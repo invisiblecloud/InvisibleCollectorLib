@@ -5,3 +5,10 @@ Master: [![Build status](https://ci.appveyor.com/api/projects/status/bvvchuog648
 #### Download
 
 Download the [latest release].
+
+#### License
+
+[MIT]
+
+[latest release]: https://github.com/invisiblecloud/InvoiceCaptureLib/releases
+[MIT]: https://github.com/invisiblecloud/InvoiceCaptureLib/blob/master/LICENSE
