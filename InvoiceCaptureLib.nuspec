@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>InvoiceCaptureLib</id>
     <version>0.1.11</version>
@@ -8,7 +8,7 @@
     <owners>Invisible Cloud</owners>
     <licenseUrl>https://github.com/invisiblecloud/InvoiceCaptureLib/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/invisiblecloud/InvoiceCaptureLib/blob/master/LICENSE</projectUrl>    
-    <iconUrl>https://avatars1.githubusercontent.com/u/29180452?v=3&s=200</iconUrl>
+    <iconUrl>http://invisiblecloud.pt/images/logo-inv.png?1472205046</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Invoice Capture's C# Library</description>
     <releaseNotes>https://github.com/invisiblecloud/InvoiceCaptureLib/releases</releaseNotes>
