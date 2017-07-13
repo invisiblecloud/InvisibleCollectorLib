@@ -13,4 +13,4 @@ build:
   parallel: true
   verbosity: normal
 artifacts:
-- path: InvoiceCaptureLib\bin\**\*.*
+- path: InvoiceCaptureLib\bin\**\*.dll
