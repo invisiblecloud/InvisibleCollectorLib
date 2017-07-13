@@ -41,3 +41,7 @@
     - ps: nuget pack InvoiceCaptureLib.nuspec -Version $env:APPVEYOR_BUILD_VERSION
   artifacts:
   - path: '**\InvoiceCaptureLib.*.nupkg'
+  deploy:
+  - provider: NuGet
+    api_key:
+      secure: 3GMoi1X9uXZH6O3Zg2f+S7VlhgaX6c8l+d637t2S5Wd6sSvmEGYPEEsFNCVaTfAQ
