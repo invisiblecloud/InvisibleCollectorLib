@@ -1,19 +1,43 @@
-version: 0.1.{build}
-image: Visual Studio 2017
-environment:
+-
+  branches:
+    only:
+      - master
+  version: 0.1.{build}
+  image: Visual Studio 2017
+  environment:
+    matrix:
+      - configuration: Release
   matrix:
-    - configuration: Release
-matrix:
-  fast_finish: false
-nuget:
-  project_feed: true
-before_build:
-- cmd: nuget restore
-build:
-  parallel: true
-  verbosity: normal
-after_build:
-  - ps: nuget pack InvoiceCaptureLib.nuspec -Version $env:APPVEYOR_BUILD_VERSION
-artifacts:
-- path: InvoiceCaptureLib\bin\**\*.*
-- path: '**\InvoiceCaptureLib.*.nupkg'
+    fast_finish: false
+  nuget:
+    project_feed: true
+  before_build:
+  - cmd: nuget restore
+  build:
+    parallel: true
+    verbosity: normal
+  artifacts:
+  - path: InvoiceCaptureLib\bin\**\*.*
+
+-
+  branches:
+    only:
+      - release
+  version: 0.1.{build}
+  image: Visual Studio 2017
+  environment:
+    matrix:
+      - configuration: Release
+  matrix:
+    fast_finish: false
+  nuget:
+    project_feed: true
+  before_build:
+  - cmd: nuget restore
+  build:
+    parallel: true
+    verbosity: normal
+  after_build:
+    - ps: nuget pack InvoiceCaptureLib.nuspec -Version $env:APPVEYOR_BUILD_VERSION
+  artifacts:
+  - path: '**\InvoiceCaptureLib.*.nupkg'
