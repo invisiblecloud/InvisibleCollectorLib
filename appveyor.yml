@@ -22,7 +22,7 @@
 -
   branches:
     only:
-      - release
+      - releases
   version: 0.1.{build}
   image: Visual Studio 2017
   environment:
