@@ -12,5 +12,7 @@ before_build:
 build:
   parallel: true
   verbosity: normal
+after_build:
+  - ps: nuget pack InvoiceCaptureLib.nuspec -Version $env:APPVEYOR_BUILD_VERSION
 artifacts:
 - path: InvoiceCaptureLib\bin\**\*.dll

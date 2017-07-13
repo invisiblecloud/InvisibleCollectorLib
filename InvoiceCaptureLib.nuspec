@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>InvoiceCaptureLib</id>
+    <version>0.1.11</version>
+    <title>Invoice Capture's C# Library</title>
+    <authors>Invisible Cloud</authors>
+    <owners>Invisible Cloud</owners>
+    <licenseUrl>https://github.com/invisiblecloud/InvoiceCaptureLib/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/invisiblecloud/InvoiceCaptureLib/blob/master/LICENSE</projectUrl>    
+    <iconUrl></iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Invoice Capture's C# Library</description>
+    <releaseNotes>https://github.com/invisiblecloud/InvoiceCaptureLib/releases</releaseNotes>
+    <copyright>Copyright 2017 Invisible Cloud</copyright>
+    <tags>c-sharp library</tags>
+  </metadata>
+  <files>
+    <file src="InvoiceCaptureLib\bin\Release\InvoiceCaptureLib.dll" target="lib\net45" />
+    <file src="InvoiceCaptureLib\bin\Release\InvoiceCaptureLib.pdb" target="lib\net45" />
+  </files>  
+</package>
