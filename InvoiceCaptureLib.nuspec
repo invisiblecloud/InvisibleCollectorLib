@@ -4,16 +4,16 @@
     <id>InvoiceCaptureLib</id>
     <version>0.1.11</version>
     <title>Invoice Capture's C# Library</title>
-    <authors>Invisible Cloud</authors>
-    <owners>Invisible Cloud</owners>
+    <authors>jpmadureira</authors>
+    <owners>jpmadureira</owners>
     <licenseUrl>https://github.com/invisiblecloud/InvoiceCaptureLib/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/invisiblecloud/InvoiceCaptureLib/blob/master/LICENSE</projectUrl>    
-    <iconUrl>http://invisiblecloud.pt/images/logo-inv.png?1472205046</iconUrl>
+    <projectUrl>https://github.com/invisiblecloud/InvoiceCaptureLib</projectUrl>    
+    <iconUrl>https://www.invcapture.com/assets/logo-8d0def418eab6b488b35642d885324fc3a6def1bb4443f7e3745468c4e039673.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Invoice Capture's C# Library</description>
+    <description>Invoice Capture is an online debt management system that helps companies get paid faster. InvoiceCaptureLib is a .NET library to communicate with it's public API.</description>
     <releaseNotes>https://github.com/invisiblecloud/InvoiceCaptureLib/releases</releaseNotes>
     <copyright>Copyright 2017 Invisible Cloud</copyright>
-    <tags>c-sharp library</tags>
+    <tags>c-sharp library api</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="9.0.1" />
     </dependencies>
