@@ -15,4 +15,5 @@ build:
 after_build:
   - ps: nuget pack InvoiceCaptureLib.nuspec -Version $env:APPVEYOR_BUILD_VERSION
 artifacts:
-- path: InvoiceCaptureLib\bin\**\*.dll
+- path: InvoiceCaptureLib\bin\**\*.*
+- path: '**\InvoiceCaptureLib.*.nupkg'
