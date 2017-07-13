@@ -14,6 +14,9 @@
     <releaseNotes>https://github.com/invisiblecloud/InvoiceCaptureLib/releases</releaseNotes>
     <copyright>Copyright 2017 Invisible Cloud</copyright>
     <tags>c-sharp library</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+    </dependencies>
   </metadata>
   <files>
     <file src="InvoiceCaptureLib\bin\Release\InvoiceCaptureLib.dll" target="lib\net45" />
