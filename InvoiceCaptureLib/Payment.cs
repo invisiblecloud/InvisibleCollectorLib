@@ -34,96 +34,13 @@ namespace InvoiceCaptureLib
             this.currency = myCurrency;
         }
 
-        public string Number
-        {
-            get
-            {
-                return number;
-            }
-
-            set
-            {
-                number = value;
-            }
-        }
-
-        public string Type
-        {
-            get
-            {
-                return type;
-            }
-
-            set
-            {
-                type = value;
-            }
-        }
-
-        public DateTime Date
-        {
-            get
-            {
-                return date;
-            }
-
-            set
-            {
-                date = value;
-            }
-        }
-
-        public List<Line> Lines
-        {
-            get
-            {
-                return lines;
-            }
-
-            set
-            {
-                lines = value;
-            }
-        }
-
-        public double NetTotal
-        {
-            get
-            {
-                return netTotal;
-            }
-
-            set
-            {
-                netTotal = value;
-            }
-        }
-
-        public double Tax
-        {
-            get
-            {
-                return tax;
-            }
-
-            set
-            {
-                tax = value;
-            }
-        }
-
-        public double GrossTotal
-        {
-            get
-            {
-                return grossTotal;
-            }
-
-            set
-            {
-                grossTotal = value;
-            }
-        }
+        public string Number { get => number; set => number = value; }
+        public string Type { get => type; set => type = value; }
+        public DateTime Date { get => date; set =>date = value; }
+        public List<Line> Lines { get => lines; set => lines = value; }
+        public double NetTotal { get => netTotal; set => netTotal = value; }
+        public double Tax { get => tax; set => tax = value; }
+        public double GrossTotal { get => grossTotal; set => grossTotal = value; }
         public string Currency { get => currency; set => currency = value; }
         public string ExternalId { get => externalId; set => externalId = value; }
         public string Status { get => status; set => status = value; }
