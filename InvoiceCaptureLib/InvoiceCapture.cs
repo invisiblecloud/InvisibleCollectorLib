@@ -175,6 +175,12 @@ namespace InvoiceCaptureLib
           return Newtonsoft.Json.JsonConvert.DeserializeObject<Invoice>(jsonString);
         }
 
+        public CreditNote getCreditNote(String id)
+        {
+          String jsonString = callAPI(creditNoteEndPoint + "/" + id, "", "GET");
+          return Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNote>(jsonString);
+        }
+
         public Invoice cancelInvoice(String id)
         {
             String jsonString = callAPI(invoicesEndPoint + "/" + id + "/cancel", "", "PUT");
