@@ -26,69 +26,10 @@ namespace InvoiceCaptureLib
             this.price = myPrice;
         }
 
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-
-            set
-            {
-                name = value;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-
-            set
-            {
-                description = value;
-            }
-        }
-
-        public double Quantity
-        {
-            get
-            {
-                return quantity;
-            }
-
-            set
-            {
-                quantity = value;
-            }
-        }
-
-        public double Vat
-        {
-            get
-            {
-                return vat;
-            }
-
-            set
-            {
-                vat = value;
-            }
-        }
-
-        public double Price
-        {
-            get
-            {
-                return price;
-            }
-
-            set
-            {
-                price = value;
-            }
-        }
+        public string Name { get => name; set => name = value; }
+        public string Description { get => description; set => description = value; }
+        public double Quantity { get => quantity; set => quantity = value; }
+        public double Vat { get => vat; set => vat = value; }
+        public double Price { get => price; set => price = value; }
     }
 }

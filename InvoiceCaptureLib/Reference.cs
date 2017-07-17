@@ -24,69 +24,11 @@ namespace InvoiceCaptureLib
             this.NetTotal = myNetTotal;
             this.vat = myVat;
         }
-        public string Number
-        {
-            get
-            {
-                return number;
-            }
 
-            set
-            {
-                number = value;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-
-            set
-            {
-                description = value;
-            }
-        }
-
-        public double GrossTotal
-        {
-            get
-            {
-                return grossTotal;
-            }
-
-            set
-            {
-                grossTotal = value;
-            }
-        }
-
-        public double NetTotal
-        {
-            get
-            {
-                return netTotal;
-            }
-
-            set
-            {
-                netTotal = value;
-            }
-        }
-
-        public double Vat
-        {
-            get
-            {
-                return vat;
-            }
-
-            set
-            {
-                vat = value;
-            }
-        }
+        public string Number { get => number; set => number = value; }
+        public string Description { get => description; set => description = value; }
+        public double GrossTotal { get => grossTotal; set => grossTotal = value; }
+        public double NetTotal { get => netTotal; set => netTotal = value; }
+        public double Vat { get => vat; set => vat = value; }
     }
 }

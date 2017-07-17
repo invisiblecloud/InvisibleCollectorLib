@@ -1,4 +1,4 @@
-# InvoiceCaptureLib - Invoice Capture SDK for .NET
+# Invoice Capture SDK for .NET
 
 [![Build status](https://ci.appveyor.com/api/projects/status/bvvchuog648l3dlo?svg=true)](https://ci.appveyor.com/project/jmadureira/invoicecapturelib)
 [![NuGet](https://img.shields.io/nuget/v/InvoiceCaptureLib.svg?label=NuGet&style=flat-square)](https://www.nuget.org/packages/InvoiceCaptureLib/)

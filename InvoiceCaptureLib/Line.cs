@@ -19,30 +19,7 @@ namespace InvoiceCaptureLib
             this.number = myNumber;
         }
 
-        public string Number
-        {
-            get
-            {
-                return number;
-            }
-
-            set
-            {
-                number = value;
-            }
-        }
-
-        public Double Amount
-        {
-            get
-            {
-                return amount;
-            }
-
-            set
-            {
-                amount = value;
-            }
-        }
+        public string Number { get => number; set => number = value; }
+        public Double Amount { get => amount; set => amount = value; }
     }
 }
