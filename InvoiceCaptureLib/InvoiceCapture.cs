@@ -9,10 +9,8 @@ using System.Collections.Generic;
 
 namespace InvoiceCaptureLib
 {
-
     public class InvoiceCapture
     {
-
         private String baseEndPoint = "https://api.invcapture.com/";
         private String ApiKey = "";
 
@@ -21,7 +19,6 @@ namespace InvoiceCaptureLib
         private String invoicesEndPoint = "invoices";
         private String creditNoteEndPoint = "credit_notes";
         private String paymentsEndPoint = "payments";
-        
 
         private bool checkURI(String value)
         {
@@ -45,18 +42,7 @@ namespace InvoiceCaptureLib
             }
         }
 
-        public string ApiKey1
-        {
-            get
-            {
-                return ApiKey;
-            }
-
-            set
-            {
-                ApiKey = value;
-            }
-        }
+        public string ApiKey1 { get => ApiKey; set =>ApiKey = value; }
 
         public InvoiceCapture()
         {
@@ -73,7 +59,7 @@ namespace InvoiceCaptureLib
                 baseEndPoint = "https://api.nxt.invcapture.com/";
                 InitiateSSLTrust();
             }
-                
+
         }
 
         public static void InitiateSSLTrust()
@@ -131,7 +117,7 @@ namespace InvoiceCaptureLib
                     {
                         response = reader.ReadToEnd();
                         InvoiceCaptureError error = JsonConvert.DeserializeObject<InvoiceCaptureError>(response);
-                        throw (new InvoiceCaptureException(error.Code+" "+error.Message));     
+                        throw (new InvoiceCaptureException(error.Code+" "+error.Message));
                     }
                 }
             }
@@ -183,6 +169,12 @@ namespace InvoiceCaptureLib
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Invoice>(jsonString);
         }
 
+        public Invoice getInvoice(String id)
+        {
+          String jsonString = callAPI(invoicesEndPoint + "/" + id, "", "GET");
+          return Newtonsoft.Json.JsonConvert.DeserializeObject<Invoice>(jsonString);
+        }
+
         public Invoice cancelInvoice(String id)
         {
             String jsonString = callAPI(invoicesEndPoint + "/" + id + "/cancel", "", "PUT");
@@ -207,6 +199,12 @@ namespace InvoiceCaptureLib
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Payment>(jsonString);
         }
 
+        public CreditNote deleteCreditNote(String id)
+        {
+            String jsonString = callAPI(creditNoteEndPoint + "/" + id, "", "DELETE");
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNote>(jsonString);
+        }
+
         public CreditNote createCreditNote(CreditNote c)
         {
             WebClient client = getWebClient();
@@ -223,6 +221,6 @@ namespace InvoiceCaptureLib
             String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(p, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
             jsonString = callAPI(paymentsEndPoint, jsonString, "POST");
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Payment>(jsonString);
-        }       
+        }
     }
 }
