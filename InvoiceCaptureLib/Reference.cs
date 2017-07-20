@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceCaptureLib
 {
-    class Reference
+    public class Reference
     {
 
         private String number;
