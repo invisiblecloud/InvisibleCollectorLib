@@ -231,7 +231,7 @@ namespace InvoiceCaptureLib
 
         public List<Reference> createCreditNoteReferences(CreditNote c, List<Reference> references)
         {
-          return createCreditNoteReferences(c.ExternalId(), references);
+          return createCreditNoteReferences(c.ExternalId, references);
         }
 
         public List<Reference> createCreditNoteReferences(String id, List<Reference> references)

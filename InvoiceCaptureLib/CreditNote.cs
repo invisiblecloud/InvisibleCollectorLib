@@ -36,55 +36,10 @@ namespace InvoiceCaptureLib
             this.grossTotal = myGrossTotal;
         }
 
-        public string Number
-        {
-            get
-            {
-                return number;
-            }
-
-            set
-            {
-                number = value;
-            }
-        }
-        public DateTime Date
-        {
-            get
-            {
-                return date;
-            }
-
-            set
-            {
-                date = value;
-            }
-        }
-        public Customer Customer
-        {
-            get
-            {
-                return customer;
-            }
-
-            set
-            {
-                customer = value;
-            }
-        }
-
-        public double GrossTotal
-        {
-            get
-            {
-                return grossTotal;
-            }
-
-            set
-            {
-                grossTotal = value;
-            }
-        }
+        public string Number { get => number; set => number = value; }
+        public DateTime Date { get => date; set => date = value; }
+        public Customer Customer { get => customer; set => customer = value; }
+        public double GrossTotal { get => grossTotal; set => grossTotal = value; }
 
         public string ExternalId
         {
@@ -139,18 +94,7 @@ namespace InvoiceCaptureLib
                 tax = value;
             }
         }
-        internal List<Reference> References
-        {
-            get
-            {
-                return references;
-            }
-
-            set
-            {
-                references = value;
-            }
-        }
+        internal List<Reference> References { get => references; set => references = value; }
 
         public string Currency { get => currency; set => currency = value; }
     }
