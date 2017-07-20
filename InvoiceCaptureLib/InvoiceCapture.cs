@@ -175,7 +175,7 @@ namespace InvoiceCaptureLib
           return Newtonsoft.Json.JsonConvert.DeserializeObject<Invoice>(jsonString);
         }
 
-        public Invoice getInvoicePayments(String id)
+        public List<Payment> getInvoicePayments(String id)
         {
           String jsonString = callAPI(invoicesEndPoint + "/" + id + "/payments", "", "GET");
           return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Payment>>(jsonString);
