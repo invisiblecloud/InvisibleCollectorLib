@@ -7,6 +7,7 @@ namespace InvoiceCaptureLib
     public class Line
     {
         private String number;
+        private String referenceNumber;
         private Double amount;
 
         public override string ToString()
@@ -20,6 +21,7 @@ namespace InvoiceCaptureLib
         }
 
         public string Number { get => number; set => number = value; }
+        public string ReferenceNumber { get => referenceNumber; set => referenceNumber = value; }
         public Double Amount { get => amount; set => amount = value; }
     }
 }
