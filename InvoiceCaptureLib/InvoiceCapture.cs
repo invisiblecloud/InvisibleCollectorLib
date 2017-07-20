@@ -228,6 +228,24 @@ namespace InvoiceCaptureLib
             jsonString = callAPI(creditNoteEndPoint, jsonString, "POST");
             return Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNote>(jsonString);
         }
+
+        public List<Reference> createCreditNoteReferences(CreditNote c, List<Reference> references)
+        {
+          return createCreditNoteReferences(c.ExternalId(), references);
+        }
+
+        public List<Reference> createCreditNoteReferences(String id, List<Reference> references)
+        {
+            WebClient client = getWebClient();
+            JsonSerializerSettings s = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(references, s);
+            jsonString = callAPI(creditNoteEndPoint + "/" + id + "/references", jsonString, "POST");
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Reference>>(jsonString);
+        }
+
         public Payment createPayment(Payment p)
         {
             String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(p, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
