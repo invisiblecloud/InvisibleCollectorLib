@@ -18,34 +18,34 @@ namespace InvoiceCaptureLib
         private const string CreditNoteEndPoint = "credit_notes";
         private const string PaymentsEndPoint = "payments";
 
-        private string _baseEndPoint = "https://api.invisiblecollector.com/";
+        private string _remoteUri = "https://api.invisiblecollector.com/";
 
         public InvoiceCapture(bool isProduction, string myAPIKey)
         {
             ApiKey = myAPIKey;
             if (!isProduction)
             {
-                _baseEndPoint = "https://api.nxt.invisiblecollector.com/";
+                _remoteUri = "https://api.nxt.invisiblecollector.com/";
                 InitiateSSLTrust();
             }
         }
 
-        public InvoiceCapture(string myAPIKey, string myBaseEndpoint)
+        public InvoiceCapture(string apiKey, string remoteUri)
         {
-            ApiKey = myAPIKey;
-            BaseEndPoint = myBaseEndpoint;
+            ApiKey = apiKey;
+            RemoteUri = remoteUri;
         }
 
         public string ApiKey { get; set; } = "";
 
-        public string BaseEndPoint
+        public string RemoteUri
         {
-            get => _baseEndPoint;
+            get => _remoteUri;
 
             set
             {
                 if (checkURI(value))
-                    _baseEndPoint = value;
+                    _remoteUri = value;
                 else
                     throw new UriFormatException("Not a valid URI");
             }
@@ -203,8 +203,8 @@ namespace InvoiceCaptureLib
             try
             {
                 if (method == "POST" || method == "PUT" || method == "DELETE")
-                    response = client.UploadString(BaseEndPoint + endpoint, method, jsonString);
-                else if (method == "GET") response = client.DownloadString(BaseEndPoint + endpoint);
+                    response = client.UploadString(RemoteUri + endpoint, method, jsonString);
+                else if (method == "GET") response = client.DownloadString(RemoteUri + endpoint);
             }
             catch (WebException e)
             {
