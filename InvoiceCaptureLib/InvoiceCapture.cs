@@ -1,42 +1,32 @@
-﻿using System;
+﻿using InvoiceCaptureLib.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using InvoiceCaptureLib.Model;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace InvoiceCaptureLib
 {
     public class InvoiceCapture
     {
-        
         private const string CompanyEndPoint = "companies";
         private const string CustomerEndPoint = "customers";
         private const string InvoicesEndPoint = "invoices";
         private const string CreditNoteEndPoint = "credit_notes";
         private const string PaymentsEndPoint = "payments";
+        private const string ProdutionUri = "https://api.invisiblecollector.com/";
 
-        private string _remoteUri = "https://api.invisiblecollector.com/";
+        private string _remoteUri;
 
-        public InvoiceCapture(bool isProduction, string myAPIKey)
-        {
-            ApiKey = myAPIKey;
-            if (!isProduction)
-            {
-                _remoteUri = "https://api.nxt.invisiblecollector.com/";
-                InitiateSSLTrust();
-            }
-        }
-
-        public InvoiceCapture(string apiKey, string remoteUri)
+        public InvoiceCapture(string apiKey, string remoteUri = ProdutionUri)
         {
             ApiKey = apiKey;
             RemoteUri = remoteUri;
         }
 
-        public string ApiKey { get; set; } = "";
+        public string ApiKey { get; set; }
 
         public string RemoteUri
         {
@@ -175,18 +165,7 @@ namespace InvoiceCaptureLib
         }
 
 
-        public static void InitiateSSLTrust()
-        {
-            try
-            {
-                //Change SSL checks so that all checks pass
-                ServicePointManager.ServerCertificateValidationCallback =
-                    delegate { return true; };
-            }
-            catch (Exception)
-            {
-            }
-        }
+        
 
         public Customer updateCustomer(Customer c, string id)
         {

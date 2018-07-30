@@ -10,6 +10,7 @@ namespace InvoiceCaptureLib.Model
         private string country;
         private string gid;
         private string name;
+        private bool notificationsEnabled;
         private string vatNumber;
         private string zipCode;
 
@@ -60,6 +61,12 @@ namespace InvoiceCaptureLib.Model
             get => gid;
 
             set => gid = value;
+        }
+
+        public bool NotificationsEnabled
+        {
+            get => notificationsEnabled;
+            set => notificationsEnabled = value;
         }
 
         public override string ToString()
