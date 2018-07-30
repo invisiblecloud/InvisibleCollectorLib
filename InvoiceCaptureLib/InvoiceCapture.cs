@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using InvoiceCaptureLib.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -11,11 +12,11 @@ namespace InvoiceCaptureLib
     public class InvoiceCapture
     {
         
-        private const string companyEndPoint = "companies";
-        private const string customerEndPoint = "customers";
-        private const string invoicesEndPoint = "invoices";
-        private const string creditNoteEndPoint = "credit_notes";
-        private const string paymentsEndPoint = "payments";
+        private const string CompanyEndPoint = "companies";
+        private const string CustomerEndPoint = "customers";
+        private const string InvoicesEndPoint = "invoices";
+        private const string CreditNoteEndPoint = "credit_notes";
+        private const string PaymentsEndPoint = "payments";
 
         private string _baseEndPoint = "https://api.invisiblecollector.com/";
 
@@ -52,19 +53,19 @@ namespace InvoiceCaptureLib
 
         public CreditNote cancelCreditNote(string id)
         {
-            var jsonString = callAPI(creditNoteEndPoint + "/" + id + "/cancel", "", "PUT");
+            var jsonString = callAPI(CreditNoteEndPoint + "/" + id + "/cancel", "", "PUT");
             return JsonConvert.DeserializeObject<CreditNote>(jsonString);
         }
 
         public Invoice cancelInvoice(string id)
         {
-            var jsonString = callAPI(invoicesEndPoint + "/" + id + "/cancel", "", "PUT");
+            var jsonString = callAPI(InvoicesEndPoint + "/" + id + "/cancel", "", "PUT");
             return JsonConvert.DeserializeObject<Invoice>(jsonString);
         }
 
         public Payment cancelPayment(string id)
         {
-            var jsonString = callAPI(paymentsEndPoint + "/" + id + "/cancel", "", "PUT");
+            var jsonString = callAPI(PaymentsEndPoint + "/" + id + "/cancel", "", "PUT");
             return JsonConvert.DeserializeObject<Payment>(jsonString);
         }
 
@@ -76,7 +77,7 @@ namespace InvoiceCaptureLib
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             var jsonString = JsonConvert.SerializeObject(c, s);
-            jsonString = callAPI(creditNoteEndPoint, jsonString, "POST");
+            jsonString = callAPI(CreditNoteEndPoint, jsonString, "POST");
             return JsonConvert.DeserializeObject<CreditNote>(jsonString);
         }
 
@@ -93,7 +94,7 @@ namespace InvoiceCaptureLib
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             var jsonString = JsonConvert.SerializeObject(references, s);
-            jsonString = callAPI(creditNoteEndPoint + "/" + id + "/references", jsonString, "POST");
+            jsonString = callAPI(CreditNoteEndPoint + "/" + id + "/references", jsonString, "POST");
             return JsonConvert.DeserializeObject<List<Reference>>(jsonString);
         }
 
@@ -101,7 +102,7 @@ namespace InvoiceCaptureLib
         {
             var jsonString = JsonConvert.SerializeObject(c,
                 new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
-            jsonString = callAPI(customerEndPoint, jsonString, "POST");
+            jsonString = callAPI(CustomerEndPoint, jsonString, "POST");
             return JsonConvert.DeserializeObject<Customer>(jsonString);
         }
 
@@ -113,7 +114,7 @@ namespace InvoiceCaptureLib
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             var jsonString = JsonConvert.SerializeObject(i, s);
-            jsonString = callAPI(invoicesEndPoint, jsonString, "POST");
+            jsonString = callAPI(InvoicesEndPoint, jsonString, "POST");
             return JsonConvert.DeserializeObject<Invoice>(jsonString);
         }
 
@@ -121,55 +122,55 @@ namespace InvoiceCaptureLib
         {
             var jsonString = JsonConvert.SerializeObject(p,
                 new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
-            jsonString = callAPI(paymentsEndPoint, jsonString, "POST");
+            jsonString = callAPI(PaymentsEndPoint, jsonString, "POST");
             return JsonConvert.DeserializeObject<Payment>(jsonString);
         }
 
         public CreditNote deleteCreditNote(string id)
         {
-            var jsonString = callAPI(creditNoteEndPoint + "/" + id, "", "DELETE");
+            var jsonString = callAPI(CreditNoteEndPoint + "/" + id, "", "DELETE");
             return JsonConvert.DeserializeObject<CreditNote>(jsonString);
         }
 
         public Payment deletePayment(string id)
         {
-            var jsonString = callAPI(paymentsEndPoint + "/" + id, "", "DELETE");
+            var jsonString = callAPI(PaymentsEndPoint + "/" + id, "", "DELETE");
             return JsonConvert.DeserializeObject<Payment>(jsonString);
         }
 
         public Company getCompany()
         {
-            var json = callAPI(companyEndPoint, "", "GET");
+            var json = callAPI(CompanyEndPoint, "", "GET");
             return JsonConvert.DeserializeObject<Company>(json);
         }
 
         public CreditNote getCreditNote(string id)
         {
-            var jsonString = callAPI(creditNoteEndPoint + "/" + id, "", "GET");
+            var jsonString = callAPI(CreditNoteEndPoint + "/" + id, "", "GET");
             return JsonConvert.DeserializeObject<CreditNote>(jsonString);
         }
 
         public Customer getCustomer(string id)
         {
-            var jsonString = callAPI(customerEndPoint + "/" + id, "", "GET");
+            var jsonString = callAPI(CustomerEndPoint + "/" + id, "", "GET");
             return JsonConvert.DeserializeObject<Customer>(jsonString);
         }
 
         public List<Invoice> getCustomerDebts(string id)
         {
-            var jsonString = callAPI(customerEndPoint + "/" + id + "/debts", "", "GET");
+            var jsonString = callAPI(CustomerEndPoint + "/" + id + "/debts", "", "GET");
             return JsonConvert.DeserializeObject<List<Invoice>>(jsonString);
         }
 
         public Invoice getInvoice(string id)
         {
-            var jsonString = callAPI(invoicesEndPoint + "/" + id, "", "GET");
+            var jsonString = callAPI(InvoicesEndPoint + "/" + id, "", "GET");
             return JsonConvert.DeserializeObject<Invoice>(jsonString);
         }
 
         public List<Payment> getInvoicePayments(string id)
         {
-            var jsonString = callAPI(invoicesEndPoint + "/" + id + "/payments", "", "GET");
+            var jsonString = callAPI(InvoicesEndPoint + "/" + id + "/payments", "", "GET");
             return JsonConvert.DeserializeObject<List<Payment>>(jsonString);
         }
 
@@ -191,7 +192,7 @@ namespace InvoiceCaptureLib
         {
             var jsonString = JsonConvert.SerializeObject(c,
                 new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
-            jsonString = callAPI(customerEndPoint + "/" + id, jsonString, "PUT");
+            jsonString = callAPI(CustomerEndPoint + "/" + id, jsonString, "PUT");
             return JsonConvert.DeserializeObject<Customer>(jsonString);
         }
 

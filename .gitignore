@@ -5,3 +5,4 @@ packages
 /InvoiceCaptureLib/obj/Debug
 /test/bin/Debug
 /test/obj/Debug
+/test/ManualTests.cs

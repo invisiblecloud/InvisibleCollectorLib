@@ -46,9 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreditNote.cs" />
-    <Compile Include="Company.cs" />
+    <Compile Include="Model\Company.cs" />
     <Compile Include="Invoice.cs" />
-    <Compile Include="Customer.cs" />
+    <Compile Include="Model\Customer.cs" />
     <Compile Include="InvoiceCapture.cs" />
     <Compile Include="InvoiceCaptureError.cs" />
     <Compile Include="InvoiceCaptureException.cs" />
