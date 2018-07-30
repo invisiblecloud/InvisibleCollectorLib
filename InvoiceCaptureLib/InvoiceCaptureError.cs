@@ -1,43 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InvoiceCaptureLib
+﻿namespace InvoiceCaptureLib
 {
-    class InvoiceCaptureError
+    internal class InvoiceCaptureError
     {
-        private String code;
-        private String message;
-
-        public InvoiceCaptureError() { }
+        private string code;
+        private string message;
 
         public string Code
         {
-            get
-            {
-                return code;
-            }
+            get => code;
 
-            set
-            {
-                code = value;
-            }
+            set => code = value;
         }
 
         public string Message
         {
-            get
-            {
-                return message;
-            }
+            get => message;
 
-            set
-            {
-                message = value;
-            }
+            set => message = value;
         }
     }
 }

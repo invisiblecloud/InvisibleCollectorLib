@@ -1,256 +1,222 @@
-﻿using System;
-using System.Net;
-using System.IO;
+﻿using InvoiceCaptureLib.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Net.Security;
-using System.Text;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
 
 namespace InvoiceCaptureLib
 {
     public class InvoiceCapture
     {
-        private String baseEndPoint = "https://api.invcapture.com/";
-        private String ApiKey = "";
+        private const string CompanyEndPoint = "companies";
+        private const string CustomerEndPoint = "customers";
+        private const string InvoicesEndPoint = "invoices";
+        private const string CreditNoteEndPoint = "credit_notes";
+        private const string PaymentsEndPoint = "payments";
+        private const string ProdutionUri = "https://api.invisiblecollector.com/";
 
-        private String companyEndPoint = "companies";
-        private String customerEndPoint = "customers";
-        private String invoicesEndPoint = "invoices";
-        private String creditNoteEndPoint = "credit_notes";
-        private String paymentsEndPoint = "payments";
+        private string _remoteUri;
 
-        private bool checkURI(String value)
+        public InvoiceCapture(string apiKey, string remoteUri = ProdutionUri)
         {
-            Uri uriResult;
-            return Uri.TryCreate(value, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            ApiKey = apiKey;
+            RemoteUri = remoteUri;
         }
 
-        public string BaseEndPoint
+        public string ApiKey { get; set; }
+
+        public string RemoteUri
         {
-            get
-            {
-                return baseEndPoint;
-            }
+            get => _remoteUri;
 
             set
             {
                 if (checkURI(value))
-                    baseEndPoint = value;
+                    _remoteUri = value;
                 else
                     throw new UriFormatException("Not a valid URI");
             }
         }
 
-        public string ApiKey1 { get => ApiKey; set =>ApiKey = value; }
-
-        public InvoiceCapture()
+        public CreditNote cancelCreditNote(string id)
         {
-            baseEndPoint = "https://api.invcapture.com/";
+            var jsonString = callAPI(CreditNoteEndPoint + "/" + id + "/cancel", "", "PUT");
+            return JsonConvert.DeserializeObject<CreditNote>(jsonString);
         }
 
-        public InvoiceCapture(bool isProduction, String myAPIKey)
+        public Invoice cancelInvoice(string id)
         {
-            this.ApiKey = myAPIKey;
-            if(isProduction)
-            { baseEndPoint = "https://api.invcapture.com/"; }
-            else
+            var jsonString = callAPI(InvoicesEndPoint + "/" + id + "/cancel", "", "PUT");
+            return JsonConvert.DeserializeObject<Invoice>(jsonString);
+        }
+
+        public Payment cancelPayment(string id)
+        {
+            var jsonString = callAPI(PaymentsEndPoint + "/" + id + "/cancel", "", "PUT");
+            return JsonConvert.DeserializeObject<Payment>(jsonString);
+        }
+
+        public CreditNote createCreditNote(CreditNote c)
+        {
+            var client = getWebClient();
+            var s = new JsonSerializerSettings
             {
-                baseEndPoint = "https://api.nxt.invcapture.com/";
-                InitiateSSLTrust();
-            }
-
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var jsonString = JsonConvert.SerializeObject(c, s);
+            jsonString = callAPI(CreditNoteEndPoint, jsonString, "POST");
+            return JsonConvert.DeserializeObject<CreditNote>(jsonString);
         }
 
-        public static void InitiateSSLTrust()
+        public List<Reference> createCreditNoteReferences(CreditNote c, List<Reference> references)
         {
+            return createCreditNoteReferences(c.ExternalId, references);
+        }
+
+        public List<Reference> createCreditNoteReferences(string id, List<Reference> references)
+        {
+            var client = getWebClient();
+            var s = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var jsonString = JsonConvert.SerializeObject(references, s);
+            jsonString = callAPI(CreditNoteEndPoint + "/" + id + "/references", jsonString, "POST");
+            return JsonConvert.DeserializeObject<List<Reference>>(jsonString);
+        }
+
+        public Customer createCustomer(Customer c)
+        {
+            var jsonString = JsonConvert.SerializeObject(c,
+                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+            jsonString = callAPI(CustomerEndPoint, jsonString, "POST");
+            return JsonConvert.DeserializeObject<Customer>(jsonString);
+        }
+
+        public Invoice createInvoice(Invoice i)
+        {
+            var client = getWebClient();
+            var s = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var jsonString = JsonConvert.SerializeObject(i, s);
+            jsonString = callAPI(InvoicesEndPoint, jsonString, "POST");
+            return JsonConvert.DeserializeObject<Invoice>(jsonString);
+        }
+
+        public Payment createPayment(Payment p)
+        {
+            var jsonString = JsonConvert.SerializeObject(p,
+                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+            jsonString = callAPI(PaymentsEndPoint, jsonString, "POST");
+            return JsonConvert.DeserializeObject<Payment>(jsonString);
+        }
+
+        public CreditNote deleteCreditNote(string id)
+        {
+            var jsonString = callAPI(CreditNoteEndPoint + "/" + id, "", "DELETE");
+            return JsonConvert.DeserializeObject<CreditNote>(jsonString);
+        }
+
+        public Payment deletePayment(string id)
+        {
+            var jsonString = callAPI(PaymentsEndPoint + "/" + id, "", "DELETE");
+            return JsonConvert.DeserializeObject<Payment>(jsonString);
+        }
+
+        public Company getCompany()
+        {
+            var json = callAPI(CompanyEndPoint, "", "GET");
+            return JsonConvert.DeserializeObject<Company>(json);
+        }
+
+        public CreditNote getCreditNote(string id)
+        {
+            var jsonString = callAPI(CreditNoteEndPoint + "/" + id, "", "GET");
+            return JsonConvert.DeserializeObject<CreditNote>(jsonString);
+        }
+
+        public Customer getCustomer(string id)
+        {
+            var jsonString = callAPI(CustomerEndPoint + "/" + id, "", "GET");
+            return JsonConvert.DeserializeObject<Customer>(jsonString);
+        }
+
+        public List<Invoice> getCustomerDebts(string id)
+        {
+            var jsonString = callAPI(CustomerEndPoint + "/" + id + "/debts", "", "GET");
+            return JsonConvert.DeserializeObject<List<Invoice>>(jsonString);
+        }
+
+        public Invoice getInvoice(string id)
+        {
+            var jsonString = callAPI(InvoicesEndPoint + "/" + id, "", "GET");
+            return JsonConvert.DeserializeObject<Invoice>(jsonString);
+        }
+
+        public List<Payment> getInvoicePayments(string id)
+        {
+            var jsonString = callAPI(InvoicesEndPoint + "/" + id + "/payments", "", "GET");
+            return JsonConvert.DeserializeObject<List<Payment>>(jsonString);
+        }
+
+
+        
+
+        public Customer updateCustomer(Customer c, string id)
+        {
+            var jsonString = JsonConvert.SerializeObject(c,
+                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+            jsonString = callAPI(CustomerEndPoint + "/" + id, jsonString, "PUT");
+            return JsonConvert.DeserializeObject<Customer>(jsonString);
+        }
+
+        private string callAPI(string endpoint, string jsonString, string method)
+        {
+            var response = "";
+            var client = getWebClient();
             try
             {
-                //Change SSL checks so that all checks pass
-                ServicePointManager.ServerCertificateValidationCallback =
-                   new RemoteCertificateValidationCallback(
-                        delegate
-                        { return true; }
-                    );
-            }
-            catch (Exception){}
-        }
-
-        public InvoiceCapture(String myAPIKey, String myBaseEndpoint)
-        {
-            this.BaseEndPoint = myAPIKey;
-            this.BaseEndPoint = myBaseEndpoint;
-        }
-
-        private WebClient getWebClient()
-        {
-            System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true);
-            var client = new WebClient();
-            client.Headers.Set("Content-Type", "application/json");
-            client.Headers.Set("X-Api-Token", ApiKey1);
-            client.Encoding = Encoding.UTF8;
-            return client;
-        }
-
-        private String callAPI(String endpoint, String jsonString, String method)
-        {
-            String response = "";
-            WebClient client = getWebClient();
-            try
-            {
-                if (method == "POST" || method == "PUT" || method =="DELETE")
-                {
-                    response = client.UploadString(BaseEndPoint + endpoint, method, jsonString);
-                }
-                else if(method == "GET")
-                {
-                    response = client.DownloadString(BaseEndPoint + endpoint);
-                }
-
+                if (method == "POST" || method == "PUT" || method == "DELETE")
+                    response = client.UploadString(RemoteUri + endpoint, method, jsonString);
+                else if (method == "GET") response = client.DownloadString(RemoteUri + endpoint);
             }
             catch (WebException e)
             {
                 var responseStream = e.Response?.GetResponseStream();
                 if (responseStream != null)
-                {
                     using (var reader = new StreamReader(responseStream))
                     {
                         response = reader.ReadToEnd();
-                        InvoiceCaptureError error = JsonConvert.DeserializeObject<InvoiceCaptureError>(response);
-                        throw (new InvoiceCaptureException(error.Code+" "+error.Message));
+                        var error = JsonConvert.DeserializeObject<InvoiceCaptureError>(response);
+                        throw new InvoiceCaptureException(error.Code + " " + error.Message);
                     }
-                }
             }
 
             return response;
         }
 
-        public Company getCompany()
+
+        private bool checkURI(string value)
         {
-            String json = callAPI(companyEndPoint, "","GET");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Company>(json);
+            Uri uriResult;
+            return Uri.TryCreate(value, UriKind.Absolute, out uriResult) &&
+                   (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
         }
 
-        public Customer createCustomer(Customer c)
+        private WebClient getWebClient()
         {
-            String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(c, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
-            jsonString = callAPI(customerEndPoint, jsonString, "POST");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Customer>(jsonString);
-        }
-
-        public Customer updateCustomer(Customer c, String id)
-        {
-            String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(c, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
-            jsonString = callAPI(customerEndPoint + "/" + id, jsonString, "PUT");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Customer>(jsonString);
-        }
-
-        public Customer getCustomer(String id)
-        {
-            String jsonString = callAPI(customerEndPoint+"/"+id, "", "GET");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Customer>(jsonString);
-        }
-
-        public List<Invoice> getCustomerDebts(String id)
-        {
-            String jsonString = callAPI(customerEndPoint + "/" + id+"/debts", "", "GET");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Invoice>>(jsonString);
-        }
-
-        public Invoice createInvoice(Invoice i)
-        {
-            WebClient client = getWebClient();
-            JsonSerializerSettings s = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(i, s);
-            jsonString = callAPI(invoicesEndPoint, jsonString, "POST");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Invoice>(jsonString);
-        }
-
-        public Invoice getInvoice(String id)
-        {
-          String jsonString = callAPI(invoicesEndPoint + "/" + id, "", "GET");
-          return Newtonsoft.Json.JsonConvert.DeserializeObject<Invoice>(jsonString);
-        }
-
-        public List<Payment> getInvoicePayments(String id)
-        {
-          String jsonString = callAPI(invoicesEndPoint + "/" + id + "/payments", "", "GET");
-          return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Payment>>(jsonString);
-        }
-
-        public CreditNote getCreditNote(String id)
-        {
-          String jsonString = callAPI(creditNoteEndPoint + "/" + id, "", "GET");
-          return Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNote>(jsonString);
-        }
-
-        public Invoice cancelInvoice(String id)
-        {
-            String jsonString = callAPI(invoicesEndPoint + "/" + id + "/cancel", "", "PUT");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Invoice>(jsonString);
-        }
-
-        public CreditNote cancelCreditNote(String id)
-        {
-            String jsonString = callAPI(creditNoteEndPoint + "/" + id + "/cancel", "", "PUT");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNote>(jsonString);
-        }
-
-        public Payment cancelPayment(String id)
-        {
-            String jsonString = callAPI(paymentsEndPoint + "/" + id + "/cancel", "", "PUT");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Payment>(jsonString);
-        }
-
-        public Payment deletePayment(String id)
-        {
-            String jsonString = callAPI(paymentsEndPoint + "/" + id, "", "DELETE");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Payment>(jsonString);
-        }
-
-        public CreditNote deleteCreditNote(String id)
-        {
-            String jsonString = callAPI(creditNoteEndPoint + "/" + id, "", "DELETE");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNote>(jsonString);
-        }
-
-        public CreditNote createCreditNote(CreditNote c)
-        {
-            WebClient client = getWebClient();
-            JsonSerializerSettings s = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(c, s);
-            jsonString = callAPI(creditNoteEndPoint, jsonString, "POST");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<CreditNote>(jsonString);
-        }
-
-        public List<Reference> createCreditNoteReferences(CreditNote c, List<Reference> references)
-        {
-          return createCreditNoteReferences(c.ExternalId, references);
-        }
-
-        public List<Reference> createCreditNoteReferences(String id, List<Reference> references)
-        {
-            WebClient client = getWebClient();
-            JsonSerializerSettings s = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(references, s);
-            jsonString = callAPI(creditNoteEndPoint + "/" + id + "/references", jsonString, "POST");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Reference>>(jsonString);
-        }
-
-        public Payment createPayment(Payment p)
-        {
-            String jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(p, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
-            jsonString = callAPI(paymentsEndPoint, jsonString, "POST");
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<Payment>(jsonString);
+            ServicePointManager.ServerCertificateValidationCallback =
+                (sender, certificate, chain, sslPolicyErrors) => true;
+            var client = new WebClient();
+            client.Headers.Set("Content-Type", "application/json");
+            client.Headers.Set("X-Api-Token", ApiKey);
+            client.Encoding = Encoding.UTF8;
+            return client;
         }
     }
 }

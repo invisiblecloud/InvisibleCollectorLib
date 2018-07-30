@@ -1,0 +1,10 @@
+.vs
+.git
+packages
+/InvoiceCaptureLib/bin/Debug
+/InvoiceCaptureLib/obj/Debug
+/test/bin/Debug
+/test/obj/Debug
+/test/ManualTests.cs
+/test/obj
+/InvoiceCaptureLib/obj
