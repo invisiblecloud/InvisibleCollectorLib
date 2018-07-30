@@ -1,0 +1,7 @@
+.vs
+.git
+packages
+/InvoiceCaptureLib/bin/Debug
+/InvoiceCaptureLib/obj/Debug
+/test/bin/Debug
+/test/obj/Debug
