@@ -3,14 +3,14 @@ using Newtonsoft.Json.Serialization;
 
 namespace InvoiceCaptureLib.Model
 {
-    public class Company
+    public class Company : Model
     {
         private string address;
         private string city;
         private string country;
         private string gid;
         private string name;
-        private bool notificationsEnabled;
+        private bool? notificationsEnabled;
         private string vatNumber;
         private string zipCode;
 
@@ -63,7 +63,7 @@ namespace InvoiceCaptureLib.Model
             set => gid = value;
         }
 
-        public bool NotificationsEnabled
+        public bool? NotificationsEnabled
         {
             get => notificationsEnabled;
             set => notificationsEnabled = value;
