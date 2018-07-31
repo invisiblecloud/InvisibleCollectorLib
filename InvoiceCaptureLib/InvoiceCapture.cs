@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using InvoiceCaptureLib.Model;
 using InvoiceCaptureLib.Model.Json;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace InvoiceCaptureLib
 {
@@ -16,13 +14,15 @@ namespace InvoiceCaptureLib
         private const string CustomerEndPoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
+        private string _apiKey;
+        private readonly JsonModelConverterFacade _jsonFacade;
 
         private string _remoteUri;
-        private string _apiKey;
-        private JsonModelConverterFacade _jsonFacade;
 
-        public InvoiceCapture(string apiKey, string remoteUri = ProdutionUri) : this(apiKey, remoteUri, new JsonModelConverterFacade())
-        { }
+        public InvoiceCapture(string apiKey, string remoteUri = ProdutionUri) : this(apiKey, remoteUri,
+            new JsonModelConverterFacade())
+        {
+        }
 
         internal InvoiceCapture(string apiKey, string remoteUri, JsonModelConverterFacade jsonFacade)
         {
@@ -31,7 +31,7 @@ namespace InvoiceCaptureLib
             _jsonFacade = jsonFacade;
         }
 
-        public string ApiKey { get; private set;  }
+        public string ApiKey { get; }
 
         public string RemoteUri
         {
@@ -49,14 +49,14 @@ namespace InvoiceCaptureLib
         public Company RequestCompanyInfo()
         {
             var json = callAPI(CompanyEndPoint, "", "GET");
-            return this._jsonFacade.JsonToModel<Company>(json);
+            return _jsonFacade.JsonToModel<Company>(json);
         }
 
         public Company UpdateCompanyInfo(Company company)
         {
-            string json = this._jsonFacade.ModelToSendableJson(company);
-            string returnedJson = callAPI(CompanyEndPoint, json, "PUT");
-            return this._jsonFacade.JsonToModel<Company>(returnedJson);
+            var json = _jsonFacade.ModelToSendableJson(company);
+            var returnedJson = callAPI(CompanyEndPoint, json, "PUT");
+            return _jsonFacade.JsonToModel<Company>(returnedJson);
         }
 
         private string callAPI(string endpoint, string jsonString, string method)

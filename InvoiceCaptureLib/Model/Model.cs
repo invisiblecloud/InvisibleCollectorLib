@@ -13,10 +13,10 @@ namespace InvoiceCaptureLib.Model
             _fields = new Dictionary<string, object>();
         }
 
-        // avoid using this
-        internal IDictionary<string, object> Fields 
+        // don't use this
+        internal IDictionary<string, object> Fields
         {
-            set => this._fields = new Dictionary<string, object>(value);
+            set => _fields = new Dictionary<string, object>(value);
         }
 
         protected object this[string key]
@@ -37,17 +37,15 @@ namespace InvoiceCaptureLib.Model
 
         protected virtual IImmutableSet<string> SendableFields { get; }
 
+        public override string ToString()
+        {
+            return
+                $"{{ {string.Join(", ", _fields.Select(pair => pair.Key + "=" + pair.Value.ToString()).ToArray())} }}";
+        }
+
         protected T GetField<T>(string key)
         {
             return (T) _fields[key];
         }
-
-
-        public override string ToString()
-        {
-            return $"{{ {string.Join(", ", this._fields.Select(pair => pair.Key + "=" + pair.Value.ToString()).ToArray())} }}";
-        }
-
-
     }
 }
