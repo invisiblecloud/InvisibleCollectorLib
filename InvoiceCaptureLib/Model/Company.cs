@@ -3,75 +3,80 @@ using System.Collections.Immutable;
 
 namespace InvoiceCaptureLib.Model
 {
-    public class Company : Model
+    public class Company : Model, IRoutableModel
     {
-        private const string ADDRESS_NAME = "address";
-        private const string CITY_NAME = "city";
-        private const string COUNTRY_NAME = "country";
-        private const string ID_NAME = "gid";
-        private const string NAME_NAME = "name";
-        private const string NOTIFICATIONS_NAME = "notificationsEnabled";
-        private const string VAT_NUMBER_NAME = "vatNumber";
-        private const string ZIP_CODE_NAME = "zipCode";
+        private const string AddressName = "address";
+        private const string CityName = "city";
+        private const string CountryName = "country";
+        private const string IdName = "gid";
+        private const string NameName = "name";
+        private const string NotificationsName = "notificationsEnabled";
+        private const string VatNumberName = "vatNumber";
+        private const string ZipCodeName = "zipCode";
 
         public string Address
         {
-            get => GetField<string>(ADDRESS_NAME);
+            get => GetField<string>(AddressName);
 
-            set => this[ADDRESS_NAME] = value;
+            set => this[AddressName] = value;
         }
 
         public string City
         {
-            get => GetField<string>(CITY_NAME);
+            get => GetField<string>(CityName);
 
-            set => this[CITY_NAME] = value;
+            set => this[CityName] = value;
         }
 
         public string Country
         {
-            get => GetField<string>(COUNTRY_NAME);
+            get => GetField<string>(CountryName);
 
-            set => this[COUNTRY_NAME] = value;
+            set => this[CountryName] = value;
         }
 
         public string Id
         {
-            get => GetField<string>(ID_NAME);
+            get => GetField<string>(IdName);
 
-            set => this[ID_NAME] = value;
+            set => this[IdName] = value;
         }
 
         public string Name
         {
-            get => GetField<string>(NAME_NAME);
+            get => GetField<string>(NameName);
 
-            set => this[NAME_NAME] = value;
+            set => this[NameName] = value;
         }
 
         public bool? NotificationsEnabled
         {
-            get => GetField<bool?>(NOTIFICATIONS_NAME);
+            get => GetField<bool?>(NotificationsName);
 
-            set => this[NOTIFICATIONS_NAME] = value;
+            set => this[NotificationsName] = value;
         }
 
         protected override IImmutableSet<string> SendableFields =>
-            new HashSet<string> {NAME_NAME, VAT_NUMBER_NAME, ADDRESS_NAME, ZIP_CODE_NAME, CITY_NAME}
-                .ToImmutableHashSet();
+            new SortedSet<string>() {NameName, VatNumberName, AddressName, ZipCodeName, CityName}.ToImmutableSortedSet();
+
+        protected override IImmutableSet<string> MandatoryFields =>
+            new SortedSet<string> { NameName, VatNumberName}
+                .ToImmutableSortedSet();
 
         public string VatNumber
         {
-            get => GetField<string>(VAT_NUMBER_NAME);
+            get => GetField<string>(VatNumberName);
 
-            set => this[VAT_NUMBER_NAME] = value;
+            set => this[VatNumberName] = value;
         }
 
         public string ZipCode
         {
-            get => GetField<string>(ZIP_CODE_NAME);
+            get => GetField<string>(ZipCodeName);
 
-            set => this[ZIP_CODE_NAME] = value;
+            set => this[ZipCodeName] = value;
         }
+
+        public string RoutableId => Id;
     }
 }

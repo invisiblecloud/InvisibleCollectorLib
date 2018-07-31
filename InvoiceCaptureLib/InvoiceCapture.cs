@@ -54,6 +54,7 @@ namespace InvoiceCaptureLib
 
         public Company UpdateCompanyInfo(Company company)
         {
+            company.AssertHasMandatoryFields();
             var json = _jsonFacade.ModelToSendableJson(company);
             var returnedJson = callAPI(CompanyEndPoint, json, "PUT");
             return _jsonFacade.JsonToModel<Company>(returnedJson);
