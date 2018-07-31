@@ -1,78 +1,79 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace InvoiceCaptureLib.Model
 {
     public class Company : Model
     {
-        private string address;
-        private string city;
-        private string country;
-        private string gid;
-        private string name;
-        private bool? notificationsEnabled;
-        private string vatNumber;
-        private string zipCode;
+        private const string ADDRESS_NAME = "address";
+        private const string CITY_NAME = "city";
+        private const string COUNTRY_NAME = "country";
+        private const string ID_NAME = "gid";
+        private const string NAME_NAME = "name";
+        private const string NOTIFICATIONS_NAME = "notificationsEnabled";
+        private const string VAT_NUMBER_NAME = "vatNumber";
+        private const string ZIP_CODE_NAME = "zipCode";
+
+        public Company() { }
 
         public string Name
         {
-            get => name;
+            get => GetField<string>(NAME_NAME);
 
-            set => name = value;
+            set => this[NAME_NAME] = value;
         }
 
         public string VatNumber
         {
-            get => vatNumber;
+            get => GetField<string>(VAT_NUMBER_NAME);
 
-            set => vatNumber = value;
+            set => this[VAT_NUMBER_NAME] = value;
         }
 
         public string Address
         {
-            get => address;
+            get => GetField<string>(ADDRESS_NAME);
 
-            set => address = value;
+            set => this[ADDRESS_NAME] = value;
         }
 
         public string ZipCode
         {
-            get => zipCode;
+            get => GetField<string>(ZIP_CODE_NAME);
 
-            set => zipCode = value;
+            set => this[ZIP_CODE_NAME] = value;
         }
 
         public string City
         {
-            get => city;
+            get => GetField<string>(CITY_NAME);
 
-            set => city = value;
+            set => this[CITY_NAME] = value;
         }
 
         public string Country
         {
-            get => country;
+            get => GetField<string>(COUNTRY_NAME);
 
-            set => country = value;
+            set => this[COUNTRY_NAME] = value;
         }
 
-        public string Gid
+        public string Id
         {
-            get => gid;
+            get => GetField<string>(ID_NAME);
 
-            set => gid = value;
+            set => this[ID_NAME] = value;
         }
 
         public bool? NotificationsEnabled
         {
-            get => notificationsEnabled;
-            set => notificationsEnabled = value;
+            get => GetField<bool?>(NOTIFICATIONS_NAME);
+
+            set => this[NOTIFICATIONS_NAME] = value;
         }
 
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this,
-                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
-        }
+        protected override IImmutableSet<string> SendableFields => new HashSet<string>{ NAME_NAME, VAT_NUMBER_NAME, ADDRESS_NAME, ZIP_CODE_NAME, CITY_NAME }.ToImmutableHashSet();
     }
 }
