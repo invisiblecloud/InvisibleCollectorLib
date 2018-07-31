@@ -41,17 +41,6 @@ namespace InvoiceCaptureLib
             }
         }
 
-        public CreditNote cancelCreditNote(string id)
-        {
-            var jsonString = callAPI(CreditNoteEndPoint + "/" + id + "/cancel", "", "PUT");
-            return JsonConvert.DeserializeObject<CreditNote>(jsonString);
-        }
-
-        public Invoice cancelInvoice(string id)
-        {
-            var jsonString = callAPI(InvoicesEndPoint + "/" + id + "/cancel", "", "PUT");
-            return JsonConvert.DeserializeObject<Invoice>(jsonString);
-        }
 
         public Payment cancelPayment(string id)
         {
@@ -96,7 +85,7 @@ namespace InvoiceCaptureLib
             return JsonConvert.DeserializeObject<Customer>(jsonString);
         }
 
-        public Invoice createInvoice(Invoice i)
+        public Debt createInvoice(Debt i)
         {
             var client = getWebClient();
             var s = new JsonSerializerSettings
@@ -105,7 +94,7 @@ namespace InvoiceCaptureLib
             };
             var jsonString = JsonConvert.SerializeObject(i, s);
             jsonString = callAPI(InvoicesEndPoint, jsonString, "POST");
-            return JsonConvert.DeserializeObject<Invoice>(jsonString);
+            return JsonConvert.DeserializeObject<Debt>(jsonString);
         }
 
         public Payment createPayment(Payment p)
@@ -146,16 +135,16 @@ namespace InvoiceCaptureLib
             return JsonConvert.DeserializeObject<Customer>(jsonString);
         }
 
-        public List<Invoice> getCustomerDebts(string id)
+        public List<Debt> getCustomerDebts(string id)
         {
             var jsonString = callAPI(CustomerEndPoint + "/" + id + "/debts", "", "GET");
-            return JsonConvert.DeserializeObject<List<Invoice>>(jsonString);
+            return JsonConvert.DeserializeObject<List<Debt>>(jsonString);
         }
 
-        public Invoice getInvoice(string id)
+        public Debt getInvoice(string id)
         {
             var jsonString = callAPI(InvoicesEndPoint + "/" + id, "", "GET");
-            return JsonConvert.DeserializeObject<Invoice>(jsonString);
+            return JsonConvert.DeserializeObject<Debt>(jsonString);
         }
 
         public List<Payment> getInvoicePayments(string id)
@@ -163,9 +152,6 @@ namespace InvoiceCaptureLib
             var jsonString = callAPI(InvoicesEndPoint + "/" + id + "/payments", "", "GET");
             return JsonConvert.DeserializeObject<List<Payment>>(jsonString);
         }
-
-
-        
 
         public Customer updateCustomer(Customer c, string id)
         {
@@ -199,7 +185,6 @@ namespace InvoiceCaptureLib
 
             return response;
         }
-
 
         private bool checkURI(string value)
         {
