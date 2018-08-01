@@ -36,7 +36,7 @@ namespace InvoiceCaptureLib
         public Company RequestCompanyInfo()
         {
             var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
-            var json = _connectionFacade.CallAPI(requestUri, "GET", "");
+            var json = _connectionFacade.CallApi(requestUri, "GET", null);
             return _jsonFacade.JsonToModel<Company>(json);
         }
 
@@ -45,20 +45,8 @@ namespace InvoiceCaptureLib
             company.AssertHasMandatoryFields();
             var json = _jsonFacade.ModelToSendableJson(company);
             var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
-            var returnedJson = _connectionFacade.CallAPI(requestUri, "PUT", json);
+            var returnedJson = _connectionFacade.CallApi(requestUri, "PUT", json);
             return _jsonFacade.JsonToModel<Company>(returnedJson);
         }
-
-        private Uri BuildUri(string absoluteHttpUri)
-        {
-            Uri uriResult;
-            if (!(Uri.TryCreate(absoluteHttpUri, UriKind.Absolute, out uriResult) &&
-                  (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
-                throw new UriFormatException("Not a valid HTTP URI: " + absoluteHttpUri);
-
-            return uriResult;
-        }
-
-        
     }
 }

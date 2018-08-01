@@ -8,17 +8,23 @@ namespace InvoiceCaptureLib.Connection
     {
         private readonly Uri _baseUri;
 
-        internal HttpUriBuilder(string absoluteBaseUri)
+        internal HttpUriBuilder(string absoluteBaseUri) : this(new Uri(absoluteBaseUri))
         {
-            if (! Uri.TryCreate(absoluteBaseUri, UriKind.Absolute, out _baseUri) ||
-                  (_baseUri.Scheme != Uri.UriSchemeHttp && _baseUri.Scheme != Uri.UriSchemeHttps))
-                throw new UriFormatException("Not a valid HTTP URI: " + absoluteBaseUri);
         }
 
         internal HttpUriBuilder(Uri absoluteBaseUri)
         {
-            if (_baseUri.Scheme != Uri.UriSchemeHttp && _baseUri.Scheme != Uri.UriSchemeHttps)
-                throw new UriFormatException("Not a valid HTTP URI: " + absoluteBaseUri);
+            AssertValidHttpUri(absoluteBaseUri);
+            _baseUri = absoluteBaseUri;
+        }
+
+        internal static void AssertValidHttpUri(Uri uri)
+        {
+            if (!uri.IsAbsoluteUri)
+                throw new ArgumentException("Must be an absolute uri: " + uri.ToString());
+
+            if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
+                throw new ArgumentException("Not an HTTP Url: " + uri.ToString());
         }
 
         internal Uri BuildUri(params string[] fragments)

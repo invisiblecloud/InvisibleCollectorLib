@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using InvoiceCaptureLib.Exception;
 using Newtonsoft.Json;
 
 namespace InvoiceCaptureLib.Connection
@@ -15,8 +16,17 @@ namespace InvoiceCaptureLib.Connection
             _apiKey = apiKey;
         }
 
-        internal string CallAPI(Uri requestUri, string method, string jsonString)
+        /// <summary>
+        ///     Make an Api Request.
+        /// </summary>
+        /// <param name="requestUri"></param>
+        /// the absolute uri of the request
+        /// <param name="method"></param>
+        /// <param name="jsonString"></param>
+        /// <returns></returns>
+        internal string CallApi(Uri requestUri, string method, string jsonString)
         {
+            HttpUriBuilder.AssertValidHttpUri(requestUri);
             var requestHasBody = !string.IsNullOrEmpty(jsonString);
             var client = BuildWebClient(requestUri.Host, requestHasBody);
             try
@@ -24,13 +34,13 @@ namespace InvoiceCaptureLib.Connection
                 if (method == "POST" || method == "PUT" || method == "DELETE")
                     return client.UploadString(requestUri, method, jsonString);
                 if (method == "GET")
-                    return client.DownloadString("https://api.invisiblecollector.com/companies/");
+                    return client.DownloadString(requestUri);
                 throw new ArgumentException("Invalid HTTP method");
             }
             catch (WebException e)
             {
                 // TODO: improve error handling
-                // TODO: optimize connections
+                // TODO: optimize webclient connections
                 var responseStream = e.Response?.GetResponseStream();
                 if (responseStream != null)
                     using (var reader = new StreamReader(responseStream))
@@ -47,11 +57,11 @@ namespace InvoiceCaptureLib.Connection
         private WebClient BuildWebClient(string requestUriHost, bool requestHasBody)
         {
             var client = new WebClient();
-            //if (requestHasBody)
+            if (requestHasBody)
                 client.Headers.Set("Content-Type", "application/json");
-            //client.Headers.Set("Accept", "application/json");
-            client.Headers.Set("X-Api-Token", $"{_apiKey}");
-            //client.Headers.Set("Host", requestUriHost);
+            client.Headers.Set("Accept", "application/json");
+            client.Headers.Set("Authorization", $"Bearer {_apiKey}");
+            client.Headers.Set("Host", requestUriHost);
             client.Encoding = Encoding.UTF8;
             return client;
         }
