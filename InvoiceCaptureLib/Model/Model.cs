@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace InvoiceCaptureLib.Model
@@ -26,9 +25,9 @@ namespace InvoiceCaptureLib.Model
             }
         }
 
-        protected virtual IImmutableSet<string> MandatoryFields { get; }
+        protected virtual ISet<string> MandatoryFields { get; }
 
-        protected virtual IImmutableSet<string> SendableFields { get; }
+        protected virtual ISet<string> SendableFields { get; }
 
         // don't use this
         internal IDictionary<string, object> Fields

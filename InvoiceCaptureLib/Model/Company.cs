@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 
 namespace InvoiceCaptureLib.Model
 {
@@ -70,12 +69,11 @@ namespace InvoiceCaptureLib.Model
             set => this[ZipCodeName] = value;
         }
 
-        protected override IImmutableSet<string> MandatoryFields =>
-            new SortedSet<string> {NameName, VatNumberName}
-                .ToImmutableSortedSet();
+        protected override ISet<string> MandatoryFields =>
+            new SortedSet<string> {NameName, VatNumberName};
 
-        protected override IImmutableSet<string> SendableFields =>
-            new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName}.ToImmutableSortedSet();
+        protected override ISet<string> SendableFields =>
+            new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName};
 
         public string RoutableId => Id;
 
