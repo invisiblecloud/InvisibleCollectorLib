@@ -82,9 +82,14 @@ namespace InvoiceCaptureLib.Model
             return other is Company company && this == company;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public static bool operator ==(Company left, Company right)
         {
-            return (Model) left == (Model) right;
+            return left == (Model) right;
         }
 
         public static bool operator !=(Company left, Company right)

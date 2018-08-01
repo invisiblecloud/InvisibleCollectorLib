@@ -1,6 +1,6 @@
 ﻿namespace InvoiceCaptureLib.Connection
 {
-    internal class InvoiceCaptureJsonError
+    internal class IcResponseJsonError
     {
         private string code;
         private string message;
