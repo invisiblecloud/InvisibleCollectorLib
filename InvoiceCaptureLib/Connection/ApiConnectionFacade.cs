@@ -19,23 +19,31 @@ namespace InvoiceCaptureLib.Connection
         /// <summary>
         ///     Make an Api Request.
         /// </summary>
-        /// <param name="requestUri"></param>
+        /// <param name="requestUri">The absolute request Url</param>
         /// the absolute uri of the request
-        /// <param name="method"></param>
-        /// <param name="jsonString"></param>
+        /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
+        /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
         /// <returns></returns>
-        internal string CallApi(Uri requestUri, string method, string jsonString)
+        internal string CallApi(Uri requestUri, string method, string jsonString = null)
         {
             HttpUriBuilder.AssertValidHttpUri(requestUri);
             var requestHasBody = !string.IsNullOrEmpty(jsonString);
+            jsonString = requestHasBody ? jsonString : "";
             var client = BuildWebClient(requestUri.Host, requestHasBody);
+
             try
             {
-                if (method == "POST" || method == "PUT" || method == "DELETE")
-                    return client.UploadString(requestUri, method, jsonString);
-                if (method == "GET")
-                    return client.DownloadString(requestUri);
-                throw new ArgumentException("Invalid HTTP method");
+                switch (method)
+                {
+                    case "POST":
+                    case "PUT":
+                    case "DELETE":
+                        return client.UploadString(requestUri, method, jsonString);
+                    case "GET":
+                        return client.DownloadString(requestUri);
+                    default:
+                        throw new ArgumentException("Invalid HTTP method");
+                }
             }
             catch (WebException e)
             {
@@ -46,7 +54,7 @@ namespace InvoiceCaptureLib.Connection
                     using (var reader = new StreamReader(responseStream))
                     {
                         var errorString = reader.ReadToEnd();
-                        var error = JsonConvert.DeserializeObject<InvoiceCaptureError>(errorString);
+                        var error = JsonConvert.DeserializeObject<InvoiceCaptureJsonError>(errorString);
                         throw new InvoiceCaptureException(error.Code + " " + error.Message);
                     }
 
