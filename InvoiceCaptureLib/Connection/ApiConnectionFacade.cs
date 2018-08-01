@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using InvoiceCaptureLib.Exception;
 using Newtonsoft.Json;
 
@@ -24,7 +25,7 @@ namespace InvoiceCaptureLib.Connection
         /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
         /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
         /// <returns></returns>
-        internal string CallApi(Uri requestUri, string method, string jsonString = null)
+        internal async Task<string> CallApiAsync(Uri requestUri, string method, string jsonString = null)
         {
             HttpUriBuilder.AssertValidHttpUri(requestUri);
             var requestHasBody = !string.IsNullOrEmpty(jsonString);
@@ -38,9 +39,9 @@ namespace InvoiceCaptureLib.Connection
                     case "POST":
                     case "PUT":
                     case "DELETE":
-                        return client.UploadString(requestUri, method, jsonString);
+                        return await client.UploadStringTaskAsync(requestUri, method, jsonString);
                     case "GET":
-                        return client.DownloadString(requestUri);
+                        return await client.DownloadStringTaskAsync(requestUri);
                     default:
                         throw new ArgumentException("Invalid HTTP method");
                 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using InvoiceCaptureLib.Connection;
 using InvoiceCaptureLib.Model;
 using InvoiceCaptureLib.Model.Json;
@@ -33,19 +34,19 @@ namespace InvoiceCaptureLib
             _connectionFacade = connectionFacade;
         }
 
-        public Company RequestCompanyInfo()
+        public async Task<Company> RequestCompanyInfoAsync()
         {
             var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
-            var json = _connectionFacade.CallApi(requestUri, "GET", null);
+            var json = await _connectionFacade.CallApiAsync(requestUri, "GET", null);
             return _jsonFacade.JsonToModel<Company>(json);
         }
 
-        public Company UpdateCompanyInfo(Company company)
+        public async Task<Company> UpdateCompanyInfoAsync(Company company)
         {
             company.AssertHasMandatoryFields();
             var json = _jsonFacade.ModelToSendableJson(company);
             var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
-            var returnedJson = _connectionFacade.CallApi(requestUri, "PUT", json);
+            var returnedJson = await _connectionFacade.CallApiAsync(requestUri, "PUT", json);
             return _jsonFacade.JsonToModel<Company>(returnedJson);
         }
     }
