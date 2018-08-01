@@ -1,78 +1,100 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using System.Collections.Generic;
 
 namespace InvoiceCaptureLib.Model
 {
-    public class Company
+    public class Company : Model, IRoutableModel
     {
-        private string address;
-        private string city;
-        private string country;
-        private string gid;
-        private string name;
-        private bool notificationsEnabled;
-        private string vatNumber;
-        private string zipCode;
-
-        public string Name
-        {
-            get => name;
-
-            set => name = value;
-        }
-
-        public string VatNumber
-        {
-            get => vatNumber;
-
-            set => vatNumber = value;
-        }
+        private const string AddressName = "address";
+        private const string CityName = "city";
+        private const string CountryName = "country";
+        private const string IdName = "gid";
+        private const string NameName = "name";
+        private const string NotificationsName = "notificationsEnabled";
+        private const string VatNumberName = "vatNumber";
+        private const string ZipCodeName = "zipCode";
 
         public string Address
         {
-            get => address;
+            get => GetField<string>(AddressName);
 
-            set => address = value;
-        }
-
-        public string ZipCode
-        {
-            get => zipCode;
-
-            set => zipCode = value;
+            set => this[AddressName] = value;
         }
 
         public string City
         {
-            get => city;
+            get => GetField<string>(CityName);
 
-            set => city = value;
+            set => this[CityName] = value;
         }
 
         public string Country
         {
-            get => country;
+            get => GetField<string>(CountryName);
 
-            set => country = value;
+            set => this[CountryName] = value;
         }
 
-        public string Gid
+        public string Id
         {
-            get => gid;
+            get => GetField<string>(IdName);
 
-            set => gid = value;
+            set => this[IdName] = value;
         }
 
-        public bool NotificationsEnabled
+        public string Name
         {
-            get => notificationsEnabled;
-            set => notificationsEnabled = value;
+            get => GetField<string>(NameName);
+
+            set => this[NameName] = value;
         }
 
-        public override string ToString()
+        public bool? NotificationsEnabled
         {
-            return JsonConvert.SerializeObject(this,
-                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+            get => GetField<bool?>(NotificationsName);
+
+            set => this[NotificationsName] = value;
+        }
+
+        public string VatNumber
+        {
+            get => GetField<string>(VatNumberName);
+
+            set => this[VatNumberName] = value;
+        }
+
+        public string ZipCode
+        {
+            get => GetField<string>(ZipCodeName);
+
+            set => this[ZipCodeName] = value;
+        }
+
+        protected override ISet<string> MandatoryFields =>
+            new SortedSet<string> {NameName, VatNumberName};
+
+        protected override ISet<string> SendableFields =>
+            new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName};
+
+        public string RoutableId => Id;
+
+        public override bool Equals(object other)
+        {
+            return other is Company company && this == company;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(Company left, Company right)
+        {
+            return left == (Model) right;
+        }
+
+        public static bool operator !=(Company left, Company right)
+        {
+            return !(left == right);
         }
     }
 }
