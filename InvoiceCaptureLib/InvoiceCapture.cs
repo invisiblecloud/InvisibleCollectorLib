@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Net;
-using System.Text;
+using InvoiceCaptureLib.Connection;
 using InvoiceCaptureLib.Model;
 using InvoiceCaptureLib.Model.Json;
-using Newtonsoft.Json;
 
 namespace InvoiceCaptureLib
 {
@@ -14,28 +11,32 @@ namespace InvoiceCaptureLib
         private const string CustomerEndPoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
-        private readonly string _apiKey;
         private readonly JsonModelConverterFacade _jsonFacade;
-        private readonly Uri _remoteUri;
+        private readonly ApiConnectionFacade _connectionFacade;
+        private readonly HttpUriBuilder _uriBuilder;
 
 
-        public InvoiceCapture(string apiKey, string remoteUri = ProdutionUri) : this(apiKey, remoteUri,
-            new JsonModelConverterFacade())
+        public InvoiceCapture(string apiKey, string remoteUri = ProdutionUri) : this(new HttpUriBuilder(remoteUri), new ApiConnectionFacade(apiKey), new JsonModelConverterFacade())
         {
         }
 
-        internal InvoiceCapture(string apiKey, string remoteUri, JsonModelConverterFacade jsonFacade)
+        public InvoiceCapture(string apiKey, Uri remoteUri) : this(new HttpUriBuilder(remoteUri), new ApiConnectionFacade(apiKey), new JsonModelConverterFacade())
         {
-            this._apiKey = apiKey;
-            _jsonFacade = jsonFacade;
-            _remoteUri = buildUri(remoteUri);
+        }
 
+        internal InvoiceCapture(HttpUriBuilder uriBuilder,
+            ApiConnectionFacade connectionFacade,
+            JsonModelConverterFacade jsonFacade)
+        {
+            _jsonFacade = jsonFacade;
+            _uriBuilder = uriBuilder;
+            _connectionFacade = connectionFacade;
         }
 
         public Company RequestCompanyInfo()
         {
-            var requestUri = buildUri(_remoteUri, CompanyEndPoint);
-            var json = callAPI(requestUri, "", "GET");
+            var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
+            var json = _connectionFacade.CallAPI(requestUri, "GET", "");
             return _jsonFacade.JsonToModel<Company>(json);
         }
 
@@ -43,66 +44,21 @@ namespace InvoiceCaptureLib
         {
             company.AssertHasMandatoryFields();
             var json = _jsonFacade.ModelToSendableJson(company);
-            var requestUri = buildUri(_remoteUri, CompanyEndPoint);
-            var returnedJson = callAPI(requestUri, json, "PUT");
+            var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
+            var returnedJson = _connectionFacade.CallAPI(requestUri, "PUT", json);
             return _jsonFacade.JsonToModel<Company>(returnedJson);
         }
 
-
-
-        private string callAPI(Uri endpoint, string jsonString, string method)
-        {
-            var response = "";
-            var client = BuildWebClient();
-            try
-            {
-                if (method == "POST" || method == "PUT" || method == "DELETE")
-                    response = client.UploadString(endpoint, method, jsonString);
-                else if (method == "GET")
-                    response = client.DownloadString(endpoint);
-            }
-            catch (WebException e)
-            {
-                var responseStream = e.Response?.GetResponseStream();
-                if (responseStream != null)
-                    using (var reader = new StreamReader(responseStream))
-                    {
-                        response = reader.ReadToEnd();
-                        var error = JsonConvert.DeserializeObject<InvoiceCaptureError>(response);
-                        throw new InvoiceCaptureException(error.Code + " " + error.Message);
-                    }
-            }
-
-            return response;
-        }
-
-        private Uri buildUri(string uri)
+        private Uri BuildUri(string absoluteHttpUri)
         {
             Uri uriResult;
-            if (! (Uri.TryCreate(uri, UriKind.Absolute, out uriResult) &&
-                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
-            {
-                throw new UriFormatException("Not a valid HTTP URI: " + uri);
-            }
+            if (!(Uri.TryCreate(absoluteHttpUri, UriKind.Absolute, out uriResult) &&
+                  (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
+                throw new UriFormatException("Not a valid HTTP URI: " + absoluteHttpUri);
 
             return uriResult;
         }
 
-        private Uri buildUri(Uri baseUri, params string[] fragments)
-        {
-            var relativePath = string.Join("/", fragments);
-            return new Uri(baseUri, relativePath);
-        }
-
-        private WebClient BuildWebClient()
-        {
-            ServicePointManager.ServerCertificateValidationCallback =
-                (sender, certificate, chain, sslPolicyErrors) => true;
-            var client = new WebClient();
-            client.Headers.Set("Content-Type", "application/json");
-            client.Headers.Set("X-Api-Token", this._apiKey);
-            client.Encoding = Encoding.UTF8;
-            return client;
-        }
+        
     }
 }
