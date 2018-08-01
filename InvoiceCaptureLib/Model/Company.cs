@@ -56,13 +56,6 @@ namespace InvoiceCaptureLib.Model
             set => this[NotificationsName] = value;
         }
 
-        protected override IImmutableSet<string> SendableFields =>
-            new SortedSet<string>() {NameName, VatNumberName, AddressName, ZipCodeName, CityName}.ToImmutableSortedSet();
-
-        protected override IImmutableSet<string> MandatoryFields =>
-            new SortedSet<string> { NameName, VatNumberName}
-                .ToImmutableSortedSet();
-
         public string VatNumber
         {
             get => GetField<string>(VatNumberName);
@@ -77,6 +70,28 @@ namespace InvoiceCaptureLib.Model
             set => this[ZipCodeName] = value;
         }
 
+        protected override IImmutableSet<string> MandatoryFields =>
+            new SortedSet<string> {NameName, VatNumberName}
+                .ToImmutableSortedSet();
+
+        protected override IImmutableSet<string> SendableFields =>
+            new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName}.ToImmutableSortedSet();
+
         public string RoutableId => Id;
+
+        public override bool Equals(object other)
+        {
+            return other is Company company && this == company;
+        }
+
+        public static bool operator ==(Company left, Company right)
+        {
+            return (Model) left == (Model) right;
+        }
+
+        public static bool operator !=(Company left, Company right)
+        {
+            return !(left == right);
+        }
     }
 }

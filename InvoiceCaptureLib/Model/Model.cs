@@ -50,6 +50,38 @@ namespace InvoiceCaptureLib.Model
                 }
         }
 
+        public override bool Equals(object other)
+        {
+            return other is Model model && this == model;
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = 0;
+
+            foreach (var entry in _fields)
+                hash ^= entry.Key.GetHashCode() ^ entry.Value.GetHashCode();
+
+            return hash;
+        }
+
+        public static bool operator ==(Model left, Model right)
+        {
+            // both null.
+            if (left is null && right is null)
+                return true;
+            if (ReferenceEquals(left, right))
+                return true;
+            if (left == null || right == null || left._fields == null || right._fields == null)
+                return false;
+            return left._fields.Count == right._fields.Count && !left._fields.Except(right._fields).Any();
+        }
+
+        public static bool operator !=(Model left, Model right)
+        {
+            return !(left == right);
+        }
+
         public override string ToString()
         {
             return
@@ -60,6 +92,5 @@ namespace InvoiceCaptureLib.Model
         {
             return (T) _fields[key];
         }
-
     }
 }
