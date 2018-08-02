@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InvoiceCaptureLib.Utils;
 
 namespace InvoiceCaptureLib.Model
 {
@@ -66,14 +67,8 @@ namespace InvoiceCaptureLib.Model
 
         public static bool operator ==(Model left, Model right)
         {
-            // both null.
-            if (left is null && right is null)
-                return true;
-            if (ReferenceEquals(left, right))
-                return true;
-            if (left is null || right is null || left._fields is null || right._fields is null)
-                return false;
-            return left._fields.Count == right._fields.Count && !left._fields.Except(right._fields).Any();
+            return IcUtils.ReferenceNullableEquals(left, right) ?? 
+                   IcUtils.EqualsDict(left._fields, right._fields);
         }
 
         public static bool operator !=(Model left, Model right)
@@ -83,7 +78,7 @@ namespace InvoiceCaptureLib.Model
 
         public override string ToString()
         {
-            return Utils.Utils.StringifyDictionary(_fields);
+            return IcUtils.StringifyDictionary(_fields);
         }
 
         protected T GetField<T>(string key)
