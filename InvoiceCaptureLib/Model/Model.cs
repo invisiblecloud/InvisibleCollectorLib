@@ -25,11 +25,6 @@ namespace InvoiceCaptureLib.Model
             }
         }
 
-        protected void UnsetField(string fieldName)
-        {
-            this._fields.Remove(fieldName);
-        }
-
         protected virtual ISet<string> MandatoryFields { get; }
 
         protected virtual ISet<string> SendableFields { get; }
@@ -88,12 +83,17 @@ namespace InvoiceCaptureLib.Model
 
         public override string ToString()
         {
-            return Utils.Utils.StringifyDictionary(this._fields);
+            return Utils.Utils.StringifyDictionary(_fields);
         }
 
         protected T GetField<T>(string key)
         {
             return (T) this[key];
+        }
+
+        protected void UnsetField(string fieldName)
+        {
+            _fields.Remove(fieldName);
         }
     }
 }

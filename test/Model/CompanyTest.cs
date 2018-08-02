@@ -7,47 +7,46 @@ namespace test.Model
     public class CompanyTest
     {
         [Test]
-        public void Properties_savesFieldsCorrectly()
+        public void AssertHasMandatoryFields_HasAllFields()
         {
-            const string CompanyName = "hello";
-            const string Id = null;
-            bool? notifications = false;
+            var company = new Company
+            {
+                Name = "a name",
+                VatNumber = "123"
+            };
 
-            var company = new Company();
-            company.Name = CompanyName;
-            company.Id = Id;
-            company.NotificationsEnabled = notifications;
-            Assert.AreEqual(company.Name, CompanyName);
-            Assert.AreEqual(company.Id, Id);
-            Assert.AreEqual(company.NotificationsEnabled, notifications);
+            company.AssertHasMandatoryFields();
         }
 
         [Test]
-        public void UnsetProperties_correctlyUnset()
+        public void AssertHasMandatoryFields_MissingFields()
         {
-            const string CompanyName = "hello";
-            const string Id = null;
-            bool? notifications = false;
+            var company = new Company
+            {
+                Name = "a name"
+            };
 
-            var company = new Company();
-            company.Name = CompanyName;
-            company.Id = Id;
-            company.NotificationsEnabled = notifications;
-
-            company.UnsetName();
-            company.UnsetId();
-            company.UnsetNotifications();
-
-            Assert.IsNull(company.Name);
-            Assert.IsNull(company.Name);
-            Assert.IsNull(company.NotificationsEnabled);
+            Assert.That(company.AssertHasMandatoryFields, Throws.Exception);
         }
 
         [Test]
-        public void Equals_Identity()
+        public void EqualityOperator_EqualCompany()
         {
-            var company = new Company();
-            Assert.True(company.Equals(company));
+            const string Name = "a name";
+            const bool Notification = false;
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+
+            Assert.True(company == otherCompany);
         }
 
         [Test]
@@ -56,13 +55,6 @@ namespace test.Model
             var company = new Company();
             var other = "other";
             Assert.False(company.Equals(other));
-        }
-
-        [Test]
-        public void Equals_Null()
-        {
-            var company = new Company();
-            Assert.False(company.Equals(null));
         }
 
         [Test]
@@ -83,6 +75,20 @@ namespace test.Model
             };
 
             Assert.True(company.Equals(otherCompany));
+        }
+
+        [Test]
+        public void Equals_Identity()
+        {
+            var company = new Company();
+            Assert.True(company.Equals(company));
+        }
+
+        [Test]
+        public void Equals_Null()
+        {
+            var company = new Company();
+            Assert.False(company.Equals(null));
         }
 
         [Test]
@@ -120,45 +126,6 @@ namespace test.Model
             };
 
             Assert.False(company.Equals(otherCompany));
-        }
-
-        [Test]
-        public void EqualityOperator_EqualCompany()
-        {
-            const string Name = "a name";
-            const bool Notification = false;
-
-            var company = new Company
-            {
-                Name = Name,
-                NotificationsEnabled = Notification
-            };
-            var otherCompany = new Company
-            {
-                Name = Name,
-                NotificationsEnabled = Notification
-            };
-
-            Assert.True(company == otherCompany);
-        }
-
-        [Test]
-        public void InequalityOperator_UnequalCompany()
-        {
-            const string Name = "a name";
-
-            var company = new Company
-            {
-                Name = Name,
-                NotificationsEnabled = false
-            };
-            var otherCompany = new Company
-            {
-                Name = Name,
-                NotificationsEnabled = true
-            };
-
-            Assert.True(company != otherCompany);
         }
 
         [Test]
@@ -216,6 +183,62 @@ namespace test.Model
             };
 
             Assert.AreNotEqual(company.GetHashCode(), otherCompany.GetHashCode());
+        }
+
+        [Test]
+        public void InequalityOperator_UnequalCompany()
+        {
+            const string Name = "a name";
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = false
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = true
+            };
+
+            Assert.True(company != otherCompany);
+        }
+
+        [Test]
+        public void Properties_savesFieldsCorrectly()
+        {
+            const string CompanyName = "hello";
+            const string Id = null;
+            bool? notifications = false;
+
+            var company = new Company();
+            company.Name = CompanyName;
+            company.Id = Id;
+            company.NotificationsEnabled = notifications;
+            Assert.AreEqual(company.Name, CompanyName);
+            Assert.AreEqual(company.Id, Id);
+            Assert.AreEqual(company.NotificationsEnabled, notifications);
+        }
+
+        [Test]
+        public void UnsetProperties_correctlyUnset()
+        {
+            const string CompanyName = "hello";
+            const string Id = null;
+            bool? notifications = false;
+
+            var company = new Company();
+            company.Name = CompanyName;
+            company.Id = Id;
+            company.NotificationsEnabled = notifications;
+
+            company.UnsetName();
+            company.UnsetId();
+            company.UnsetNotifications();
+
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.NotificationsEnabled);
         }
     }
 }
