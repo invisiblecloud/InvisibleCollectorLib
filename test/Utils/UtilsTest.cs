@@ -15,7 +15,7 @@ namespace test.Utils
             dictionary["test2"] = (double) 0.9; 
 
             string result = InvoiceCaptureLib.Utils.IcUtils.StringifyDictionary(dictionary);
-            TestUtils.AssertStringContainsValues(result, "12", "test", "test2", "9");
+            TestingUtils.AssertStringContainsValues(result, "12", "test", "test2", "9");
         }
 
         [Test]

@@ -36,7 +36,7 @@ namespace InvoiceCaptureLib.Model
             set => _fields = new Dictionary<string, object>(value);
         }
 
-        internal IDictionary<string, object> SendableDictionary => _fields
+        internal virtual IDictionary<string, object> SendableDictionary => _fields
             .Where(pair => SendableFields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
 
