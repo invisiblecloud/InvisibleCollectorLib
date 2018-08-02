@@ -96,5 +96,45 @@ namespace InvoiceCaptureLib.Model
         {
             return !(left == right);
         }
+
+        public void UnsetAddress()
+        {
+            UnsetField(AddressName);
+        }
+
+        public void UnsetCity()
+        {
+            UnsetField(CityName);
+        }
+
+        public void UnsetCountry()
+        {
+            UnsetField(CountryName);
+        }
+
+        public void UnsetId()
+        {
+            UnsetField(IdName);
+        }
+
+        public void UnsetName()
+        {
+            UnsetField(NameName);
+        }
+
+        public void UnsetNotifications()
+        {
+            UnsetField(NotificationsName);
+        }
+
+        public void UnsetVatNumber()
+        {
+            UnsetField(VatNumberName);
+        }
+
+        public void UnsetZipCode()
+        {
+            UnsetField(ZipCodeName);
+        }
     }
 }
