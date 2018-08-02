@@ -76,7 +76,7 @@ namespace InvoiceCaptureLib.Model
                 return true;
             if (ReferenceEquals(left, right))
                 return true;
-            if (left == null || right == null || left._fields == null || right._fields == null)
+            if (left is null || right is null || left._fields is null || right._fields is null)
                 return false;
             return left._fields.Count == right._fields.Count && !left._fields.Except(right._fields).Any();
         }

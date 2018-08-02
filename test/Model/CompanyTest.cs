@@ -41,5 +41,181 @@ namespace InvoiceCaptureLib.Model
             Assert.IsNull(company.Name);
             Assert.IsNull(company.NotificationsEnabled);
         }
+
+        [Test()]
+        public void Equals_Identity()
+        {
+            Company company = new Company();
+            Assert.True(company.Equals(company));
+        }
+
+        [Test()]
+        public void Equals_DifferentType()
+        {
+            Company company = new Company();
+            string other = "other";
+            Assert.False(company.Equals(other));
+        }
+
+        [Test()]
+        public void Equals_Null()
+        {
+            Company company = new Company();
+            Assert.False(company.Equals(null));
+        }
+
+        [Test()]
+        public void Equals_EqualCompany()
+        {
+            const string Name = "a name";
+            const bool Notification = false;
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+
+            Assert.True(company.Equals(otherCompany));
+        }
+
+        [Test()]
+        public void Equals_UnequalCompany()
+        {
+            const string Name = "a name";
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = false,
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = true,
+            };
+
+            Assert.False(company.Equals(otherCompany));
+        }
+
+        [Test()]
+        public void Equals_UnequalCompanyMoreFields()
+        {
+            const string Name = "a name";
+
+            var company = new Company
+            {
+                Name = Name,
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = true,
+            };
+
+            Assert.False(company.Equals(otherCompany));
+        }
+
+        [Test()]
+        public void EqualityOperator_EqualCompany()
+        {
+            const string Name = "a name";
+            const bool Notification = false;
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+
+            Assert.True(company == otherCompany);
+        }
+
+        [Test()]
+        public void InequalityOperator_UnequalCompany()
+        {
+            const string Name = "a name";
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = false,
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = true,
+            };
+
+            Assert.True(company != otherCompany);
+        }
+
+        [Test()]
+        public void GetHashCode_EqualCompany()
+        {
+            const string Name = "a name";
+            const bool Notification = false;
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = Notification
+            };
+
+            Assert.AreEqual(company.GetHashCode(), otherCompany.GetHashCode());
+        }
+
+        [Test()]
+        public void GetHashCode_UnequalCompany()
+        {
+            const string Name = "a name";
+
+            var company = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = false,
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = true,
+            };
+
+            Assert.AreNotEqual(company.GetHashCode(), otherCompany.GetHashCode());
+        }
+
+        [Test()]
+        public void GetHashCode_UnequalCompanyMoreFields()
+        {
+            const string Name = "a name";
+
+            var company = new Company
+            {
+                Name = Name,
+            };
+            var otherCompany = new Company
+            {
+                Name = Name,
+                NotificationsEnabled = true,
+            };
+
+            Assert.AreNotEqual(company.GetHashCode(), otherCompany.GetHashCode());
+        }
+
     }
 }
