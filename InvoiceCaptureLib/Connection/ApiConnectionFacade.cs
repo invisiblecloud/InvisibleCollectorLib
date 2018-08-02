@@ -76,7 +76,7 @@ namespace InvoiceCaptureLib.Connection
 
             var jsonObject = _jsonParser(jsonStream);
             if (!jsonObject.ContainsKey(messageName) || !jsonObject.ContainsKey(codeName))
-                throw new IcException($"Invalid json error response received: {Utils.StringifyDictionary(jsonObject)}");
+                throw new IcException($"Invalid json error response received: {Utils.Utils.StringifyDictionary(jsonObject)}");
             else if (jsonObject.ContainsKey(idName))
                 return new IcModelConflictException(jsonObject[messageName], jsonObject[idName]);
             else 

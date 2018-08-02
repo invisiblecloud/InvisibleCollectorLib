@@ -88,7 +88,7 @@ namespace InvoiceCaptureLib.Model
 
         public override string ToString()
         {
-            return Utils.StringifyDictionary(this._fields);
+            return Utils.Utils.StringifyDictionary(this._fields);
         }
 
         protected T GetField<T>(string key)

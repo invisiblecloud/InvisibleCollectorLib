@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using InvoiceCaptureLib.Model;
+using NUnit.Framework;
 
-namespace InvoiceCaptureLib.Model
+namespace test.Model
 {
     [TestFixture]
     public class CompanyTest

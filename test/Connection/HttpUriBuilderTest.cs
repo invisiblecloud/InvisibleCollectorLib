@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace test.Connection
 {
+    [TestFixture]
     class HttpUriBuilderTest
     {
         [Test]
