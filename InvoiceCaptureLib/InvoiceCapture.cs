@@ -53,5 +53,16 @@ namespace InvoiceCaptureLib
             var returnedJson = await _apiFacade.CallApiAsync(requestUri, "PUT", json);
             return _jsonFacade.JsonToModel<Company>(returnedJson);
         }
+
+        public async Task<Company> SetCompanyNotifications(bool bEnableNotifications)
+        {
+            const string EnableNotifications = "enableNotifications";
+            const string DisableNotifications = "disableNotifications";
+
+            var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
+            var requestUri = _uriBuilder.BuildUri(CompanyEndPoint, endpoint);
+            var json = await _apiFacade.CallApiAsync(requestUri, "PUT", null);
+            return _jsonFacade.JsonToModel<Company>(json);
+        }
     }
 }

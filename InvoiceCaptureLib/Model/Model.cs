@@ -83,8 +83,7 @@ namespace InvoiceCaptureLib.Model
 
         public override string ToString()
         {
-            return
-                $"{{ {string.Join(", ", _fields.Select(pair => pair.Key + "=" + pair.Value.ToString()).ToArray())} }}";
+            return Utils.StringifyDictionary(this._fields);
         }
 
         protected T GetField<T>(string key)

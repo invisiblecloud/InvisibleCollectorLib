@@ -69,13 +69,18 @@ namespace InvoiceCaptureLib.Connection
 
         private IcException BuildException(Stream jsonStream)
         {
+            // json key names
+            const string messageName = "message";
+            const string codeName = "code";
+            const string idName = "gid";
+
             var jsonObject = _jsonParser(jsonStream);
-            if (!jsonObject.ContainsKey("message") || !jsonObject.ContainsKey("code"))
-                throw new IcException($"Invalid json error response received: {jsonObject.ToString()}");
-            else if (jsonObject.ContainsKey("gid"))
-                return new IcModelConflictException(jsonObject["message"], jsonObject["gid"]);
+            if (!jsonObject.ContainsKey(messageName) || !jsonObject.ContainsKey(codeName))
+                throw new IcException($"Invalid json error response received: {Utils.StringifyDictionary(jsonObject)}");
+            else if (jsonObject.ContainsKey(idName))
+                return new IcModelConflictException(jsonObject[messageName], jsonObject[idName]);
             else 
-                return new IcException($"{jsonObject["message"]} (HTTP Code: {jsonObject["code"]})");
+                return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
         }
 
         private WebClient BuildWebClient(string requestUriHost, bool requestHasBody)
