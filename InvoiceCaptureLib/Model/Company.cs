@@ -89,7 +89,7 @@ namespace InvoiceCaptureLib.Model
 
         public static bool operator ==(Company left, Company right)
         {
-            return (Model) left == (Model) right;
+            return left == (Model) right;
         }
 
         public static bool operator !=(Company left, Company right)

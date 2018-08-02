@@ -2,17 +2,17 @@
 
 namespace InvoiceCaptureLib.Model
 {
-    [TestFixture()]
+    [TestFixture]
     public class CompanyTest
     {
-        [Test()]
+        [Test]
         public void Properties_savesFieldsCorrectly()
         {
             const string CompanyName = "hello";
             const string Id = null;
             bool? notifications = false;
 
-            Company company = new Company();
+            var company = new Company();
             company.Name = CompanyName;
             company.Id = Id;
             company.NotificationsEnabled = notifications;
@@ -21,14 +21,14 @@ namespace InvoiceCaptureLib.Model
             Assert.AreEqual(company.NotificationsEnabled, notifications);
         }
 
-        [Test()]
+        [Test]
         public void UnsetProperties_correctlyUnset()
         {
             const string CompanyName = "hello";
             const string Id = null;
             bool? notifications = false;
 
-            Company company = new Company();
+            var company = new Company();
             company.Name = CompanyName;
             company.Id = Id;
             company.NotificationsEnabled = notifications;
@@ -42,29 +42,29 @@ namespace InvoiceCaptureLib.Model
             Assert.IsNull(company.NotificationsEnabled);
         }
 
-        [Test()]
+        [Test]
         public void Equals_Identity()
         {
-            Company company = new Company();
+            var company = new Company();
             Assert.True(company.Equals(company));
         }
 
-        [Test()]
+        [Test]
         public void Equals_DifferentType()
         {
-            Company company = new Company();
-            string other = "other";
+            var company = new Company();
+            var other = "other";
             Assert.False(company.Equals(other));
         }
 
-        [Test()]
+        [Test]
         public void Equals_Null()
         {
-            Company company = new Company();
+            var company = new Company();
             Assert.False(company.Equals(null));
         }
 
-        [Test()]
+        [Test]
         public void Equals_EqualCompany()
         {
             const string Name = "a name";
@@ -84,7 +84,7 @@ namespace InvoiceCaptureLib.Model
             Assert.True(company.Equals(otherCompany));
         }
 
-        [Test()]
+        [Test]
         public void Equals_UnequalCompany()
         {
             const string Name = "a name";
@@ -92,36 +92,36 @@ namespace InvoiceCaptureLib.Model
             var company = new Company
             {
                 Name = Name,
-                NotificationsEnabled = false,
+                NotificationsEnabled = false
             };
             var otherCompany = new Company
             {
                 Name = Name,
-                NotificationsEnabled = true,
+                NotificationsEnabled = true
             };
 
             Assert.False(company.Equals(otherCompany));
         }
 
-        [Test()]
+        [Test]
         public void Equals_UnequalCompanyMoreFields()
         {
             const string Name = "a name";
 
             var company = new Company
             {
-                Name = Name,
+                Name = Name
             };
             var otherCompany = new Company
             {
                 Name = Name,
-                NotificationsEnabled = true,
+                NotificationsEnabled = true
             };
 
             Assert.False(company.Equals(otherCompany));
         }
 
-        [Test()]
+        [Test]
         public void EqualityOperator_EqualCompany()
         {
             const string Name = "a name";
@@ -141,7 +141,7 @@ namespace InvoiceCaptureLib.Model
             Assert.True(company == otherCompany);
         }
 
-        [Test()]
+        [Test]
         public void InequalityOperator_UnequalCompany()
         {
             const string Name = "a name";
@@ -149,18 +149,18 @@ namespace InvoiceCaptureLib.Model
             var company = new Company
             {
                 Name = Name,
-                NotificationsEnabled = false,
+                NotificationsEnabled = false
             };
             var otherCompany = new Company
             {
                 Name = Name,
-                NotificationsEnabled = true,
+                NotificationsEnabled = true
             };
 
             Assert.True(company != otherCompany);
         }
 
-        [Test()]
+        [Test]
         public void GetHashCode_EqualCompany()
         {
             const string Name = "a name";
@@ -180,7 +180,7 @@ namespace InvoiceCaptureLib.Model
             Assert.AreEqual(company.GetHashCode(), otherCompany.GetHashCode());
         }
 
-        [Test()]
+        [Test]
         public void GetHashCode_UnequalCompany()
         {
             const string Name = "a name";
@@ -188,34 +188,33 @@ namespace InvoiceCaptureLib.Model
             var company = new Company
             {
                 Name = Name,
-                NotificationsEnabled = false,
+                NotificationsEnabled = false
             };
             var otherCompany = new Company
             {
                 Name = Name,
-                NotificationsEnabled = true,
+                NotificationsEnabled = true
             };
 
             Assert.AreNotEqual(company.GetHashCode(), otherCompany.GetHashCode());
         }
 
-        [Test()]
+        [Test]
         public void GetHashCode_UnequalCompanyMoreFields()
         {
             const string Name = "a name";
 
             var company = new Company
             {
-                Name = Name,
+                Name = Name
             };
             var otherCompany = new Company
             {
                 Name = Name,
-                NotificationsEnabled = true,
+                NotificationsEnabled = true
             };
 
             Assert.AreNotEqual(company.GetHashCode(), otherCompany.GetHashCode());
         }
-
     }
 }
