@@ -50,7 +50,7 @@ namespace InvoiceCaptureLib.Json
             }
         }
 
-        private IDictionary<string, object> JsonToDictionary(string json)
+        internal IDictionary<string, object> JsonToDictionary(string json)
         {
             try
             { 

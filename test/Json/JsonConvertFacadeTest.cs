@@ -4,6 +4,7 @@ using System.Text;
 using InvoiceCaptureLib.Exception;
 using InvoiceCaptureLib.Json;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using test.Utils;
 
 namespace test.Json
@@ -70,9 +71,15 @@ namespace test.Json
             TestingUtils.AssertStringContainsValues(returnedJson, Key1, DateString);
         }
 
-        
-            // TODO, check date is parsed correctly
-        
+
+        [Test]
+        public void JsonToDictionary_Date()
+        {
+            var json = TestingUtils.BuildJson((Key1, DateString));
+            var dict = new JsonConvertFacade().JsonToDictionary(json);
+            TestingUtils.AssertDictionaryContainsItems(dict, (Key1, MinimalDate));
+            
+        }
 
         [Test]
         public void ModelToSendableJson_DateExtraInfo()
