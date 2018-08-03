@@ -92,12 +92,11 @@ namespace InvoiceCaptureLib.Connection
 
             var jsonObject = _jsonParser(jsonStream);
             if (!jsonObject.ContainsKey(messageName) || !jsonObject.ContainsKey(codeName))
-                throw new IcException($"Invalid json error response received: {Utils.IcUtils.StringifyDictionary(jsonObject)}");
+                throw new IcException($"Invalid json error response received: {jsonObject.StringifyDictionary()}");
 
-            string conflictingId = null;
             // will check for the various ways a model ID can be named.
             // First accepted key will also initialize the previous local
-            var containsId = jsonObject.TryGetValue(gidName, out conflictingId) || 
+            var containsId = jsonObject.TryGetValue(gidName, out var conflictingId) || 
                              jsonObject.TryGetValue(idName, out conflictingId); 
             if (containsId)
                 return new IcModelConflictException(jsonObject[messageName], conflictingId);

@@ -20,8 +20,7 @@ namespace InvoiceCaptureLib.Model
 
             private get
             {
-                object value = null;
-                _fields.TryGetValue(key, out value);
+                _fields.TryGetValue(key, out var value);
                 return value;
             }
         }
@@ -68,7 +67,7 @@ namespace InvoiceCaptureLib.Model
         public static bool operator ==(Model left, Model right)
         {
             return IcUtils.ReferenceNullableEquals(left, right) ?? 
-                   IcUtils.EqualsDict(left._fields, right._fields);
+                   left._fields.EqualsDict(right._fields);
         }
 
         public static bool operator !=(Model left, Model right)
@@ -78,7 +77,7 @@ namespace InvoiceCaptureLib.Model
 
         public override string ToString()
         {
-            return IcUtils.StringifyDictionary(_fields);
+            return _fields.StringifyDictionary();
         }
 
         protected T GetField<T>(string key)
