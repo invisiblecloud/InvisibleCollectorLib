@@ -14,14 +14,8 @@ using test.Utils;
 namespace test.Connection
 {
     [TestFixture]
-    internal class ApiConnectionFacadeTest
+    internal class ApiConnectionFacadeTest : MockServerTesterBase
     {
-        [TearDown]
-        public void ResetServer()
-        {
-            _mockServer.Reset();
-        }
-
         private const string TestApiKey = "12345";
         private const string DefaultErorMessage = "an error occured";
         private const string DefaultErrorCode = "400";
@@ -52,20 +46,6 @@ namespace test.Connection
             BodiedHeaders.Except(BodylessHeaders).ToImmutableList();
 
         private const string TestPath = "umm/123";
-
-        private MockServerJsonFacade _mockServer;
-
-        [OneTimeSetUp]
-        public void StartServer()
-        {
-            _mockServer = new MockServerJsonFacade();
-        }
-
-        [OneTimeTearDown]
-        public void StopServer()
-        {
-            _mockServer.Stop();
-        }
 
         private ApiConnectionFacade BuildApiFacade(IDictionary<string, string> errorJsonObject)
         {

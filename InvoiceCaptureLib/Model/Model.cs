@@ -66,7 +66,7 @@ namespace InvoiceCaptureLib.Model
 
         public static bool operator ==(Model left, Model right)
         {
-            return IcUtils.ReferenceNullableEquals(left, right) ?? 
+            return IcUtils.ReferenceNullableEquals(left, right) ??
                    left._fields.EqualsDict(right._fields);
         }
 
