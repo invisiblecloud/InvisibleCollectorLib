@@ -30,7 +30,7 @@ namespace InvoiceCaptureLib.Model
 
         protected virtual ISet<string> SendableFields { get; }
 
-        // don't use this
+        // don't use this, will fail on null value
         internal IDictionary<string, object> Fields
         {
             set => _fields = new Dictionary<string, object>(value);

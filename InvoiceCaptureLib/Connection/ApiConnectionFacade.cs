@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using InvoiceCaptureLib.Exception;
+using InvoiceCaptureLib.Utils;
 
 namespace InvoiceCaptureLib.Connection
 {
@@ -12,8 +14,6 @@ namespace InvoiceCaptureLib.Connection
 
     internal class ApiConnectionFacade
     {
-        private const string JSON_MIME_TYPE = "application/json";
-
         private readonly string _apiKey;
         private readonly Func<Stream, IDictionary<string, string>> _jsonParser;
 
@@ -45,6 +45,7 @@ namespace InvoiceCaptureLib.Connection
                 {
                     case "POST":
                     case "PUT":
+                    // does DELETE have a return json?
                     case "DELETE":
                         response = await client.UploadStringTaskAsync(requestUri, method, jsonString);
                         break;
@@ -57,20 +58,17 @@ namespace InvoiceCaptureLib.Connection
             }
             catch (WebException webException)
             {
-                if (webException.Status != WebExceptionStatus.ProtocolError || webException.Response == null ||
-                    !IsJsonMimeType(webException.Response.Headers))
+                var errorResponse = webException.Response;
+                if (webException.Status != WebExceptionStatus.ProtocolError || errorResponse?.GetResponseStream() is null || !IsJsonMimeType(errorResponse.Headers))
                     throw;
 
-                var responseStream = webException.Response.GetResponseStream();
-                throw BuildException(responseStream);
+                throw BuildException(errorResponse.GetResponseStream());
 
             }
 
             // check that the response has 'Content-Type' header set to json
             if (!IsJsonMimeType(client.ResponseHeaders))
                 throw new IcException("Request valid but no JSON response HTTP header received");
-
-            //this
 
             return response;
         }
@@ -81,7 +79,7 @@ namespace InvoiceCaptureLib.Connection
                 return false;
 
             var headerValue = headers.Get("Content-Type");
-            return !(headerValue is null) && headerValue.Contains(JSON_MIME_TYPE);
+            return !(headerValue is null) && headerValue.Contains(IcConstants.JsonMimeType);
         }
 
         private IcException BuildException(Stream jsonStream)
@@ -89,23 +87,31 @@ namespace InvoiceCaptureLib.Connection
             // json key names
             const string messageName = "message";
             const string codeName = "code";
-            const string idName = "gid";
+            const string gidName = "gid";
+            const string idName = "id";
 
             var jsonObject = _jsonParser(jsonStream);
             if (!jsonObject.ContainsKey(messageName) || !jsonObject.ContainsKey(codeName))
                 throw new IcException($"Invalid json error response received: {Utils.IcUtils.StringifyDictionary(jsonObject)}");
-            else if (jsonObject.ContainsKey(idName))
-                return new IcModelConflictException(jsonObject[messageName], jsonObject[idName]);
+
+            string conflictingId = null;
+            // will check for the various ways a model ID can be named.
+            // First accepted key will also initialize the previous local
+            var containsId = jsonObject.TryGetValue(gidName, out conflictingId) || 
+                             jsonObject.TryGetValue(idName, out conflictingId); 
+            if (containsId)
+                return new IcModelConflictException(jsonObject[messageName], conflictingId);
             else 
                 return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
         }
 
         private WebClient BuildWebClient(string requestUriHost, bool requestHasBody)
         {
+
             var client = new WebClient();
             if (requestHasBody)
-                client.Headers.Set("Content-Type", JSON_MIME_TYPE);
-            client.Headers.Set("Accept", JSON_MIME_TYPE);
+                client.Headers.Set("Content-Type", IcConstants.JsonMimeType);
+            client.Headers.Set("Accept", IcConstants.JsonMimeType);
             client.Headers.Set("Authorization", $"Bearer {_apiKey}");
             client.Headers.Set("Host", requestUriHost);
             client.Encoding = Encoding.UTF8;
