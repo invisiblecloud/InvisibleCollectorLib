@@ -13,6 +13,7 @@ namespace InvoiceCaptureLib.Json
             DateFormatString = "yyyy'-'MM'-'dd"
         };
 
+        
         internal IDictionary<string, string> JsonStreamToStringDictionary(Stream stream)
         {
             try

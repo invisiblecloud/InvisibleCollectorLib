@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InvoiceCaptureLib.Utils;
 
 namespace InvoiceCaptureLib.Model
 {
@@ -35,7 +36,7 @@ namespace InvoiceCaptureLib.Model
             set => _fields = new Dictionary<string, object>(value);
         }
 
-        internal IDictionary<string, object> SendableDictionary => _fields
+        internal virtual IDictionary<string, object> SendableDictionary => _fields
             .Where(pair => SendableFields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
 
@@ -66,14 +67,8 @@ namespace InvoiceCaptureLib.Model
 
         public static bool operator ==(Model left, Model right)
         {
-            // both null.
-            if (left is null && right is null)
-                return true;
-            if (ReferenceEquals(left, right))
-                return true;
-            if (left == null || right == null || left._fields == null || right._fields == null)
-                return false;
-            return left._fields.Count == right._fields.Count && !left._fields.Except(right._fields).Any();
+            return IcUtils.ReferenceNullableEquals(left, right) ?? 
+                   IcUtils.EqualsDict(left._fields, right._fields);
         }
 
         public static bool operator !=(Model left, Model right)
@@ -83,13 +78,17 @@ namespace InvoiceCaptureLib.Model
 
         public override string ToString()
         {
-            return
-                $"{{ {string.Join(", ", _fields.Select(pair => pair.Key + "=" + pair.Value.ToString()).ToArray())} }}";
+            return IcUtils.StringifyDictionary(_fields);
         }
 
         protected T GetField<T>(string key)
         {
-            return (T) _fields[key];
+            return (T) this[key];
+        }
+
+        protected void UnsetField(string fieldName)
+        {
+            _fields.Remove(fieldName);
         }
     }
 }

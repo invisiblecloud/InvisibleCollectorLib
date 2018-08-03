@@ -18,6 +18,8 @@ namespace InvoiceCaptureLib.Connection
             _baseUri = absoluteBaseUri;
         }
 
+        internal Uri BaseUri => _baseUri;
+
         internal static void AssertValidHttpUri(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
