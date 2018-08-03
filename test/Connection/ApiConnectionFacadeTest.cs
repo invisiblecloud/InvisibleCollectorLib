@@ -76,25 +76,37 @@ namespace test.Connection
         }
 
         [Test]
-        public async Task CallApiAsync_Error()
+        public void CallApiAsync_Error()
         {
             _mockServer.AddRequest("POST", TestPath)
                 .AddJsonResponse(""); // supposed to fail here
             var exception = Assert.ThrowsAsync<IcException>(() =>
-                BuildApiFacade(ErrorDictionary).CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
+                BuildApiFacade(ErrorDictionary)
+                    .CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
 
             TestingUtils.AssertStringContainsValues(exception.Message, DefaultErorMessage, DefaultErrorCode);
         }
 
         [Test]
-        public async Task CallApiAsync_ErrorConflict()
+        public void CallApiAsync_ErrorConflict()
         {
             _mockServer.AddRequest("POST", TestPath)
                 .AddJsonResponse(""); // supposed to fail here
             var exception = Assert.ThrowsAsync<IcModelConflictException>(() =>
-                BuildApiFacade(ConflictErrorDictionary).CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
+                BuildApiFacade(ConflictErrorDictionary)
+                    .CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
 
             Assert.AreEqual(exception.ConflictingId, DefaultConflictingId);
+        }
+
+        [Test]
+        public void CallApiAsync_ErrorMissingFields()
+        {
+            _mockServer.AddRequest("POST", TestPath)
+                .AddJsonResponse(""); // supposed to fail here
+            Assert.ThrowsAsync<IcException>(() =>
+                BuildApiFacade(new Dictionary<string, string>())
+                    .CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
         }
 
         [Test]
@@ -126,5 +138,7 @@ namespace test.Connection
             var result = await BuildApiFacade(ErrorDictionary).CallApiAsync(uri, Method, sendingJson);
             Assert.AreEqual(returnJson, result);
         }
+
+
     }
 }
