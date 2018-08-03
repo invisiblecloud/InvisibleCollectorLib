@@ -12,6 +12,8 @@ namespace InvoiceCaptureLib.Connection
 
     internal class ApiConnectionFacade
     {
+        private const string JSON_MIME_TYPE = "application/json";
+
         private readonly string _apiKey;
         private readonly Func<Stream, IDictionary<string, string>> _jsonParser;
 
@@ -35,6 +37,7 @@ namespace InvoiceCaptureLib.Connection
             var requestHasBody = !string.IsNullOrEmpty(jsonString);
             jsonString = requestHasBody ? jsonString : "";
             var client = BuildWebClient(requestUri.Host, requestHasBody);
+            string response = "";
 
             try
             {
@@ -43,28 +46,42 @@ namespace InvoiceCaptureLib.Connection
                     case "POST":
                     case "PUT":
                     case "DELETE":
-                        return await client.UploadStringTaskAsync(requestUri, method, jsonString);
+                        response = await client.UploadStringTaskAsync(requestUri, method, jsonString);
+                        break;
                     case "GET":
-                        return await client.DownloadStringTaskAsync(requestUri);
+                        response = await client.DownloadStringTaskAsync(requestUri);
+                        break;
                     default:
                         throw new ArgumentException("Invalid HTTP method");
                 }
             }
             catch (WebException webException)
             {
-                if (webException.Status == WebExceptionStatus.ProtocolError && webException.Response != null)
-                {
-                    var contentType = webException.Response.ContentType;
-                    var isJsonResponse = contentType?.Contains("application/json") ?? false;
-                    if (isJsonResponse)
-                    {
-                        var responseStream = webException.Response.GetResponseStream();
-                        throw BuildException(responseStream);
-                    }
-                }
+                if (webException.Status != WebExceptionStatus.ProtocolError || webException.Response == null ||
+                    !IsJsonMimeType(webException.Response.Headers))
+                    throw;
 
-                throw;
+                var responseStream = webException.Response.GetResponseStream();
+                throw BuildException(responseStream);
+
             }
+
+            // check that the response has 'Content-Type' header set to json
+            if (!IsJsonMimeType(client.ResponseHeaders))
+                throw new IcException("Request valid but no JSON response HTTP header received");
+
+            //this
+
+            return response;
+        }
+
+        private bool IsJsonMimeType(WebHeaderCollection headers)
+        {
+            if (headers is null)
+                return false;
+
+            var headerValue = headers.Get("Content-Type");
+            return !(headerValue is null) && headerValue.Contains(JSON_MIME_TYPE);
         }
 
         private IcException BuildException(Stream jsonStream)
@@ -87,8 +104,8 @@ namespace InvoiceCaptureLib.Connection
         {
             var client = new WebClient();
             if (requestHasBody)
-                client.Headers.Set("Content-Type", "application/json");
-            client.Headers.Set("Accept", "application/json");
+                client.Headers.Set("Content-Type", JSON_MIME_TYPE);
+            client.Headers.Set("Accept", JSON_MIME_TYPE);
             client.Headers.Set("Authorization", $"Bearer {_apiKey}");
             client.Headers.Set("Host", requestUriHost);
             client.Encoding = Encoding.UTF8;
