@@ -25,8 +25,6 @@ namespace InvoiceCaptureLib.Model
             }
         }
 
-        protected virtual ISet<string> MandatoryFields { get; }
-
         protected virtual ISet<string> SendableFields { get; }
 
         // don't use this, will fail on null value
@@ -39,9 +37,14 @@ namespace InvoiceCaptureLib.Model
             .Where(pair => SendableFields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
 
-        public void AssertHasMandatoryFields()
+        /// <summary>
+        /// checks if all mandatory fields are present
+        /// </summary>
+        /// <param name="mandatoryFields">the mndatory fields names</param>
+        /// <exception cref="ArgumentException">thrown if a field isn't present</exception>
+        internal void AssertHasMandatoryFields(params string[] mandatoryFields)
         {
-            foreach (var mandatoryField in MandatoryFields)
+            foreach (var mandatoryField in mandatoryFields)
                 if (!_fields.ContainsKey(mandatoryField))
                 {
                     var msg = $"Model is missing mandatory field: {mandatoryField}";

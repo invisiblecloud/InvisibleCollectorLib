@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using InvoiceCaptureLib.Connection;
-using InvoiceCaptureLib.Exception;
 using InvoiceCaptureLib.Json;
 using InvoiceCaptureLib.Model;
 
@@ -38,20 +38,10 @@ namespace InvoiceCaptureLib
             _apiFacade = apiFacade;
         }
 
-        private async Task<TModel> MakeBodylessRequest<TModel>(string method, params string[] pathFragments) where TModel: Model.Model, new()
+        public async Task<Customer> RegisterNewCustomerAsync(Customer customer)
         {
-            var requestUri = _uriBuilder.BuildUri(pathFragments);
-            var json = await _apiFacade.CallApiAsync(requestUri, method);
-            return _jsonFacade.JsonToModel<TModel>(json);
-        }
-
-        private async Task<TModel> MakeBodiedRequest<TModel>(string method, TModel modelToSend, params string[] pathFragments) where TModel : Model.Model, new()
-        {
-            modelToSend.AssertHasMandatoryFields();
-            var requestJson = _jsonFacade.ModelToSendableJson(modelToSend);
-            var requestUri = _uriBuilder.BuildUri(pathFragments);
-            var returnJson = await _apiFacade.CallApiAsync(requestUri, method, requestJson);
-            return _jsonFacade.JsonToModel<TModel>(returnJson);
+            customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
+            return await MakeBodiedRequest("POST", customer, CustomerEndpoint);
         }
 
         public async Task<Company> RequestCompanyInfoAsync()
@@ -59,12 +49,13 @@ namespace InvoiceCaptureLib
             return await MakeBodylessRequest<Company>("GET", CompanyEndpoint);
         }
 
-        public async Task<Company> UpdateCompanyInfoAsync(Company company)
+        public async Task<Customer> RequestCustomerInfoAsync(string customerId)
         {
-            return await MakeBodiedRequest("PUT", company, CompanyEndpoint);
+            var id = AssertValidAndNormalizeId(customerId);
+            return await MakeBodylessRequest<Customer>("GET", CustomerEndpoint, id);
         }
 
-        public async Task<Company> SetCompanyNotifications(bool bEnableNotifications)
+        public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
         {
             const string EnableNotifications = "enableNotifications";
             const string DisableNotifications = "disableNotifications";
@@ -73,7 +64,42 @@ namespace InvoiceCaptureLib
             return await MakeBodylessRequest<Company>("PUT", CompanyEndpoint, endpoint);
         }
 
-        //public async Task<>
+        public async Task<Company> UpdateCompanyInfoAsync(Company company)
+        {
+            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
+            return await MakeBodiedRequest("PUT", company, CompanyEndpoint);
+        }
 
+        public async Task<Customer> UpdateCustomerInfoAsync(Customer customer)
+        {
+            var id = AssertValidAndNormalizeId(customer.RoutableId);
+            customer.AssertHasMandatoryFields(Customer.CountryName);
+            return await MakeBodiedRequest("PUT", customer, CustomerEndpoint, id);
+        }
+
+        private string AssertValidAndNormalizeId(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id) || id.Contains("/"))
+                throw new ArgumentException("Illegal routing id: " + id);
+
+            return WebUtility.UrlEncode(id);
+        }
+
+        private async Task<TModel> MakeBodiedRequest<TModel>(string method, TModel modelToSend,
+            params string[] pathFragments) where TModel : Model.Model, new()
+        {
+            var requestJson = _jsonFacade.ModelToSendableJson(modelToSend);
+            var requestUri = _uriBuilder.BuildUri(pathFragments);
+            var returnJson = await _apiFacade.CallApiAsync(requestUri, method, requestJson);
+            return _jsonFacade.JsonToModel<TModel>(returnJson);
+        }
+
+        private async Task<TModel> MakeBodylessRequest<TModel>(string method, params string[] pathFragments)
+            where TModel : Model.Model, new()
+        {
+            var requestUri = _uriBuilder.BuildUri(pathFragments);
+            var json = await _apiFacade.CallApiAsync(requestUri, method);
+            return _jsonFacade.JsonToModel<TModel>(json);
+        }
     }
 }

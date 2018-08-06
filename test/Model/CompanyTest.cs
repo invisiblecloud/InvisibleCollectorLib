@@ -15,7 +15,7 @@ namespace test.Model
                 VatNumber = "123"
             };
 
-            company.AssertHasMandatoryFields();
+            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace test.Model
                 Name = "a name"
             };
 
-            Assert.That(company.AssertHasMandatoryFields, Throws.Exception);
+            Assert.That(()=>company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName), Throws.Exception);
         }
 
         [Test]

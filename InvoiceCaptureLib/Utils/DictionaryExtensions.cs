@@ -16,7 +16,7 @@ namespace InvoiceCaptureLib.Utils
         internal static string StringifyDictionary<T, V>(this IDictionary<T, V> dictionary)
         {
             return
-                $"{{ {string.Join(", ", dictionary.Select(pair => pair.Key.ToString() + "=" + pair.Value.ToString()).ToArray())} }}";
+                $"{{ {string.Join(", ", dictionary.Select(pair => Convert.ToString(pair.Key) + "=" + Convert.ToString(pair.Value)).ToArray())} }}";
         }
     }
 }

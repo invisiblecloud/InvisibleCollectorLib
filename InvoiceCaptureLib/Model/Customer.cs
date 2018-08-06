@@ -7,14 +7,13 @@ namespace InvoiceCaptureLib.Model
         internal const string AddressName = "address";
         internal const string CityName = "city";
         internal const string CountryName = "country";
-        internal const string IdName = "gid";
-        internal const string NameName = "name";
-        internal const string VatNumberName = "vatNumber";
-        internal const string ZipCodeName = "zipCode";
-
         internal const string EmailName = "email";
         internal const string ExternalIdName = "externalId";
+        internal const string IdName = "gid";
+        internal const string NameName = "name";
         internal const string PhoneName = "phone";
+        internal const string VatNumberName = "vatNumber";
+        internal const string ZipCodeName = "zipCode";
 
         public string Address
         {
@@ -85,9 +84,6 @@ namespace InvoiceCaptureLib.Model
 
             set => this[ZipCodeName] = value;
         }
-
-        protected override ISet<string> MandatoryFields =>
-            new SortedSet<string> {NameName, VatNumberName, CountryName};
 
         protected override ISet<string> SendableFields =>
             new SortedSet<string>

@@ -69,9 +69,6 @@ namespace InvoiceCaptureLib.Model
             set => this[ZipCodeName] = value;
         }
 
-        protected override ISet<string> MandatoryFields =>
-            new SortedSet<string> {NameName, VatNumberName};
-
         protected override ISet<string> SendableFields =>
             new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName};
 

@@ -14,11 +14,11 @@ namespace test
         private InvoiceCapture ConfigureIc(string method, string path, string returnedJson,
             string expectedJson = null)
         {
-            MockServerSetup._mockServer.AddRequest(method, path, expectedJson,
+            _mockServer.AddRequest(method, path, expectedJson,
                     expectedJson is null ? BodylessHeaders : BodiedHeaders, expectedJson is null? BodyHeaderDifference : null)
                 .AddJsonResponse(returnedJson);
 
-            var uri = MockServerSetup._mockServer.GetUrl();
+            var uri = _mockServer.GetUrl();
             return new InvoiceCapture(TestApiKey, uri);
         }
 
@@ -63,11 +63,11 @@ namespace test
             var builder = ModelBuilder.BuildReplyCompanyBuilder();
             builder[Company.NotificationsName] = true;
             AssertingRequest("PUT", "companies/enableNotifications", builder,
-                async ic => await ic.SetCompanyNotifications(true));
+                async ic => await ic.SetCompanyNotificationsAsync(true));
 
             builder[Company.NotificationsName] = false;
             AssertingRequest("PUT", "companies/disableNotifications", builder,
-                async ic => await ic.SetCompanyNotifications(false));
+                async ic => await ic.SetCompanyNotificationsAsync(false));
         }
 
         [Test]

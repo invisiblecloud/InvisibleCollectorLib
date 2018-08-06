@@ -28,11 +28,25 @@ namespace test
         protected static readonly ImmutableList<(string, string)> BodyHeaderDifference =
             BodiedHeaders.Except(BodylessHeaders).ToImmutableList();
 
+        protected static MockServerFacade _mockServer;
 
         [TearDown]
         public void ResetServer()
         {
-            MockServerSetup._mockServer.Reset();
+            _mockServer.Reset();
+        }
+
+
+        [OneTimeSetUp]
+        public void StartServer()
+        {
+            _mockServer = new MockServerFacade();
+        }
+
+        [OneTimeTearDown]
+        public void StopServer()
+        {
+            _mockServer.Stop();
         }
     }
 }
