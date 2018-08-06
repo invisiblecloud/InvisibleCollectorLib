@@ -62,8 +62,11 @@ namespace InvoiceCaptureLib.Connection
                 if (webException.Status != WebExceptionStatus.ProtocolError || errorResponse?.GetResponseStream() is null || !IsJsonMimeType(errorResponse.Headers))
                     throw;
 
-                throw BuildException(errorResponse.GetResponseStream());
-
+                var ex = BuildException(errorResponse.GetResponseStream());
+                if (!(ex is null))
+                    throw ex;
+                else
+                    throw;
             }
 
             // check that the response has 'Content-Type' header set to json
@@ -92,7 +95,7 @@ namespace InvoiceCaptureLib.Connection
 
             var jsonObject = _jsonParser(jsonStream);
             if (!jsonObject.ContainsKey(messageName) || !jsonObject.ContainsKey(codeName))
-                throw new IcException($"Invalid json error response received: {jsonObject.StringifyDictionary()}");
+                return null;
 
             // will check for the various ways a model ID can be named.
             // First accepted key will also initialize the previous local
@@ -109,7 +112,7 @@ namespace InvoiceCaptureLib.Connection
 
             var client = new WebClient();
             if (requestHasBody)
-                client.Headers.Set("Content-Type", IcConstants.JsonMimeType);
+                client.Headers.Set("Content-Type", $"{IcConstants.JsonMimeType}; charset=UTF-8");
             client.Headers.Set("Accept", IcConstants.JsonMimeType);
             client.Headers.Set("Authorization", $"Bearer {_apiKey}");
             client.Headers.Set("Host", requestUriHost);

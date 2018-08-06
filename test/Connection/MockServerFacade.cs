@@ -7,29 +7,42 @@ using WireMock.Server;
 
 namespace test.Connection
 {
-    public class MockServerJsonFacade
+    public class MockServerFacade
     {
         private readonly FluentMockServer _mockServer;
 
         private readonly Stack<IRequestBuilder> requests = new Stack<IRequestBuilder>();
 
 
-        public MockServerJsonFacade()
+        public MockServerFacade()
         {
             _mockServer = FluentMockServer.Start();
         }
 
-        public MockServerJsonFacade AddJsonResponse(string json = "{}", int statusCode = 200)
+        /**
+         * Must have a previous mathing request
+         */
+        public MockServerFacade AddJsonResponse(string json = "{}", int statusCode = 200)
         {
             var request = requests.Pop();
             var response = Response.Create().WithStatusCode(statusCode).WithBody(json)
-                .WithHeader("Content-Type", "application/json");
+                .WithHeader("Content-Type", "application/json; charset=UTF-8");
 
             _mockServer.Given(request).RespondWith(response);
             return this;
         }
 
-        public MockServerJsonFacade AddRequest(string httpMethod, string pathRegex, string expectedJson = null,
+        public MockServerFacade AddHtmlResponse(string body = "{}", int statusCode = 200)
+        {
+            var request = requests.Pop();
+            var response = Response.Create().WithStatusCode(statusCode).WithBody(body)
+                .WithHeader("Content-Type", "text/html; charset=UTF-8");
+
+            _mockServer.Given(request).RespondWith(response);
+            return this;
+        }
+
+        public MockServerFacade AddRequest(string httpMethod, string pathRegex, string expectedJson = null,
             IEnumerable<(string, string)> expectedHeaders = null,
             IEnumerable<(string, string)> notExpectedHeaders = null)
         {

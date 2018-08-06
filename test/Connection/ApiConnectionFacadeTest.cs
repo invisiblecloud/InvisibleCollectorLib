@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using InvoiceCaptureLib.Connection;
 using InvoiceCaptureLib.Exception;
@@ -16,10 +17,11 @@ namespace test.Connection
     [TestFixture]
     internal class ApiConnectionFacadeTest : MockServerTesterBase
     {
-        private const string TestApiKey = "12345";
+        
         private const string DefaultErorMessage = "an error occured";
         private const string DefaultErrorCode = "400";
         private const string DefaultConflictingId = "3456";
+        private const string TestPath = "umm/123";
 
         private static readonly ImmutableDictionary<string, string> ErrorDictionary = new Dictionary<string, string>
         {
@@ -27,25 +29,11 @@ namespace test.Connection
             {"message", DefaultErorMessage}
         }.ToImmutableDictionary();
 
+        private static readonly ImmutableDictionary<string, string> EmptyDictionary = new Dictionary<string, string>().ToImmutableDictionary();
+
         private static readonly ImmutableDictionary<string, string> ConflictErrorDictionary =
             new Dictionary<string, string>(ErrorDictionary) {{"gid", DefaultConflictingId}}
                 .ToImmutableDictionary();
-
-        private static readonly (string, string) ContentHeader = ("Content-Type", IcConstants.JsonMimeType);
-        private static readonly (string, string) AcceptHeader = ("Accept", IcConstants.JsonMimeType);
-        private static readonly (string, string) AuthorizationHeader = ("Authorization", $"Bearer {TestApiKey}");
-        private static readonly (string, string) HostHeader = ("Host", "localhost");
-
-        private static readonly ImmutableList<(string, string)> BodylessHeaders =
-            new List<(string, string)> {AcceptHeader, AuthorizationHeader, HostHeader}.ToImmutableList();
-
-        private static readonly ImmutableList<(string, string)> BodiedHeaders =
-            new List<(string, string)>(BodylessHeaders) {ContentHeader}.ToImmutableList();
-
-        private static readonly ImmutableList<(string, string)> BodyHeaderDifference =
-            BodiedHeaders.Except(BodylessHeaders).ToImmutableList();
-
-        private const string TestPath = "umm/123";
 
         private ApiConnectionFacade BuildApiFacade(IDictionary<string, string> errorJsonObject)
         {
@@ -58,23 +46,43 @@ namespace test.Connection
         [Test]
         public void CallApiAsync_Error()
         {
-            _mockServer.AddRequest("POST", TestPath)
-                .AddJsonResponse(""); // supposed to fail here
+            MockServerSetup._mockServer.AddRequest("GET", TestPath)
+                .AddJsonResponse("", 400); // supposed to fail here
             var exception = Assert.ThrowsAsync<IcException>(() =>
                 BuildApiFacade(ErrorDictionary)
-                    .CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
+                    .CallApiAsync(MockServerSetup._mockServer.GetUrl(TestPath), "GET"));
 
             TestingUtils.AssertStringContainsValues(exception.Message, DefaultErorMessage, DefaultErrorCode);
         }
 
         [Test]
+        public void CallApiAsync_FailNotJsonResponse()
+        {
+            MockServerSetup._mockServer.AddRequest("GET", TestPath)
+                .AddHtmlResponse("", 400); // supposed to fail here
+            Assert.ThrowsAsync<WebException>(() =>
+                BuildApiFacade(ErrorDictionary)
+                    .CallApiAsync(MockServerSetup._mockServer.GetUrl(TestPath), "GET"));
+        }
+
+        [Test]
+        public void CallApiAsync_200FailNotJsonResponse()
+        {
+            MockServerSetup._mockServer.AddRequest("GET", TestPath)
+                .AddHtmlResponse("", 200); 
+            Assert.ThrowsAsync<IcException>(() =>
+                BuildApiFacade(ErrorDictionary)
+                    .CallApiAsync(MockServerSetup._mockServer.GetUrl(TestPath), "GET"));
+        }
+
+        [Test]
         public void CallApiAsync_ErrorConflict()
         {
-            _mockServer.AddRequest("POST", TestPath)
-                .AddJsonResponse(""); // supposed to fail here
+            MockServerSetup._mockServer.AddRequest("GET", TestPath)
+                .AddJsonResponse("", 400); 
             var exception = Assert.ThrowsAsync<IcModelConflictException>(() =>
                 BuildApiFacade(ConflictErrorDictionary)
-                    .CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
+                    .CallApiAsync(MockServerSetup._mockServer.GetUrl(TestPath), "GET"));
 
             Assert.AreEqual(exception.ConflictingId, DefaultConflictingId);
         }
@@ -82,11 +90,21 @@ namespace test.Connection
         [Test]
         public void CallApiAsync_ErrorMissingFields()
         {
-            _mockServer.AddRequest("POST", TestPath)
-                .AddJsonResponse(""); // supposed to fail here
-            Assert.ThrowsAsync<IcException>(() =>
-                BuildApiFacade(new Dictionary<string, string>())
-                    .CallApiAsync(_mockServer.GetUrl(TestPath), "GET"));
+            MockServerSetup._mockServer.AddRequest("GET", TestPath)
+                .AddJsonResponse("", 400); 
+            Assert.ThrowsAsync<WebException>(() =>
+                BuildApiFacade(EmptyDictionary)
+                    .CallApiAsync(MockServerSetup._mockServer.GetUrl(TestPath), "GET"));
+        }
+
+        [Test]
+        public void CallApiAsync_404Error()
+        {
+            MockServerSetup._mockServer.AddRequest("GET", "unreachablPath")
+                .AddJsonResponse("", 200); 
+            Assert.ThrowsAsync<WebException>(() =>
+                BuildApiFacade(EmptyDictionary)
+                    .CallApiAsync(MockServerSetup._mockServer.GetUrl(TestPath), "GET"));
         }
 
         [Test]
@@ -95,11 +113,11 @@ namespace test.Connection
             const string Method = "GET";
             var json = TestingUtils.BuildJson(("a", "b"));
 
-            _mockServer.AddRequest(Method, TestPath, expectedHeaders: BodylessHeaders,
+            MockServerSetup._mockServer.AddRequest(Method, TestPath, expectedHeaders: BodylessHeaders,
                     notExpectedHeaders: BodyHeaderDifference)
                 .AddJsonResponse(json);
 
-            var uri = _mockServer.GetUrl(TestPath);
+            var uri = MockServerSetup._mockServer.GetUrl(TestPath);
             var result = await BuildApiFacade(ErrorDictionary).CallApiAsync(uri, Method);
             Assert.AreEqual(json, result);
         }
@@ -111,10 +129,10 @@ namespace test.Connection
             var returnJson = TestingUtils.BuildJson(("a", "b"));
             var sendingJson = TestingUtils.BuildJson(("q", "w"));
 
-            _mockServer.AddRequest(Method, TestPath, sendingJson, BodiedHeaders)
+            MockServerSetup._mockServer.AddRequest(Method, TestPath, sendingJson, BodiedHeaders)
                 .AddJsonResponse(returnJson);
 
-            var uri = _mockServer.GetUrl(TestPath);
+            var uri = MockServerSetup._mockServer.GetUrl(TestPath);
             var result = await BuildApiFacade(ErrorDictionary).CallApiAsync(uri, Method, sendingJson);
             Assert.AreEqual(returnJson, result);
         }

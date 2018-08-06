@@ -4,14 +4,14 @@ namespace InvoiceCaptureLib.Model
 {
     public class Company : Model, IRoutableModel
     {
-        private const string AddressName = "address";
-        private const string CityName = "city";
-        private const string CountryName = "country";
-        private const string IdName = "gid";
-        private const string NameName = "name";
-        private const string NotificationsName = "notificationsEnabled";
-        private const string VatNumberName = "vatNumber";
-        private const string ZipCodeName = "zipCode";
+        internal const string AddressName = "address";
+        internal const string CityName = "city";
+        internal const string CountryName = "country";
+        internal const string IdName = "gid";
+        internal const string NameName = "name";
+        internal const string NotificationsName = "notificationsEnabled";
+        internal const string VatNumberName = "vatNumber";
+        internal const string ZipCodeName = "zipCode";
 
         public string Address
         {

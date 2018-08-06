@@ -75,6 +75,11 @@ namespace InvoiceCaptureLib.Model
             return !(left == right);
         }
 
+        public void UnsetAll()
+        {
+            _fields = new Dictionary<string, object>();
+        }
+
         public override string ToString()
         {
             return _fields.StringifyDictionary();
