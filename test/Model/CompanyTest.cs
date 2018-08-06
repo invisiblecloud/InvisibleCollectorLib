@@ -211,10 +211,12 @@ namespace test.Model
             const string Id = null;
             bool? notifications = false;
 
-            var company = new Company();
-            company.Name = CompanyName;
-            company.Id = Id;
-            company.NotificationsEnabled = notifications;
+            var company = new Company
+            {
+                Name = CompanyName,
+                Id = Id,
+                NotificationsEnabled = notifications
+            };
             Assert.AreEqual(company.Name, CompanyName);
             Assert.AreEqual(company.Id, Id);
             Assert.AreEqual(company.NotificationsEnabled, notifications);
@@ -227,10 +229,12 @@ namespace test.Model
             const string Id = null;
             bool? notifications = false;
 
-            var company = new Company();
-            company.Name = CompanyName;
-            company.Id = Id;
-            company.NotificationsEnabled = notifications;
+            var company = new Company
+            {
+                Name = CompanyName,
+                Id = Id,
+                NotificationsEnabled = notifications
+            };
 
             company.UnsetName();
             company.UnsetId();
@@ -248,10 +252,12 @@ namespace test.Model
             const string Id = null;
             bool? notifications = false;
 
-            var company = new Company();
-            company.Name = CompanyName;
-            company.Id = Id;
-            company.NotificationsEnabled = notifications;
+            var company = new Company
+            {
+                Name = CompanyName,
+                Id = Id,
+                NotificationsEnabled = notifications
+            };
 
             company.UnsetAll();
 

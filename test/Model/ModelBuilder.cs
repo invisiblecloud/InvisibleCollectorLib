@@ -70,6 +70,27 @@ namespace test.Model
             return new ModelBuilder(fields);
         }
 
+        public static ModelBuilder BuildReplyCustomerBuilder()
+        {
+            var builder = BuildRequestCustomerBuilder();
+            builder[Customer.IdName] = Id;
+
+            return builder;
+        }
+
+        public static ModelBuilder BuildRequestCustomerBuilder()
+        {
+            var fields = new Dictionary<string, object>()
+            {
+                { Customer.VatNumberName, VatNumber },
+                { Customer.NameName, "a name" },
+                { Customer.ZipCodeName, null },
+                { Customer.CountryName, "PT" },
+            };
+
+            return new ModelBuilder(fields);
+        }
+
         public ModelBuilder clone()
         {
             return new ModelBuilder(_fields);
