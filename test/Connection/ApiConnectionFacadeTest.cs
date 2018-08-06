@@ -136,7 +136,5 @@ namespace test.Connection
             var result = await BuildApiFacade(ErrorDictionary).CallApiAsync(uri, Method, sendingJson);
             Assert.AreEqual(returnJson, result);
         }
-
-
     }
 }

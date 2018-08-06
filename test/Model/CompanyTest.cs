@@ -240,5 +240,24 @@ namespace test.Model
             Assert.IsNull(company.Name);
             Assert.IsNull(company.NotificationsEnabled);
         }
+
+        [Test]
+        public void UnsetAll_correctlyUnset()
+        {
+            const string CompanyName = "hello";
+            const string Id = null;
+            bool? notifications = false;
+
+            var company = new Company();
+            company.Name = CompanyName;
+            company.Id = Id;
+            company.NotificationsEnabled = notifications;
+
+            company.UnsetAll();
+
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.NotificationsEnabled);
+        }
     }
 }
