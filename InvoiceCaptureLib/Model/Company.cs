@@ -2,7 +2,7 @@
 
 namespace InvoiceCaptureLib.Model
 {
-    public class Company : Model, IRoutableModel
+    public class Company : Model
     {
         internal const string AddressName = "address";
         internal const string CityName = "city";
@@ -74,8 +74,6 @@ namespace InvoiceCaptureLib.Model
 
         protected override ISet<string> SendableFields =>
             new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName};
-
-        public string RoutableId => Id;
 
         public override bool Equals(object other)
         {

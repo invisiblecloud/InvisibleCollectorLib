@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace InvoiceCaptureLib.Utils
+﻿namespace InvoiceCaptureLib.Utils
 {
     internal static class IcUtils
     {
@@ -10,12 +7,11 @@ namespace InvoiceCaptureLib.Utils
         {
             if (left is null && right is null)
                 return true;
-            else if (ReferenceEquals(left, right)) //identity
+            if (ReferenceEquals(left, right)) //identity
                 return true;
-            else if (left is null || right is null)
+            if (left is null || right is null)
                 return false;
-            else 
-                return null;
+            return null;
         }
     }
 }

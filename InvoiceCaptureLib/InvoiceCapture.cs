@@ -9,8 +9,8 @@ namespace InvoiceCaptureLib
 {
     public class InvoiceCapture
     {
-        private const string CompanyEndPoint = "companies";
-        private const string CustomerEndPoint = "customers";
+        private const string CompanyEndpoint = "companies";
+        private const string CustomerEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
         private readonly ApiConnectionFacade _apiFacade;
@@ -38,20 +38,30 @@ namespace InvoiceCaptureLib
             _apiFacade = apiFacade;
         }
 
+        private async Task<TModel> MakeBodylessRequest<TModel>(string method, params string[] pathFragments) where TModel: Model.Model, new()
+        {
+            var requestUri = _uriBuilder.BuildUri(pathFragments);
+            var json = await _apiFacade.CallApiAsync(requestUri, method);
+            return _jsonFacade.JsonToModel<TModel>(json);
+        }
+
+        private async Task<TModel> MakeBodiedRequest<TModel>(string method, TModel modelToSend, params string[] pathFragments) where TModel : Model.Model, new()
+        {
+            modelToSend.AssertHasMandatoryFields();
+            var requestJson = _jsonFacade.ModelToSendableJson(modelToSend);
+            var requestUri = _uriBuilder.BuildUri(pathFragments);
+            var returnJson = await _apiFacade.CallApiAsync(requestUri, method, requestJson);
+            return _jsonFacade.JsonToModel<TModel>(returnJson);
+        }
+
         public async Task<Company> RequestCompanyInfoAsync()
         {
-            var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
-            var json = await _apiFacade.CallApiAsync(requestUri, "GET", null);
-            return _jsonFacade.JsonToModel<Company>(json);
+            return await MakeBodylessRequest<Company>("GET", CompanyEndpoint);
         }
 
         public async Task<Company> UpdateCompanyInfoAsync(Company company)
         {
-            company.AssertHasMandatoryFields();
-            var json = _jsonFacade.ModelToSendableJson(company);
-            var requestUri = _uriBuilder.BuildUri(CompanyEndPoint);
-            var returnedJson = await _apiFacade.CallApiAsync(requestUri, "PUT", json);
-            return _jsonFacade.JsonToModel<Company>(returnedJson);
+            return await MakeBodiedRequest("PUT", company, CompanyEndpoint);
         }
 
         public async Task<Company> SetCompanyNotifications(bool bEnableNotifications)
@@ -60,9 +70,10 @@ namespace InvoiceCaptureLib
             const string DisableNotifications = "disableNotifications";
 
             var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
-            var requestUri = _uriBuilder.BuildUri(CompanyEndPoint, endpoint);
-            var json = await _apiFacade.CallApiAsync(requestUri, "PUT", null);
-            return _jsonFacade.JsonToModel<Company>(json);
+            return await MakeBodylessRequest<Company>("PUT", CompanyEndpoint, endpoint);
         }
+
+        //public async Task<>
+
     }
 }
