@@ -39,13 +39,13 @@ namespace test.Model
             }
         }
 
-        public T buildModel<T>()
+        public T BuildModel<T>()
             where T : InvoiceCaptureLib.Model.Model, new()
         {
             return new T() { Fields = new Dictionary<string, object>(_fields)};
         }
 
-        public string buildJson()
+        public string BuildJson()
         {
             return JsonConvert.SerializeObject(_fields, SerializerSettings);
         }
@@ -93,7 +93,12 @@ namespace test.Model
             return new ModelBuilder(fields);
         }
 
-        public ModelBuilder clone()
+        public static string DictToJson(IDictionary<string, string> dict)
+        {
+            return JsonConvert.SerializeObject(dict, SerializerSettings);
+        }
+
+        public ModelBuilder Clone()
         {
             return new ModelBuilder(_fields);
         }

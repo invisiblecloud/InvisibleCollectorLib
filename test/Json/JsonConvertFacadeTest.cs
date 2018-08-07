@@ -76,7 +76,7 @@ namespace test.Json
         public void JsonToDictionary_Date()
         {
             var json = TestingUtils.BuildJson((Key1, DateString));
-            var dict = new JsonConvertFacade().JsonToDictionary(json);
+            var dict = new JsonConvertFacade().JsonToDictionary<object>(json);
             TestingUtils.AssertDictionaryContainsItems(dict, (Key1, MinimalDate));
             
         }

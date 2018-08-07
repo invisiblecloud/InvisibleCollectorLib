@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Net;
 using System.Threading.Tasks;
 using InvoiceCaptureLib;
 using InvoiceCaptureLib.Model;
+using InvoiceCaptureLib.Utils;
 using NUnit.Framework;
 using test.Model;
+using WireMock.Util;
 
 namespace test
 {
@@ -17,23 +21,35 @@ namespace test
             string expectedJson = null)
         {
             _mockServer.AddRequest(expectedMethod, expectedPath, expectedJson,
-                    expectedJson is null ? BodylessHeaders : BodiedHeaders, expectedJson is null? BodyHeaderDifference : null)
+                    expectedJson is null ? BodylessHeaders : BodiedHeaders,
+                    expectedJson is null ? BodyHeaderDifference : null)
                 .AddJsonResponse(responseJson);
 
             var uri = _mockServer.GetUrl();
             return new InvoiceCapture(TestApiKey, uri);
         }
 
-        private void AssertingRequest<TModel>(string expectedMethod, string expectedPath, ModelBuilder replyModelBuilder,
+        private void AssertingRequest<TModel>(string expectedMethod, string expectedPath,
+            ModelBuilder replyModelBuilder,
             Func<InvoiceCapture, Task<TModel>> requestMethod, string expectedJson = null)
             where TModel : InvoiceCaptureLib.Model.Model, new()
         {
-            var returnedJson = replyModelBuilder.buildJson();
-            var expectedModel = replyModelBuilder.buildModel<TModel>();
+            var returnedJson = replyModelBuilder.BuildJson();
+            var expectedModel = replyModelBuilder.BuildModel<TModel>();
 
             var ic = ConfigureIc(expectedMethod, expectedPath, returnedJson, expectedJson);
             var result = requestMethod(ic).Result;
             Assert.AreEqual(expectedModel, result);
+        }
+
+        [Test]
+        public void RegisterNewCustomerAsync_correct()
+        {
+            var request = ModelBuilder.BuildRequestCustomerBuilder();
+            var reply = ModelBuilder.BuildRequestCustomerBuilder();
+            AssertingRequest("POST", $"customers", reply,
+                async ic => await ic.RegisterNewCustomerAsync(request.BuildModel<Customer>()),
+                request.BuildJson());
         }
 
         [Test]
@@ -60,6 +76,14 @@ namespace test
         }
 
         [Test]
+        public void RequestCustomerInfoAsync_correct()
+        {
+            var builder = ModelBuilder.BuildReplyCustomerBuilder();
+            AssertingRequest("GET", $"customers/{TestId}", builder,
+                async ic => await ic.RequestCustomerInfoAsync(TestId));
+        }
+
+        [Test]
         public void SetCompanyNotifications_correct()
         {
             var builder = ModelBuilder.BuildReplyCompanyBuilder();
@@ -76,29 +100,10 @@ namespace test
         public void UpdateCompanyInfoAsync_correct()
         {
             var replyBuilder = ModelBuilder.BuildReplyCompanyBuilder();
-            var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder(); 
+            var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder();
             AssertingRequest("PUT", "companies", replyBuilder,
-                async ic => await ic.UpdateCompanyInfoAsync(requestBuilder.buildModel<Company>()),
-                requestBuilder.buildJson());
-        }
-
-        [Test]
-        public void RequestCustomerInfoAsync_correct()
-        {
-            var builder = ModelBuilder.BuildReplyCustomerBuilder();
-            AssertingRequest("GET", $"customers/{TestId}", builder,
-                async ic => await ic.RequestCustomerInfoAsync(TestId));
-
-        }
-
-        [Test]
-        public void RegisterNewCustomerAsync_correct()
-        {
-            var request = ModelBuilder.BuildRequestCustomerBuilder();
-            var reply = ModelBuilder.BuildRequestCustomerBuilder();
-            AssertingRequest("POST", $"customers", reply,
-                async ic => await ic.RegisterNewCustomerAsync(request.buildModel<Customer>()), 
-                request.buildJson());
+                async ic => await ic.UpdateCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
+                requestBuilder.BuildJson());
         }
 
         [Test]
@@ -106,15 +111,40 @@ namespace test
         {
             var request = ModelBuilder.BuildRequestCustomerBuilder();
             var reply = ModelBuilder.BuildReplyCustomerBuilder();
-            var requestModel = reply.buildModel<Customer>();
+            var requestModel = reply.BuildModel<Customer>();
             AssertingRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
                 async ic => await ic.UpdateCustomerInfoAsync(requestModel),
-                request.buildJson());
+                request.BuildJson());
         }
 
+        private static readonly IDictionary<string, string> Attributes1 = new Dictionary<string, string>()
+        {
+            {"test-attr-1", "test-value-1"},
+            {"test-attr-2", "test-value-2"},
+        }.ToImmutableDictionary();
 
+        private static readonly IDictionary<string, string> Attributes2 = new Dictionary<string, string>(Attributes1)
+        {
+            {"test-attr-3", "test-value-3"},
+        }.ToImmutableDictionary();
 
+        [Test]
+        public async Task SetCustomerAttributesAsync_correct()
+        {
+            var requestJson = ModelBuilder.DictToJson(Attributes1);
+            var replyJson = ModelBuilder.DictToJson(Attributes2);
+            var ic = ConfigureIc("POST", $"customers/{TestId}/attributes", replyJson, requestJson);
+            var returnedAttributes = await ic.SetCustomerAttributesAsync(TestId, Attributes1);
+            Assert.True(Attributes2.EqualsDict(returnedAttributes));
+        }
 
-
+        [Test]
+        public async Task GetCustomerAttributesAsync_correct()
+        {
+            var replyJson = ModelBuilder.DictToJson(Attributes2);
+            var ic = ConfigureIc("GET", $"customers/{TestId}/attributes", replyJson);
+            var returnedAttributes = await ic.GetCustomerAttributesAsync(TestId);
+            Assert.True(Attributes2.EqualsDict(returnedAttributes));
+        }
     }
 }

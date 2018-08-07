@@ -13,7 +13,7 @@ namespace InvoiceCaptureLib.Utils
                    dict1.Count == dict2.Count && !dict1.Except(dict2).Any();
         }
 
-        internal static string StringifyDictionary<T, V>(this IDictionary<T, V> dictionary)
+        internal static string StringifyDictionary<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
         {
             return
                 $"{{ {string.Join(", ", dictionary.Select(pair => Convert.ToString(pair.Key) + "=" + Convert.ToString(pair.Value)).ToArray())} }}";

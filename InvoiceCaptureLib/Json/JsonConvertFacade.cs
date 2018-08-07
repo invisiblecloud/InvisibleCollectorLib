@@ -34,15 +34,20 @@ namespace InvoiceCaptureLib.Json
         internal T JsonToModel<T>(string json)
             where T : Model.Model, new()
         {
-            var fields = JsonToDictionary(json);
+            var fields = JsonToDictionary<object>(json);
             return new T {Fields = fields};
         }
 
         internal string ModelToSendableJson(Model.Model model)
         {
+            return DictionaryToJson(model.SendableDictionary);
+        }
+
+        internal string DictionaryToJson<TValue>(IDictionary<string, TValue> dict)
+        {
             try
             {
-                return JsonConvert.SerializeObject(model.SendableDictionary, SerializerSettings);
+                return JsonConvert.SerializeObject(dict, SerializerSettings);
             }
             catch (JsonException e)
             {
@@ -50,11 +55,11 @@ namespace InvoiceCaptureLib.Json
             }
         }
 
-        internal IDictionary<string, object> JsonToDictionary(string json)
+        internal IDictionary<string, TValue> JsonToDictionary<TValue>(string json)
         {
             try
             { 
-                return JsonConvert.DeserializeObject<Dictionary<string, object>>(json, SerializerSettings);
+                return JsonConvert.DeserializeObject<Dictionary<string, TValue>>(json, SerializerSettings);
             }
             catch (JsonException e)
             {

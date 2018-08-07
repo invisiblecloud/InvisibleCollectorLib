@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using InvoiceCaptureLib.Connection;
@@ -13,6 +14,7 @@ namespace InvoiceCaptureLib
         private const string CustomerEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
+        private const string CustomerAttributesPath = "attributes";
         private readonly ApiConnectionFacade _apiFacade;
         private readonly JsonConvertFacade _jsonFacade;
         private readonly HttpUriBuilder _uriBuilder;
@@ -41,18 +43,18 @@ namespace InvoiceCaptureLib
         public async Task<Customer> RegisterNewCustomerAsync(Customer customer)
         {
             customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
-            return await MakeBodiedRequest("POST", customer, CustomerEndpoint);
+            return await MakeBodiedModelRequest("POST", customer, CustomerEndpoint);
         }
 
         public async Task<Company> RequestCompanyInfoAsync()
         {
-            return await MakeBodylessRequest<Company>("GET", CompanyEndpoint);
+            return await MakeBodylessModelRequest<Company>("GET", CompanyEndpoint);
         }
 
         public async Task<Customer> RequestCustomerInfoAsync(string customerId)
         {
             var id = AssertValidAndNormalizeId(customerId);
-            return await MakeBodylessRequest<Customer>("GET", CustomerEndpoint, id);
+            return await MakeBodylessModelRequest<Customer>("GET", CustomerEndpoint, id);
         }
 
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
@@ -61,21 +63,41 @@ namespace InvoiceCaptureLib
             const string DisableNotifications = "disableNotifications";
 
             var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
-            return await MakeBodylessRequest<Company>("PUT", CompanyEndpoint, endpoint);
+            return await MakeBodylessModelRequest<Company>("PUT", CompanyEndpoint, endpoint);
         }
 
         public async Task<Company> UpdateCompanyInfoAsync(Company company)
         {
             company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
-            return await MakeBodiedRequest("PUT", company, CompanyEndpoint);
+            return await MakeBodiedModelRequest("PUT", company, CompanyEndpoint);
         }
 
         public async Task<Customer> UpdateCustomerInfoAsync(Customer customer)
         {
             var id = AssertValidAndNormalizeId(customer.RoutableId);
             customer.AssertHasMandatoryFields(Customer.CountryName);
-            return await MakeBodiedRequest("PUT", customer, CustomerEndpoint, id);
+            return await MakeBodiedModelRequest("PUT", customer, CustomerEndpoint, id);
         }
+
+        public async Task<IDictionary<string, string>> SetCustomerAttributesAsync(string customerId,
+            IDictionary<string, string> attributes)
+        {
+            var id = AssertValidAndNormalizeId(customerId);
+            var requestJson = _jsonFacade.DictionaryToJson(attributes);
+            var requestUri = _uriBuilder.BuildUri(CustomerEndpoint, id, CustomerAttributesPath);
+            var returnJson = await _apiFacade.CallApiAsync(requestUri, "POST", requestJson);
+            return _jsonFacade.JsonToDictionary<string>(returnJson);
+        }
+
+        public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
+        {
+            var id = AssertValidAndNormalizeId(customerId);
+            var requestUri = _uriBuilder.BuildUri(CustomerEndpoint, id, CustomerAttributesPath);
+            var returnJson = await _apiFacade.CallApiAsync(requestUri, "GET");
+            return _jsonFacade.JsonToDictionary<string>(returnJson);
+        }
+
+
 
         private string AssertValidAndNormalizeId(string id)
         {
@@ -85,7 +107,7 @@ namespace InvoiceCaptureLib
             return WebUtility.UrlEncode(id);
         }
 
-        private async Task<TModel> MakeBodiedRequest<TModel>(string method, TModel modelToSend,
+        private async Task<TModel> MakeBodiedModelRequest<TModel>(string method, TModel modelToSend,
             params string[] pathFragments) where TModel : Model.Model, new()
         {
             var requestJson = _jsonFacade.ModelToSendableJson(modelToSend);
@@ -94,7 +116,7 @@ namespace InvoiceCaptureLib
             return _jsonFacade.JsonToModel<TModel>(returnJson);
         }
 
-        private async Task<TModel> MakeBodylessRequest<TModel>(string method, params string[] pathFragments)
+        private async Task<TModel> MakeBodylessModelRequest<TModel>(string method, params string[] pathFragments)
             where TModel : Model.Model, new()
         {
             var requestUri = _uriBuilder.BuildUri(pathFragments);
