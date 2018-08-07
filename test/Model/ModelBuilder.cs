@@ -50,6 +50,7 @@ namespace test.Model
             return JsonConvert.SerializeObject(_fields, SerializerSettings);
         }
 
+        // should only add the id
         public static ModelBuilder BuildReplyCompanyBuilder()
         {
             var builder = BuildRequestCompanyBuilder();
@@ -70,6 +71,7 @@ namespace test.Model
             return new ModelBuilder(fields);
         }
 
+        // should only add the id
         public static ModelBuilder BuildReplyCustomerBuilder()
         {
             var builder = BuildRequestCustomerBuilder();

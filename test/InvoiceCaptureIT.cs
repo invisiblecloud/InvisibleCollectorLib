@@ -91,5 +91,30 @@ namespace test
 
         }
 
+        [Test]
+        public void RegisterNewCustomerAsync_correct()
+        {
+            var request = ModelBuilder.BuildRequestCustomerBuilder();
+            var reply = ModelBuilder.BuildRequestCustomerBuilder();
+            AssertingRequest("POST", $"customers", reply,
+                async ic => await ic.RegisterNewCustomerAsync(request.buildModel<Customer>()), 
+                request.buildJson());
+        }
+
+        [Test]
+        public void UpdateCustomerInfoAsync_correct()
+        {
+            var request = ModelBuilder.BuildRequestCustomerBuilder();
+            var reply = ModelBuilder.BuildReplyCustomerBuilder();
+            var requestModel = reply.buildModel<Customer>();
+            AssertingRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
+                async ic => await ic.UpdateCustomerInfoAsync(requestModel),
+                request.buildJson());
+        }
+
+
+
+
+
     }
 }

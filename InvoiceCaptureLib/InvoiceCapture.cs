@@ -79,7 +79,7 @@ namespace InvoiceCaptureLib
 
         private string AssertValidAndNormalizeId(string id)
         {
-            if (string.IsNullOrWhiteSpace(id) || id.Contains("/"))
+            if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentException("Illegal routing id: " + id);
 
             return WebUtility.UrlEncode(id);
