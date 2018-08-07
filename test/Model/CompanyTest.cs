@@ -1,4 +1,4 @@
-﻿using InvoiceCaptureLib.Model;
+﻿using InvisibleCollectorLib.Model;
 using NUnit.Framework;
 
 namespace test.Model

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using InvoiceCaptureLib.Utils;
+using InvisibleCollectorLib.Utils;
 using NUnit.Framework;
 using test.Connection;
 

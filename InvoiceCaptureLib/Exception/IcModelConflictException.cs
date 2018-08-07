@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InvoiceCaptureLib.Exception
+namespace InvisibleCollectorLib.Exception
 {
     public class IcModelConflictException : IcException
     {

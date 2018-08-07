@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using InvoiceCaptureLib.Model;
+using InvisibleCollectorLib.Model;
 using NUnit.Framework;
 
 namespace test.Model

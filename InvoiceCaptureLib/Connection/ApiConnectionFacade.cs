@@ -5,10 +5,10 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using InvoiceCaptureLib.Exception;
-using InvoiceCaptureLib.Utils;
+using InvisibleCollectorLib.Exception;
+using InvisibleCollectorLib.Utils;
 
-namespace InvoiceCaptureLib.Connection
+namespace InvisibleCollectorLib.Connection
 {
     // TODO: optimize webclient connections with ServicePointManager class
 

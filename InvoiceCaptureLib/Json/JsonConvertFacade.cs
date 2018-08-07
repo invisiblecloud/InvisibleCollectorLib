@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using InvoiceCaptureLib.Exception;
+using InvisibleCollectorLib.Exception;
 using Newtonsoft.Json;
 
-namespace InvoiceCaptureLib.Json
+namespace InvisibleCollectorLib.Json
 {
     internal class JsonConvertFacade
     {

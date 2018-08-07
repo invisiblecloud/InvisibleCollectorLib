@@ -2,36 +2,36 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using InvoiceCaptureLib.Connection;
-using InvoiceCaptureLib.Json;
-using InvoiceCaptureLib.Model;
+using InvisibleCollectorLib.Connection;
+using InvisibleCollectorLib.Json;
+using InvisibleCollectorLib.Model;
 
-namespace InvoiceCaptureLib
+namespace InvisibleCollectorLib
 {
-    public class InvoiceCapture
+    public class InvisibleCollector
     {
         private const string CompanyEndpoint = "companies";
+        private const string CustomerAttributesPath = "attributes";
         private const string CustomerEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
-        private const string CustomerAttributesPath = "attributes";
         private readonly ApiConnectionFacade _apiFacade;
         private readonly JsonConvertFacade _jsonFacade;
         private readonly HttpUriBuilder _uriBuilder;
 
 
-        public InvoiceCapture(string apiKey, string remoteUri = ProdutionUri)
+        public InvisibleCollector(string apiKey, string remoteUri = ProdutionUri)
         {
             _uriBuilder = new HttpUriBuilder(remoteUri);
             _jsonFacade = new JsonConvertFacade();
             _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary);
         }
 
-        public InvoiceCapture(string apiKey, Uri remoteUri) : this(apiKey, remoteUri.AbsoluteUri)
+        public InvisibleCollector(string apiKey, Uri remoteUri) : this(apiKey, remoteUri.AbsoluteUri)
         {
         }
 
-        internal InvoiceCapture(HttpUriBuilder uriBuilder,
+        internal InvisibleCollector(HttpUriBuilder uriBuilder,
             ApiConnectionFacade apiFacade,
             JsonConvertFacade jsonFacade)
         {
@@ -40,18 +40,26 @@ namespace InvoiceCaptureLib
             _apiFacade = apiFacade;
         }
 
-        public async Task<Customer> RegisterNewCustomerAsync(Customer customer)
+        public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
+        {
+            var id = AssertValidAndNormalizeId(customerId);
+            var requestUri = _uriBuilder.BuildUri(CustomerEndpoint, id, CustomerAttributesPath);
+            var returnJson = await _apiFacade.CallApiAsync(requestUri, "GET");
+            return _jsonFacade.JsonToDictionary<string>(returnJson);
+        }
+
+        public async Task<Customer> SetNewCustomerAsync(Customer customer)
         {
             customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
             return await MakeBodiedModelRequest("POST", customer, CustomerEndpoint);
         }
 
-        public async Task<Company> RequestCompanyInfoAsync()
+        public async Task<Company> GetCompanyInfoAsync()
         {
             return await MakeBodylessModelRequest<Company>("GET", CompanyEndpoint);
         }
 
-        public async Task<Customer> RequestCustomerInfoAsync(string customerId)
+        public async Task<Customer> GetCustomerInfoAsync(string customerId)
         {
             var id = AssertValidAndNormalizeId(customerId);
             return await MakeBodylessModelRequest<Customer>("GET", CustomerEndpoint, id);
@@ -66,19 +74,6 @@ namespace InvoiceCaptureLib
             return await MakeBodylessModelRequest<Company>("PUT", CompanyEndpoint, endpoint);
         }
 
-        public async Task<Company> UpdateCompanyInfoAsync(Company company)
-        {
-            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
-            return await MakeBodiedModelRequest("PUT", company, CompanyEndpoint);
-        }
-
-        public async Task<Customer> UpdateCustomerInfoAsync(Customer customer)
-        {
-            var id = AssertValidAndNormalizeId(customer.RoutableId);
-            customer.AssertHasMandatoryFields(Customer.CountryName);
-            return await MakeBodiedModelRequest("PUT", customer, CustomerEndpoint, id);
-        }
-
         public async Task<IDictionary<string, string>> SetCustomerAttributesAsync(string customerId,
             IDictionary<string, string> attributes)
         {
@@ -89,14 +84,18 @@ namespace InvoiceCaptureLib
             return _jsonFacade.JsonToDictionary<string>(returnJson);
         }
 
-        public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
+        public async Task<Company> SetCompanyInfoAsync(Company company)
         {
-            var id = AssertValidAndNormalizeId(customerId);
-            var requestUri = _uriBuilder.BuildUri(CustomerEndpoint, id, CustomerAttributesPath);
-            var returnJson = await _apiFacade.CallApiAsync(requestUri, "GET");
-            return _jsonFacade.JsonToDictionary<string>(returnJson);
+            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
+            return await MakeBodiedModelRequest("PUT", company, CompanyEndpoint);
         }
 
+        public async Task<Customer> SetCustomerInfoAsync(Customer customer)
+        {
+            var id = AssertValidAndNormalizeId(customer.RoutableId);
+            customer.AssertHasMandatoryFields(Customer.CountryName);
+            return await MakeBodiedModelRequest("PUT", customer, CustomerEndpoint, id);
+        }
 
 
         private string AssertValidAndNormalizeId(string id)

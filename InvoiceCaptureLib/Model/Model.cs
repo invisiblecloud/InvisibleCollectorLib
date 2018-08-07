@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using InvoiceCaptureLib.Utils;
+using InvisibleCollectorLib.Utils;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
     public abstract class Model
     {

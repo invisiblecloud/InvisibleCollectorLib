@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using InvoiceCaptureLib.Model;
+﻿using System.Collections.Generic;
+using InvisibleCollectorLib.Model;
 using Newtonsoft.Json;
 
 namespace test.Model
 {
-    class ModelBuilder
+    internal class ModelBuilder
     {
+        private const string Id = "4567";
+
+        private const string VatNumber = "510205933"; // is actually valid in pt
+
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Include,
             DateFormatString = "yyyy'-'MM'-'dd"
         };
 
-        private const string VatNumber = "510205933"; // is actually valid in pt
-        private const string Id = "4567";
-
-        private IDictionary<string, object> _fields = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> _fields = new Dictionary<string, object>();
 
         public ModelBuilder()
         {
@@ -39,15 +38,15 @@ namespace test.Model
             }
         }
 
-        public T BuildModel<T>()
-            where T : InvoiceCaptureLib.Model.Model, new()
-        {
-            return new T() { Fields = new Dictionary<string, object>(_fields)};
-        }
-
         public string BuildJson()
         {
             return JsonConvert.SerializeObject(_fields, SerializerSettings);
+        }
+
+        public T BuildModel<T>()
+            where T : InvisibleCollectorLib.Model.Model, new()
+        {
+            return new T {Fields = new Dictionary<string, object>(_fields)};
         }
 
         // should only add the id
@@ -59,18 +58,6 @@ namespace test.Model
             return builder;
         }
 
-        public static ModelBuilder BuildRequestCompanyBuilder()
-        {
-            var fields = new Dictionary<string, object>()
-            {
-                { Company.VatNumberName, VatNumber },
-                { Company.NameName, "a name" },
-                { Company.ZipCodeName, null },
-            };
-
-            return new ModelBuilder(fields);
-        }
-
         // should only add the id
         public static ModelBuilder BuildReplyCustomerBuilder()
         {
@@ -80,27 +67,39 @@ namespace test.Model
             return builder;
         }
 
-        public static ModelBuilder BuildRequestCustomerBuilder()
+        public static ModelBuilder BuildRequestCompanyBuilder()
         {
-            var fields = new Dictionary<string, object>()
+            var fields = new Dictionary<string, object>
             {
-                { Customer.VatNumberName, VatNumber },
-                { Customer.NameName, "a name" },
-                { Customer.ZipCodeName, null },
-                { Customer.CountryName, "PT" },
+                {Company.VatNumberName, VatNumber},
+                {Company.NameName, "a name"},
+                {Company.ZipCodeName, null}
             };
 
             return new ModelBuilder(fields);
         }
 
-        public static string DictToJson(IDictionary<string, string> dict)
+        public static ModelBuilder BuildRequestCustomerBuilder()
         {
-            return JsonConvert.SerializeObject(dict, SerializerSettings);
+            var fields = new Dictionary<string, object>
+            {
+                {Customer.VatNumberName, VatNumber},
+                {Customer.NameName, "a name"},
+                {Customer.ZipCodeName, null},
+                {Customer.CountryName, "PT"}
+            };
+
+            return new ModelBuilder(fields);
         }
 
         public ModelBuilder Clone()
         {
             return new ModelBuilder(_fields);
+        }
+
+        public static string DictToJson(IDictionary<string, string> dict)
+        {
+            return JsonConvert.SerializeObject(dict, SerializerSettings);
         }
     }
 }

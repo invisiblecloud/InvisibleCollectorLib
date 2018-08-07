@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using InvoiceCaptureLib.Exception;
-using InvoiceCaptureLib.Json;
+using InvisibleCollectorLib.Exception;
+using InvisibleCollectorLib.Json;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using test.Utils;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
     public class Customer : Model, IRoutableModel
     {

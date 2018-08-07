@@ -63,9 +63,9 @@ namespace test.Utils
             return builder.ToString();
         }
 
-        public static InvoiceCaptureLib.Model.Model BuildModelMock(IDictionary<string, object> fields)
+        public static InvisibleCollectorLib.Model.Model BuildModelMock(IDictionary<string, object> fields)
         {
-            var mock = new Mock<InvoiceCaptureLib.Model.Model>();
+            var mock = new Mock<InvisibleCollectorLib.Model.Model>();
             mock.Setup(m => m.SendableDictionary).Returns(fields);
             return mock.Object;
         }

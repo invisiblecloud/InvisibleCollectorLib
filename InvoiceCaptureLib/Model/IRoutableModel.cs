@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
     interface IRoutableModel
     {

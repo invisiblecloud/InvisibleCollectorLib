@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InvoiceCaptureLib.Connection
+namespace InvisibleCollectorLib.Connection
 {
     internal class HttpUriBuilder
     {

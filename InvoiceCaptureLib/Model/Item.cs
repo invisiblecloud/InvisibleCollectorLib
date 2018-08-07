@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
     public class Item
     {

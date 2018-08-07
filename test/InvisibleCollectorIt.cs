@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
 using System.Threading.Tasks;
-using InvoiceCaptureLib;
-using InvoiceCaptureLib.Model;
-using InvoiceCaptureLib.Utils;
+using InvisibleCollectorLib;
+using InvisibleCollectorLib.Model;
+using InvisibleCollectorLib.Utils;
 using NUnit.Framework;
 using test.Model;
 using WireMock.Util;
@@ -13,11 +13,11 @@ using WireMock.Util;
 namespace test
 {
     [TestFixture]
-    internal class InvoiceCaptureIt : MockServerTesterBase
+    internal class InvisibleCollectorIt : MockServerTesterBase
     {
         private const string TestId = "1234";
 
-        private InvoiceCapture ConfigureIc(string expectedMethod, string expectedPath, string responseJson,
+        private InvisibleCollector ConfigureIc(string expectedMethod, string expectedPath, string responseJson,
             string expectedJson = null)
         {
             _mockServer.AddRequest(expectedMethod, expectedPath, expectedJson,
@@ -26,13 +26,13 @@ namespace test
                 .AddJsonResponse(responseJson);
 
             var uri = _mockServer.GetUrl();
-            return new InvoiceCapture(TestApiKey, uri);
+            return new InvisibleCollector(TestApiKey, uri);
         }
 
         private void AssertingRequest<TModel>(string expectedMethod, string expectedPath,
             ModelBuilder replyModelBuilder,
-            Func<InvoiceCapture, Task<TModel>> requestMethod, string expectedJson = null)
-            where TModel : InvoiceCaptureLib.Model.Model, new()
+            Func<InvisibleCollector, Task<TModel>> requestMethod, string expectedJson = null)
+            where TModel : InvisibleCollectorLib.Model.Model, new()
         {
             var returnedJson = replyModelBuilder.BuildJson();
             var expectedModel = replyModelBuilder.BuildModel<TModel>();
@@ -48,7 +48,7 @@ namespace test
             var request = ModelBuilder.BuildRequestCustomerBuilder();
             var reply = ModelBuilder.BuildRequestCustomerBuilder();
             AssertingRequest("POST", $"customers", reply,
-                async ic => await ic.RegisterNewCustomerAsync(request.BuildModel<Customer>()),
+                async ic => await ic.SetNewCustomerAsync(request.BuildModel<Customer>()),
                 request.BuildJson());
         }
 
@@ -57,7 +57,7 @@ namespace test
         {
             var builder = ModelBuilder.BuildReplyCompanyBuilder();
             AssertingRequest("GET", "companies", builder,
-                async ic => await ic.RequestCompanyInfoAsync());
+                async ic => await ic.GetCompanyInfoAsync());
         }
 
 
@@ -65,14 +65,14 @@ namespace test
         public void RequestCompanyInfoAsync_fail404()
         {
             var ic = ConfigureIc("GET", "someunreachablepath", "{}");
-            Assert.ThrowsAsync<WebException>(() => ic.RequestCompanyInfoAsync());
+            Assert.ThrowsAsync<WebException>(() => ic.GetCompanyInfoAsync());
         }
 
         [Test]
         public void RequestCompanyInfoAsync_failRefuseConnection()
         {
             var uri = new Uri("http://localhost:56087"); //shouldn't be in use
-            Assert.ThrowsAsync<WebException>(() => new InvoiceCapture(TestApiKey, uri).RequestCompanyInfoAsync());
+            Assert.ThrowsAsync<WebException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyInfoAsync());
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace test
         {
             var builder = ModelBuilder.BuildReplyCustomerBuilder();
             AssertingRequest("GET", $"customers/{TestId}", builder,
-                async ic => await ic.RequestCustomerInfoAsync(TestId));
+                async ic => await ic.GetCustomerInfoAsync(TestId));
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace test
             var replyBuilder = ModelBuilder.BuildReplyCompanyBuilder();
             var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder();
             AssertingRequest("PUT", "companies", replyBuilder,
-                async ic => await ic.UpdateCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
+                async ic => await ic.SetCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
                 requestBuilder.BuildJson());
         }
 
@@ -113,7 +113,7 @@ namespace test
             var reply = ModelBuilder.BuildReplyCustomerBuilder();
             var requestModel = reply.BuildModel<Customer>();
             AssertingRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
-                async ic => await ic.UpdateCustomerInfoAsync(requestModel),
+                async ic => await ic.SetCustomerInfoAsync(requestModel),
                 request.BuildJson());
         }
 

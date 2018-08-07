@@ -1,4 +1,4 @@
-﻿namespace InvoiceCaptureLib.Utils
+﻿namespace InvisibleCollectorLib.Utils
 {
     internal static class IcConstants
     {

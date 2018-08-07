@@ -11,6 +11,6 @@
       <PackageReference Include="WireMock.Net" Version="1.0.4.8" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\InvoiceCaptureLib\InvoiceCaptureLib.csproj" />
+      <ProjectReference Include="..\InvoiceCaptureLib\InvisibleCollectorLib.csproj" />
     </ItemGroup>
 </Project>
