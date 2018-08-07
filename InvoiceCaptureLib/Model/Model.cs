@@ -14,6 +14,11 @@ namespace InvisibleCollectorLib.Model
             _fields = new Dictionary<string, object>();
         }
 
+        protected Model(Model model)
+        {
+            _fields = model._fields?.ToDictionary(entry => entry.Key, entry => entry.Value);
+        }
+
         protected object this[string key]
         {
             set => _fields[key] = value;
@@ -36,21 +41,6 @@ namespace InvisibleCollectorLib.Model
         internal virtual IDictionary<string, object> SendableDictionary => _fields
             .Where(pair => SendableFields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
-
-        /// <summary>
-        /// checks if all mandatory fields are present
-        /// </summary>
-        /// <param name="mandatoryFields">the mndatory fields names</param>
-        /// <exception cref="ArgumentException">thrown if a field isn't present</exception>
-        internal void AssertHasMandatoryFields(params string[] mandatoryFields)
-        {
-            foreach (var mandatoryField in mandatoryFields)
-                if (!_fields.ContainsKey(mandatoryField))
-                {
-                    var msg = $"Model is missing mandatory field: {mandatoryField}";
-                    throw new ArgumentException(msg);
-                }
-        }
 
         public override bool Equals(object other)
         {
@@ -78,14 +68,14 @@ namespace InvisibleCollectorLib.Model
             return !(left == right);
         }
 
-        public void UnsetAll()
-        {
-            _fields = new Dictionary<string, object>();
-        }
-
         public override string ToString()
         {
             return _fields.StringifyDictionary();
+        }
+
+        public void UnsetAll()
+        {
+            _fields = new Dictionary<string, object>();
         }
 
         protected T GetField<T>(string key)
@@ -96,6 +86,21 @@ namespace InvisibleCollectorLib.Model
         protected void UnsetField(string fieldName)
         {
             _fields.Remove(fieldName);
+        }
+
+        /// <summary>
+        ///     checks if all mandatory fields are present
+        /// </summary>
+        /// <param name="mandatoryFields">the mndatory fields names</param>
+        /// <exception cref="ArgumentException">thrown if a field isn't present</exception>
+        internal void AssertHasMandatoryFields(params string[] mandatoryFields)
+        {
+            foreach (var mandatoryField in mandatoryFields)
+                if (!_fields.ContainsKey(mandatoryField))
+                {
+                    var msg = $"Model is missing mandatory field: {mandatoryField}";
+                    throw new ArgumentException(msg);
+                }
         }
     }
 }

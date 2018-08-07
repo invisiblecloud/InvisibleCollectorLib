@@ -1,127 +1,192 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using System.Linq;
 
 namespace InvisibleCollectorLib.Model
 {
-    public class Debt
+    public class Debt : Model
     {
-        private string currency;
-        private string customerId;
-        private DateTime date;
-        private DateTime dueDate;
-        private double grossTotal;
-        private string id;
-        private List<Item> items;
-        private double netTotal;
-        private string number;
-        private string status;
-        private double tax;
-        private string type;
+        private const string AttributesName = "attributes";
+        private const string CurrencyName = "currency";
+        private const string CustomerIdName = "customerId";
+        private const string DateName = "date";
+        private const string DueDateName = "dueDate";
+        private const string GrossTotalName = "grossTotal";
+        private const string IdName = "id";
+        private const string ItemsName = "items";
+        private const string NetTotalName = "netTotal";
+        private const string NumberName = "number";
+        private const string StatusName = "status";
+        private const string TaxName = "tax";
+        private const string TypeName = "type";
 
-        public Debt()
+        public IDictionary<string, string> Attributes
         {
-        }
+            get => GetField<IDictionary<string, string>>(AttributesName)
+                ?.ToDictionary(entry => entry.Key, entry => entry.Value);
 
-        public Debt(string number, string type, string customerId, DateTime date, DateTime dueDate)
-        {
-            Number = number;
-            Type = type;
-            CustomerId = customerId;
-            Date = date;
-            DueDate = dueDate;
+            set => this[AttributesName] = value?.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
         public string Currency
         {
-            get => currency;
+            get => GetField<string>(CurrencyName);
 
-            set => currency = value;
+            set => this[CurrencyName] = value;
         }
 
         public string CustomerId
         {
-            get => customerId;
+            get => GetField<string>(CustomerIdName);
 
-            set => customerId = value;
+            set => this[CustomerIdName] = value;
         }
 
         public DateTime Date
         {
-            get => date;
+            get => GetField<DateTime>(DateName);
 
-            set => date = value;
+            set => this[DateName] = value;
         }
 
         public DateTime DueDate
         {
-            get => dueDate;
+            get => GetField<DateTime>(DueDateName);
 
-            set => dueDate = value;
+            set => this[DueDateName] = value; // datetime is immutable
         }
 
-        public double GrossTotal
+        public double? GrossTotal
         {
-            get => grossTotal;
+            get => GetField<double?>(GrossTotalName);
 
-            set => grossTotal = value;
+            set => this[GrossTotalName] = value;
         }
 
         public string Id
         {
-            get => id;
+            get => GetField<string>(IdName);
 
-            set => id = value;
+            set => this[IdName] = value;
         }
 
-        public List<Item> Items
+        public IList<Item> Items
         {
-            get => items;
+            get
+            {
+                var items = GetField<IList<Item>>(ItemsName);
+                return items is null ? null : new List<Item>(items.Select(v => (Item) v.Clone())); // deep copy
+            }
 
-            set => items = value;
+            set => this[ItemsName] =
+                value is null ? null : new List<Item>(value.Select(v => (Item) v.Clone())); // deep copy
         }
 
-
-        public double NetTotal
+        public double? NetTotal
         {
-            get => netTotal;
+            get => GetField<double?>(NetTotalName);
 
-            set => netTotal = value;
+            set => this[NetTotalName] = value;
         }
 
         public string Number
         {
-            get => number;
+            get => GetField<string>(NumberName);
 
-            set => number = value;
+            set => this[NumberName] = value;
         }
 
         public string Status
         {
-            get => status;
+            get => GetField<string>(StatusName);
 
-            set => status = value;
+            set => this[StatusName] = value;
         }
 
-        public double Tax
+        public double? Tax
         {
-            get => tax;
+            get => GetField<double?>(TaxName);
 
-            set => tax = value;
+            set => this[TaxName] = value;
         }
 
         public string Type
         {
-            get => type;
+            get => GetField<string>(TypeName);
 
-            set => type = value;
+            set => this[TypeName] = value;
         }
 
-        public override string ToString()
+        protected override ISet<string> SendableFields =>
+            new SortedSet<string>
+            {
+                NumberName,
+                CustomerIdName,
+                TypeName,
+                StatusName,
+                DateName,
+                DueDateName,
+                NetTotalName,
+                TaxName,
+                GrossTotalName,
+                CurrencyName,
+                ItemsName,
+                AttributesName
+            };
+
+        private IDictionary<string, string> InternalAttributes
         {
-            return JsonConvert.SerializeObject(this,
-                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+            get => GetField<IDictionary<string, string>>(AttributesName);
+
+            set => this[AttributesName] = value;
+        }
+
+        private IList<Item> InternalItems
+        {
+            get => GetField<IList<Item>>(ItemsName);
+
+            set => this[ItemsName] = value;
+        }
+
+        public void AddItem(Item item)
+        {
+            if (InternalItems is null)
+                InternalItems = new List<Item>();
+
+            InternalItems.Add((Item) item.Clone());
+        }
+
+        public override bool Equals(object other)
+        {
+            return other is Debt debt && this == debt;
+        }
+
+        public string GetAttribute(string key)
+        {
+            return InternalAttributes?[key];
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(Debt left, Debt right)
+        {
+            return left == (Model) right;
+        }
+
+        public static bool operator !=(Debt left, Debt right)
+        {
+            return !(left == right);
+        }
+
+        public void SetAttribute(string key, string value)
+        {
+            if (InternalAttributes is null)
+                InternalAttributes = new Dictionary<string, string>();
+
+            InternalAttributes[key] = value;
         }
     }
 }
