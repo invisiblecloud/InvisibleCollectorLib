@@ -202,6 +202,11 @@ namespace InvisibleCollectorLib.Model
             InternalAttributes[key] = value;
         }
 
-        public string RoutableId => this.Id;
+        public string RoutableId => Id;
+
+        internal void AssertItemsHaveMandatoryFields(params string[] mandatoryFields)
+        {
+            InternalItems?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
+        }
     }
 }

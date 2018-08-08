@@ -38,8 +38,8 @@ namespace InvisibleCollectorLib.Json
             }
         }
 
-        internal T JsonToModel<T>(string json)
-            where T : Model.Model, new()
+        internal T JsonToObject<T>(string json)
+            where T : new()
         {
             try
             {

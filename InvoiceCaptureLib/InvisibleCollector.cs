@@ -19,7 +19,6 @@ namespace InvisibleCollectorLib
         private readonly JsonConvertFacade _jsonFacade;
         private readonly HttpUriBuilder _uriBuilder;
 
-
         public InvisibleCollector(string apiKey, string remoteUri = ProdutionUri)
         {
             _uriBuilder = new HttpUriBuilder(remoteUri);
@@ -56,13 +55,13 @@ namespace InvisibleCollectorLib
 
         public async Task<Company> GetCompanyInfoAsync()
         {
-            return await MakeBodylessModelRequest<Company>("GET", CompaniesEndpoint);
+            return await MakeBodylessRequest<Company>("GET", CompaniesEndpoint);
         }
 
         public async Task<Customer> GetCustomerInfoAsync(string customerId)
         {
             var id = AssertValidAndNormalizeId(customerId);
-            return await MakeBodylessModelRequest<Customer>("GET", CustomersEndpoint, id);
+            return await MakeBodylessRequest<Customer>("GET", CustomersEndpoint, id);
         }
 
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
@@ -71,7 +70,7 @@ namespace InvisibleCollectorLib
             const string DisableNotifications = "disableNotifications";
 
             var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
-            return await MakeBodylessModelRequest<Company>("PUT", CompaniesEndpoint, endpoint);
+            return await MakeBodylessRequest<Company>("PUT", CompaniesEndpoint, endpoint);
         }
 
         public async Task<IDictionary<string, string>> SetCustomerAttributesAsync(string customerId,
@@ -100,13 +99,22 @@ namespace InvisibleCollectorLib
         public async Task<Debt> SetNewDebt(Debt debt)
         {
             debt.AssertHasMandatoryFields(Debt.NumberName, Debt.CustomerIdName, Debt.TypeName, Debt.DateName, Debt.DueDateName);
+            debt.AssertItemsHaveMandatoryFields(Item.NameName);
             return await MakeBodiedModelRequest("POST", debt, DebtsEndpoint);
         }
 
         public async Task<Debt> GetDebt(string debtId)
         {
             var id = AssertValidAndNormalizeId(debtId);
-            return await MakeBodylessModelRequest<Debt>("GET", DebtsEndpoint, id);
+            return await MakeBodylessRequest<Debt>("GET", DebtsEndpoint, id);
+        }
+
+        public async Task<IList<Debt>> GetCustomerDebts(string customerId)
+        {
+            const string customerDebtsPath = "debts";
+
+            var id = AssertValidAndNormalizeId(customerId);
+            return await MakeBodylessRequest<List<Debt>>("GET", CustomersEndpoint, id, customerDebtsPath);
         }
 
         private string AssertValidAndNormalizeId(string id)
@@ -123,15 +131,15 @@ namespace InvisibleCollectorLib
             var requestJson = _jsonFacade.ModelToSendableJson(modelToSend);
             var requestUri = _uriBuilder.BuildUri(pathFragments);
             var returnJson = await _apiFacade.CallApiAsync(requestUri, method, requestJson);
-            return _jsonFacade.JsonToModel<TModel>(returnJson);
+            return _jsonFacade.JsonToObject<TModel>(returnJson);
         }
 
-        private async Task<TModel> MakeBodylessModelRequest<TModel>(string method, params string[] pathFragments)
-            where TModel : Model.Model, new()
+        private async Task<TModel> MakeBodylessRequest<TModel>(string method, params string[] pathFragments)
+            where TModel : new()
         {
             var requestUri = _uriBuilder.BuildUri(pathFragments);
             var json = await _apiFacade.CallApiAsync(requestUri, method);
-            return _jsonFacade.JsonToModel<TModel>(json);
+            return _jsonFacade.JsonToObject<TModel>(json);
         }
     }
 }
