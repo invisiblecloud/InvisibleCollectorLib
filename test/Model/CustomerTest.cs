@@ -16,20 +16,20 @@ namespace test.Model
             Assert.IsNull(customer.RoutableId);
 
             string id = "1234";
-            customer.Id = id;
+            customer.Gid = id;
             Assert.AreEqual(customer.RoutableId, id);
 
             string externalId = "0909";
             customer.ExternalId = externalId;
             Assert.AreEqual(customer.RoutableId, id);
 
-            customer.Id = "";
+            customer.Gid = "";
             Assert.AreEqual(customer.RoutableId, externalId);
 
-            customer.Id = null;
+            customer.Gid = null;
             Assert.AreEqual(customer.RoutableId, externalId);
 
-            customer.UnsetId();
+            customer.UnsetGid();
             Assert.AreEqual(customer.RoutableId, externalId);
 
         }

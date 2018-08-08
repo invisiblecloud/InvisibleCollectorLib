@@ -7,7 +7,7 @@ namespace InvisibleCollectorLib.Model
 {
     public abstract class Model
     {
-        private IDictionary<string, object> _fields;
+        protected IDictionary<string, object> _fields;
 
         protected Model()
         {

@@ -34,7 +34,7 @@ namespace InvisibleCollectorLib.Model
             set => this[CountryName] = value;
         }
 
-        public string Id
+        public string Gid
         {
             get => GetField<string>(IdName);
 
@@ -107,7 +107,7 @@ namespace InvisibleCollectorLib.Model
             UnsetField(CountryName);
         }
 
-        public void UnsetId()
+        public void UnsetGid()
         {
             UnsetField(IdName);
         }

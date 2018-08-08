@@ -35,7 +35,8 @@ namespace test
             where TModel : InvisibleCollectorLib.Model.Model, new()
         {
             var returnedJson = replyModelBuilder.BuildJson();
-            var expectedModel = replyModelBuilder.BuildModel<TModel>();
+            // maybe not strip nulls
+            var expectedModel = replyModelBuilder.BuildModel<TModel>(true);
 
             var ic = ConfigureIc(expectedMethod, expectedPath, returnedJson, expectedJson);
             var result = requestMethod(ic).Result;

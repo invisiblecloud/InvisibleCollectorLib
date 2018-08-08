@@ -214,11 +214,11 @@ namespace test.Model
             var company = new Company
             {
                 Name = CompanyName,
-                Id = Id,
+                Gid = Id,
                 NotificationsEnabled = notifications
             };
             Assert.AreEqual(company.Name, CompanyName);
-            Assert.AreEqual(company.Id, Id);
+            Assert.AreEqual(company.Gid, Id);
             Assert.AreEqual(company.NotificationsEnabled, notifications);
         }
 
@@ -232,12 +232,12 @@ namespace test.Model
             var company = new Company
             {
                 Name = CompanyName,
-                Id = Id,
+                Gid = Id,
                 NotificationsEnabled = notifications
             };
 
             company.UnsetName();
-            company.UnsetId();
+            company.UnsetGid();
             company.UnsetNotifications();
 
             Assert.IsNull(company.Name);
@@ -255,7 +255,7 @@ namespace test.Model
             var company = new Company
             {
                 Name = CompanyName,
-                Id = Id,
+                Gid = Id,
                 NotificationsEnabled = notifications
             };
 

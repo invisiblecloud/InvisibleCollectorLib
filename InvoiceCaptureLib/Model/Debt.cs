@@ -45,7 +45,7 @@ namespace InvisibleCollectorLib.Model
 
         public void SetCustomerId(Customer customer)
         {
-            CustomerId = customer.Id;
+            CustomerId = customer.Gid;
         }
 
         public DateTime Date
@@ -147,6 +147,18 @@ namespace InvisibleCollectorLib.Model
             get => GetField<IList<Item>>(ItemsName);
 
             set => this[ItemsName] = value;
+        }
+
+        internal override IDictionary<string, object> SendableDictionary
+        {
+            get
+            {
+                var fields = base.SendableDictionary;
+                if (InternalItems != null)
+                    fields[ItemsName] = InternalItems.Select(item => item.SendableDictionary).ToList();
+
+                return fields;
+            }
         }
 
         public void AddItem(Item item)

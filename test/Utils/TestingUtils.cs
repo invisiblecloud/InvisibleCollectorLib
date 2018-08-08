@@ -82,5 +82,14 @@ namespace test.Utils
 
             return memoryStream;
         }
+
+        public static void StripNulls<T>(this IDictionary<string, T> dictionary)
+        {
+            foreach (var nullEntry in dictionary.Where(entry => entry.Value == null).ToList())
+            {
+                dictionary.Remove(nullEntry.Key);
+            }
+        }
+
     }
 }

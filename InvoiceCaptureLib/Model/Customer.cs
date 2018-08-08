@@ -50,7 +50,7 @@ namespace InvisibleCollectorLib.Model
             set => this[ExternalIdName] = value;
         }
 
-        public string Id
+        public string Gid
         {
             get => GetField<string>(IdName);
 
@@ -103,8 +103,8 @@ namespace InvisibleCollectorLib.Model
         {
             get
             {
-                if (!(Id is null) && Id != "")
-                    return Id;
+                if (!(Gid is null) && Gid != "")
+                    return Gid;
                 return ExternalId;
             }
         }
@@ -154,7 +154,7 @@ namespace InvisibleCollectorLib.Model
             UnsetField(ExternalIdName);
         }
 
-        public void UnsetId()
+        public void UnsetGid()
         {
             UnsetField(IdName);
         }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using InvisibleCollectorLib.Model;
 using Newtonsoft.Json;
+using test.Utils;
+
 
 namespace test.Model
 {
@@ -43,10 +45,14 @@ namespace test.Model
             return JsonConvert.SerializeObject(_fields, SerializerSettings);
         }
 
-        public T BuildModel<T>()
+        public T BuildModel<T>(bool bStripNull = false)
             where T : InvisibleCollectorLib.Model.Model, new()
         {
-            return new T {Fields = new Dictionary<string, object>(_fields)};
+            var fields = new Dictionary<string, object>(_fields);
+            if (bStripNull)
+                fields.StripNulls();
+
+            return new T {Fields = fields };
         }
 
         // should only add the id
