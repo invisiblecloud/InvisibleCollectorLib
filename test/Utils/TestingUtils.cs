@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using test.Model;
 
 namespace test.Utils
 {
@@ -90,6 +92,5 @@ namespace test.Utils
                 dictionary.Remove(nullEntry.Key);
             }
         }
-
     }
 }

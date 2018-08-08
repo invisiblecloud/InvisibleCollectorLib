@@ -8,6 +8,7 @@ using InvisibleCollectorLib.Model;
 using InvisibleCollectorLib.Utils;
 using NUnit.Framework;
 using test.Model;
+using test.Utils;
 using WireMock.Util;
 
 namespace test
@@ -148,7 +149,14 @@ namespace test
             Assert.True(Attributes2.EqualsDict(returnedAttributes));
         }
 
-        //[Test]
-        //public async Task GetDebt
+
+        //TODO fix test
+        [Test]
+        public async Task GetDebtAsync_correct()
+        {
+            //var builder = ModelBuilder.BuildReplyDebtBuilder();
+            //AssertingRequest("GET", $"debts/{TestId}", builder,
+            //    async ic => await ic.GetDebtAsync(TestId));
+        }
     }
 }
