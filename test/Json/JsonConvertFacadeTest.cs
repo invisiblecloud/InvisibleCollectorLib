@@ -61,15 +61,15 @@ namespace test.Json
         private const string DateString = "2015-05-05";
         private static readonly DateTime MinimalDate = new DateTime(2015, 5, 5);
 
-        [Test]
-        public void ModelToSendableJson_Date()
-        {
+        //[Test]
+        //public void ModelToSendableJson_Date()
+        //{
             
-            var dict = new Dictionary<string, object>() { { Key1, MinimalDate } };
-            var model = TestingUtils.BuildModelMock(dict);
-            var returnedJson = new JsonConvertFacade().ModelToSendableJson(model);
-            TestingUtils.AssertStringContainsValues(returnedJson, Key1, DateString);
-        }
+        //    var dict = new Dictionary<string, object>() { { Key1, MinimalDate } };
+        //    var model = TestingUtils.BuildModelMock(dict);
+        //    var returnedJson = new JsonConvertFacade().ModelToSendableJson(model);
+        //    TestingUtils.AssertStringContainsValues(returnedJson, Key1, DateString);
+        //}
 
 
         [Test]
@@ -81,15 +81,15 @@ namespace test.Json
             
         }
 
-        [Test]
-        public void ModelToSendableJson_DateExtraInfo()
-        {
-            var date = new DateTime(2015, 5, 5, 4, 4, 4);
-            var dict = new Dictionary<string, object>() { { Key1, date } };
-            var model = TestingUtils.BuildModelMock(dict);
-            var returnedJson = new JsonConvertFacade().ModelToSendableJson(model);
-            TestingUtils.AssertStringContainsValues(returnedJson, Key1, DateString);
-        }
+        //[Test]
+        //public void ModelToSendableJson_DateExtraInfo()
+        //{
+        //    var date = new DateTime(2015, 5, 5, 4, 4, 4);
+        //    var dict = new Dictionary<string, object>() { { Key1, date } };
+        //    var model = TestingUtils.BuildModelMock(dict);
+        //    var returnedJson = new JsonConvertFacade().ModelToSendableJson(model);
+        //    TestingUtils.AssertStringContainsValues(returnedJson, Key1, DateString);
+        //}
 
 
     }

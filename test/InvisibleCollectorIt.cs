@@ -147,5 +147,8 @@ namespace test
             var returnedAttributes = await ic.GetCustomerAttributesAsync(TestId);
             Assert.True(Attributes2.EqualsDict(returnedAttributes));
         }
+
+        //[Test]
+        //public async Task GetDebt
     }
 }

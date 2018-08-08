@@ -50,11 +50,7 @@ namespace InvisibleCollectorLib.Json
                 throw new IcException($"Failed to parse json: {e.Message}", e);
             }
         }
-
-        internal string ModelToSendableJson(Model.Model model)
-        {
-            return DictionaryToJson(model.SendableDictionary);
-        }
+        
 
         internal string DictionaryToJson<TValue>(IDictionary<string, TValue> dict)
         {

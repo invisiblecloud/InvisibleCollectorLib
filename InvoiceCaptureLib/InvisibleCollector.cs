@@ -39,29 +39,42 @@ namespace InvisibleCollectorLib
             _apiFacade = apiFacade;
         }
 
-        public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
-        {
-            var id = AssertValidAndNormalizeId(customerId);
-            var requestUri = _uriBuilder.BuildUri(CustomersEndpoint, id, CustomersAttributesPath);
-            var returnJson = await _apiFacade.CallApiAsync(requestUri, "GET");
-            return _jsonFacade.JsonToDictionary<string>(returnJson);
-        }
-
-        public async Task<Customer> SetNewCustomerAsync(Customer customer)
-        {
-            customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
-            return await MakeBodiedModelRequest("POST", customer, CustomersEndpoint);
-        }
-
         public async Task<Company> GetCompanyInfoAsync()
         {
             return await MakeBodylessRequest<Company>("GET", CompaniesEndpoint);
         }
 
+        public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
+        {
+            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
+            return await MakeBodylessRequest<Dictionary<string, string>>("GET", CustomersEndpoint, id,
+                CustomersAttributesPath);
+        }
+
+        public async Task<IList<Debt>> GetCustomerDebts(string customerId)
+        {
+            const string customerDebtsPath = "debts";
+
+            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
+            return await MakeBodylessRequest<List<Debt>>("GET", CustomersEndpoint, id, customerDebtsPath);
+        }
+
         public async Task<Customer> GetCustomerInfoAsync(string customerId)
         {
-            var id = AssertValidAndNormalizeId(customerId);
+            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
             return await MakeBodylessRequest<Customer>("GET", CustomersEndpoint, id);
+        }
+
+        public async Task<Debt> GetDebt(string debtId)
+        {
+            var id = HttpUriBuilder.NormalizeUriComponent(debtId);
+            return await MakeBodylessRequest<Debt>("GET", DebtsEndpoint, id);
+        }
+
+        public async Task<Company> SetCompanyInfoAsync(Company company)
+        {
+            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
+            return await MakeRequest<Company, object>("PUT", company.SendableDictionary, CompaniesEndpoint);
         }
 
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
@@ -76,70 +89,51 @@ namespace InvisibleCollectorLib
         public async Task<IDictionary<string, string>> SetCustomerAttributesAsync(string customerId,
             IDictionary<string, string> attributes)
         {
-            var id = AssertValidAndNormalizeId(customerId);
-            var requestJson = _jsonFacade.DictionaryToJson(attributes);
-            var requestUri = _uriBuilder.BuildUri(CustomersEndpoint, id, CustomersAttributesPath);
-            var returnJson = await _apiFacade.CallApiAsync(requestUri, "POST", requestJson);
-            return _jsonFacade.JsonToDictionary<string>(returnJson);
-        }
-
-        public async Task<Company> SetCompanyInfoAsync(Company company)
-        {
-            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
-            return await MakeBodiedModelRequest("PUT", company, CompaniesEndpoint);
+            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
+            return await MakeRequest<Dictionary<string, string>, string>("POST", attributes, CustomersEndpoint, id,
+                CustomersAttributesPath);
         }
 
         public async Task<Customer> SetCustomerInfoAsync(Customer customer)
         {
-            var id = AssertValidAndNormalizeId(customer.RoutableId);
+            var id = HttpUriBuilder.NormalizeUriComponent(customer.RoutableId);
             customer.AssertHasMandatoryFields(Customer.CountryName);
-            return await MakeBodiedModelRequest("PUT", customer, CustomersEndpoint, id);
+            return await MakeRequest<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint, id);
+        }
+
+        public async Task<Customer> SetNewCustomerAsync(Customer customer)
+        {
+            customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
+            return await MakeRequest<Customer, object>("POST", customer.SendableDictionary, CustomersEndpoint);
         }
 
         public async Task<Debt> SetNewDebt(Debt debt)
         {
-            debt.AssertHasMandatoryFields(Debt.NumberName, Debt.CustomerIdName, Debt.TypeName, Debt.DateName, Debt.DueDateName);
+            debt.AssertHasMandatoryFields(Debt.NumberName, Debt.CustomerIdName, Debt.TypeName, Debt.DateName,
+                Debt.DueDateName);
             debt.AssertItemsHaveMandatoryFields(Item.NameName);
-            return await MakeBodiedModelRequest("POST", debt, DebtsEndpoint);
+            return await MakeRequest<Debt, object>("POST", debt.SendableDictionary, DebtsEndpoint);
         }
 
-        public async Task<Debt> GetDebt(string debtId)
+        /// <summary>
+        /// Makes an api request
+        /// </summary>
+        /// <typeparam name="TReturn"></typeparam>
+        /// <param name="method"></param>
+        /// <param name="requestBody"> if null the request doesn't have a body</param>
+        /// <param name="pathFragments"></param>
+        /// <returns></returns>
+        private async Task<TReturn> MakeRequest<TReturn, TDictValue>(string method, IDictionary<string, TDictValue> requestBody = null, params string[] pathFragments) where TReturn : new()
         {
-            var id = AssertValidAndNormalizeId(debtId);
-            return await MakeBodylessRequest<Debt>("GET", DebtsEndpoint, id);
-        }
-
-        public async Task<IList<Debt>> GetCustomerDebts(string customerId)
-        {
-            const string customerDebtsPath = "debts";
-
-            var id = AssertValidAndNormalizeId(customerId);
-            return await MakeBodylessRequest<List<Debt>>("GET", CustomersEndpoint, id, customerDebtsPath);
-        }
-
-        private string AssertValidAndNormalizeId(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("Illegal routing id: " + id);
-
-            return WebUtility.UrlEncode(id);
-        }
-
-        private async Task<TModel> MakeBodiedModelRequest<TModel>(string method, TModel modelToSend,
-            params string[] pathFragments) where TModel : Model.Model, new()
-        {
-            var requestJson = _jsonFacade.ModelToSendableJson(modelToSend);
+            var requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
             var requestUri = _uriBuilder.BuildUri(pathFragments);
-            var returnJson = await _apiFacade.CallApiAsync(requestUri, method, requestJson);
-            return _jsonFacade.JsonToObject<TModel>(returnJson);
+            var json = await _apiFacade.CallApiAsync(requestUri, method, requestJson);
+            return _jsonFacade.JsonToObject<TReturn>(json);
         }
 
-        private async Task<TModel> MakeBodylessRequest<TModel>(string method, params string[] pathFragments)
-            where TModel : new()
+        private async Task<TReturn> MakeBodylessRequest<TReturn>(string method, params string[] pathFragments) where TReturn : new()
         {
-            var requestUri = _uriBuilder.BuildUri(pathFragments);
-            var json = await _apiFacade.CallApiAsync(requestUri, method);
-            return _jsonFacade.JsonToObject<TModel>(json);
+            return await MakeRequest<TReturn, object>(method, null, pathFragments);
         }
     }
 }

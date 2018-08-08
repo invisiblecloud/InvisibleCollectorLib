@@ -163,6 +163,9 @@ namespace InvisibleCollectorLib.Model
 
         public void AddItem(Item item)
         {
+            if (item is null)
+                throw new ArgumentException("Invalid argument");
+
             if (InternalItems is null)
                 InternalItems = new List<Item>();
 

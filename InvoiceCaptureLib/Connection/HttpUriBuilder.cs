@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace InvisibleCollectorLib.Connection
@@ -31,8 +32,16 @@ namespace InvisibleCollectorLib.Connection
 
         internal Uri BuildUri(params string[] fragments)
         {
-            var relativePath = string.Join("/", fragments);
+            var relativePath = String.Join("/", fragments);
             return new Uri(_baseUri, relativePath);
+        }
+
+        internal static string NormalizeUriComponent(string uriComponent)
+        {
+            if (String.IsNullOrWhiteSpace(uriComponent))
+                throw new ArgumentException("Illegal uri component: " + uriComponent);
+
+            return WebUtility.UrlEncode(uriComponent);
         }
     }
 }
