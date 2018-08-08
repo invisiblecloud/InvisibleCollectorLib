@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using InvisibleCollectorLib.Exception;
+using InvisibleCollectorLib.Model;
 using Newtonsoft.Json;
 
 namespace InvisibleCollectorLib.Json
@@ -10,7 +11,7 @@ namespace InvisibleCollectorLib.Json
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Include,
-            DateFormatString = "yyyy'-'MM'-'dd"
+            DateFormatString = "yyyy'-'MM'-'dd",
         };
 
         
@@ -38,8 +39,19 @@ namespace InvisibleCollectorLib.Json
             return new T {Fields = fields};
         }
 
-        internal string ModelToSendableJson(Model.Model model)
+        internal string ModelToSendableJson(Debt model)
         {
+            var fields = model.SendableDictionary;
+            var items = model.Items;
+
+            if (items != null)
+            {
+                fields[Debt.ItemsName] = 
+
+            }
+
+
+
             return DictionaryToJson(model.SendableDictionary);
         }
 

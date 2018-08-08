@@ -10,9 +10,9 @@ namespace InvisibleCollectorLib
 {
     public class InvisibleCollector
     {
-        private const string CompanyEndpoint = "companies";
-        private const string CustomerAttributesPath = "attributes";
-        private const string CustomerEndpoint = "customers";
+        private const string CompaniesEndpoint = "companies";
+        private const string CustomersAttributesPath = "attributes";
+        private const string CustomersEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
         private readonly ApiConnectionFacade _apiFacade;
@@ -43,7 +43,7 @@ namespace InvisibleCollectorLib
         public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
         {
             var id = AssertValidAndNormalizeId(customerId);
-            var requestUri = _uriBuilder.BuildUri(CustomerEndpoint, id, CustomerAttributesPath);
+            var requestUri = _uriBuilder.BuildUri(CustomersEndpoint, id, CustomersAttributesPath);
             var returnJson = await _apiFacade.CallApiAsync(requestUri, "GET");
             return _jsonFacade.JsonToDictionary<string>(returnJson);
         }
@@ -51,18 +51,18 @@ namespace InvisibleCollectorLib
         public async Task<Customer> SetNewCustomerAsync(Customer customer)
         {
             customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
-            return await MakeBodiedModelRequest("POST", customer, CustomerEndpoint);
+            return await MakeBodiedModelRequest("POST", customer, CustomersEndpoint);
         }
 
         public async Task<Company> GetCompanyInfoAsync()
         {
-            return await MakeBodylessModelRequest<Company>("GET", CompanyEndpoint);
+            return await MakeBodylessModelRequest<Company>("GET", CompaniesEndpoint);
         }
 
         public async Task<Customer> GetCustomerInfoAsync(string customerId)
         {
             var id = AssertValidAndNormalizeId(customerId);
-            return await MakeBodylessModelRequest<Customer>("GET", CustomerEndpoint, id);
+            return await MakeBodylessModelRequest<Customer>("GET", CustomersEndpoint, id);
         }
 
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
@@ -71,7 +71,7 @@ namespace InvisibleCollectorLib
             const string DisableNotifications = "disableNotifications";
 
             var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
-            return await MakeBodylessModelRequest<Company>("PUT", CompanyEndpoint, endpoint);
+            return await MakeBodylessModelRequest<Company>("PUT", CompaniesEndpoint, endpoint);
         }
 
         public async Task<IDictionary<string, string>> SetCustomerAttributesAsync(string customerId,
@@ -79,7 +79,7 @@ namespace InvisibleCollectorLib
         {
             var id = AssertValidAndNormalizeId(customerId);
             var requestJson = _jsonFacade.DictionaryToJson(attributes);
-            var requestUri = _uriBuilder.BuildUri(CustomerEndpoint, id, CustomerAttributesPath);
+            var requestUri = _uriBuilder.BuildUri(CustomersEndpoint, id, CustomersAttributesPath);
             var returnJson = await _apiFacade.CallApiAsync(requestUri, "POST", requestJson);
             return _jsonFacade.JsonToDictionary<string>(returnJson);
         }
@@ -87,16 +87,27 @@ namespace InvisibleCollectorLib
         public async Task<Company> SetCompanyInfoAsync(Company company)
         {
             company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
-            return await MakeBodiedModelRequest("PUT", company, CompanyEndpoint);
+            return await MakeBodiedModelRequest("PUT", company, CompaniesEndpoint);
         }
 
         public async Task<Customer> SetCustomerInfoAsync(Customer customer)
         {
             var id = AssertValidAndNormalizeId(customer.RoutableId);
             customer.AssertHasMandatoryFields(Customer.CountryName);
-            return await MakeBodiedModelRequest("PUT", customer, CustomerEndpoint, id);
+            return await MakeBodiedModelRequest("PUT", customer, CustomersEndpoint, id);
         }
 
+        public async Task<Debt> SetNewDebt(Debt debt)
+        {
+            debt.AssertHasMandatoryFields(Debt.NumberName, Debt.CustomerIdName, Debt.TypeName, Debt.DateName, Debt.DueDateName);
+            return await MakeBodiedModelRequest("POST", debt, DebtsEndpoint);
+        }
+
+        public async Task<Debt> GetDebt(string debtId)
+        {
+            var id = AssertValidAndNormalizeId(debtId);
+            return await MakeBodylessModelRequest<Debt>("GET", DebtsEndpoint, id);
+        }
 
         private string AssertValidAndNormalizeId(string id)
         {

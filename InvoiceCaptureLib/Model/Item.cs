@@ -1,24 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace InvisibleCollectorLib.Model
 {
-    public class Item: Model, ICloneable
+    public class Item : Model, ICloneable
     {
-        internal const string NameName = "name";
-
-        internal const string DescriptionName = "description";
-        internal const string PriceName = "price";
-        internal const string QuantityName = "quantity";
-        internal const string VatName = "vat";
-
         private const double FloatingDelta = 0.0001;
 
-        public Item() {}
+        internal const string NameName = "name";
+        internal const string DescriptionName = "description";
+        internal const string QuantityName = "quantity";
+        internal const string VatName = "vat";
+        internal const string PriceName = "price";
 
-        private Item(Item other) : base(other) { }
+        public Item()
+        {
+        }
+
+        private Item(Item other) : base(other)
+        {
+        }
+
+        public string Description
+        {
+            get => GetField<string>(DescriptionName);
+
+            set => this[DescriptionName] = value;
+        }
 
         public string Name
         {
@@ -27,11 +35,11 @@ namespace InvisibleCollectorLib.Model
             set => this[NameName] = value;
         }
 
-        public string Description
+        public double? Price
         {
-            get => GetField<string>(DescriptionName);
+            get => GetField<double?>(PriceName);
 
-            set => this[DescriptionName] = value;
+            set => this[PriceName] = value;
         }
 
         public double? Quantity
@@ -48,14 +56,12 @@ namespace InvisibleCollectorLib.Model
             set => this[VatName] = value;
         }
 
-        public double? Price
+        protected override ISet<string> SendableFields => new SortedSet<string> { NameName, PriceName, QuantityName, VatName, DescriptionName };
+
+        public object Clone()
         {
-            get => GetField<double?>(PriceName);
-
-            set => this[PriceName] = value;
+            return new Item(this);
         }
-
-        protected override ISet<string> SendableFields => new SortedSet<string> { NameName };
 
         public override bool Equals(object other)
         {
@@ -67,14 +73,9 @@ namespace InvisibleCollectorLib.Model
             return base.GetHashCode();
         }
 
-        public object Clone()
-        {
-            return new Item(this);
-        }
-
         public static bool operator ==(Item left, Item right)
         {
-            return left == (Model)right;
+            return left == (Model) right;
         }
 
         public static bool operator !=(Item left, Item right)
@@ -82,14 +83,14 @@ namespace InvisibleCollectorLib.Model
             return !(left == right);
         }
 
-        public void UnsetName()
-        {
-            UnsetField(NameName);
-        }
-
         public void UnsetDescription()
         {
             UnsetField(DescriptionName);
+        }
+
+        public void UnsetName()
+        {
+            UnsetField(NameName);
         }
 
         public void UnsetPrice()

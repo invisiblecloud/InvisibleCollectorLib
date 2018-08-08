@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace InvisibleCollectorLib.Model
 {
-    public class Debt : Model
+    public class Debt : Model, IRoutableModel
     {
-        private const string AttributesName = "attributes";
-        private const string CurrencyName = "currency";
-        private const string CustomerIdName = "customerId";
-        private const string DateName = "date";
-        private const string DueDateName = "dueDate";
-        private const string GrossTotalName = "grossTotal";
-        private const string IdName = "id";
-        private const string ItemsName = "items";
-        private const string NetTotalName = "netTotal";
-        private const string NumberName = "number";
-        private const string StatusName = "status";
-        private const string TaxName = "tax";
-        private const string TypeName = "type";
+        internal const string AttributesName = "attributes";
+        internal const string CurrencyName = "currency";
+        internal const string CustomerIdName = "customerId";
+        internal const string DateName = "date";
+        internal const string DueDateName = "dueDate";
+        internal const string GrossTotalName = "grossTotal";
+        internal const string IdName = "id";
+        internal const string ItemsName = "items";
+        internal const string NetTotalName = "netTotal";
+        internal const string NumberName = "number";
+        internal const string StatusName = "status";
+        internal const string TaxName = "tax";
+        internal const string TypeName = "type";
 
         public IDictionary<string, string> Attributes
         {
@@ -40,6 +41,11 @@ namespace InvisibleCollectorLib.Model
             get => GetField<string>(CustomerIdName);
 
             set => this[CustomerIdName] = value;
+        }
+
+        public void SetCustomerId(Customer customer)
+        {
+            CustomerId = customer.Id;
         }
 
         public DateTime Date
@@ -72,14 +78,9 @@ namespace InvisibleCollectorLib.Model
 
         public IList<Item> Items
         {
-            get
-            {
-                var items = GetField<IList<Item>>(ItemsName);
-                return items is null ? null : new List<Item>(items.Select(v => (Item) v.Clone())); // deep copy
-            }
+            get => GetField<IList<Item>>(ItemsName)?.Select(element => (Item) element.Clone()).ToList(); // deep copy
 
-            set => this[ItemsName] =
-                value is null ? null : new List<Item>(value.Select(v => (Item) v.Clone())); // deep copy
+            set => this[ItemsName] = value?.Select(element => (Item) element.Clone()).ToList();
         }
 
         public double? NetTotal
@@ -188,5 +189,7 @@ namespace InvisibleCollectorLib.Model
 
             InternalAttributes[key] = value;
         }
+
+        public string RoutableId => this.Id;
     }
 }

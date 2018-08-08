@@ -36,6 +36,8 @@ namespace InvisibleCollectorLib.Model
         internal IDictionary<string, object> Fields
         {
             set => _fields = new Dictionary<string, object>(value);
+
+            get => new Dictionary<string, object>(_fields);
         }
 
         internal virtual IDictionary<string, object> SendableDictionary => _fields
