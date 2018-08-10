@@ -211,8 +211,8 @@ namespace InvisibleCollectorLib.Model
 
             return KeyRefEquality(ItemsName) ??
                    KeyRefEquality(AttributesName) ??
-                   left.InternalItems.EqualsList(right.InternalItems) &&
-                   left.InternalAttributes.EqualsDict(right.InternalAttributes);
+                   left.InternalItems.EqualsCollection(right.InternalItems) &&
+                   left.InternalAttributes.EqualsCollection(right.InternalAttributes);
 
             bool? KeyRefEquality(string key)
             {

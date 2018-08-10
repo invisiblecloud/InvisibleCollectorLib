@@ -9,7 +9,7 @@ using test.Connection;
 
 namespace test
 {
-    partial class MockServerTesterBase
+    class MockServerTesterBase
     {
         protected const string TestApiKey = "12345";
 

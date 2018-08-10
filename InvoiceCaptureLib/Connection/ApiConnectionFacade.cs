@@ -59,7 +59,7 @@ namespace InvisibleCollectorLib.Connection
             catch (WebException webException)
             {
                 var errorResponse = webException.Response;
-                if (webException.Status != WebExceptionStatus.ProtocolError || errorResponse?.GetResponseStream() is null || !IsJsonMimeType(errorResponse.Headers))
+                if (webException.Status != WebExceptionStatus.ProtocolError || errorResponse?.GetResponseStream() is null || !IsContentTypeJson(errorResponse.Headers))
                     throw;
 
                 var ex = BuildException(errorResponse.GetResponseStream());
@@ -70,13 +70,13 @@ namespace InvisibleCollectorLib.Connection
             }
 
             // check that the response has 'Content-Type' header set to json
-            if (!IsJsonMimeType(client.ResponseHeaders))
+            if (!IsContentTypeJson(client.ResponseHeaders))
                 throw new IcException("Request valid but no JSON response HTTP header received");
 
             return response;
         }
 
-        private bool IsJsonMimeType(WebHeaderCollection headers)
+        private bool IsContentTypeJson(WebHeaderCollection headers)
         {
             if (headers is null)
                 return false;

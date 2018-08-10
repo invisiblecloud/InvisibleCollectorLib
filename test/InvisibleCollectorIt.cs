@@ -8,8 +8,6 @@ using InvisibleCollectorLib.Model;
 using InvisibleCollectorLib.Utils;
 using NUnit.Framework;
 using test.Model;
-using test.Utils;
-using WireMock.Util;
 
 namespace test
 {
@@ -41,7 +39,7 @@ namespace test
             {"test-attr-3", "test-value-3"}
         }.ToImmutableDictionary();
 
-        private void AssertingRequest<TModel>(string expectedMethod, string expectedPath,
+        private void AssertingModelRequest<TModel>(string expectedMethod, string expectedPath,
             ModelBuilder replyModelBuilder,
             Func<InvisibleCollector, Task<TModel>> requestMethod, string expectedJson = null)
             where TModel : InvisibleCollectorLib.Model.Model, new()
@@ -54,45 +52,80 @@ namespace test
             var result = requestMethod(ic).Result;
             Assert.AreEqual(expectedModel, result);
         }
-        
+
         [Test]
-        public void RegisterNewCustomerAsync_correct()
+        public async Task GetCustomerAttributesAsync_correct()
+        {
+            var replyJson = ModelBuilder.DictToJson(Attributes2);
+            var ic = ConfigureIc("GET", $"customers/{TestId}/attributes", replyJson);
+            var returnedAttributes = await ic.GetCustomerAttributesAsync(TestId);
+            Assert.True(Attributes2.EqualsCollection(returnedAttributes));
+        }
+
+        [Test]
+        public async Task GetCustomerDebtsAsync_correct()
+        {
+            var replyDebts = new List<Debt>
+            {
+                ModelBuilder.BuildReplyDebtBuilder("1", "10").BuildModel<Debt>(),
+                ModelBuilder.BuildReplyDebtBuilder("2", "20").BuildModel<Debt>()
+            };
+
+            var replyJson = ModelBuilder.ToJson(replyDebts);
+
+            var ic = ConfigureIc("GET", $"customers/{TestId}/debts", replyJson);
+            var result = await ic.GetCustomerDebtsAsync(TestId);
+            for (var i = 0; i < replyDebts.Count; i++)
+                Assert.AreEqual(replyDebts[i], result[i]);
+        }
+
+
+        [Test]
+        public void GetDebtAsync_correct()
+        {
+            var builder = ModelBuilder.BuildReplyDebtBuilder();
+            AssertingModelRequest("GET", $"debts/{TestId}", builder,
+                async ic => await ic.GetDebtAsync(TestId));
+        }
+
+        [Test]
+        public void SetNewCustomerAsync_correct()
         {
             var request = ModelBuilder.BuildRequestCustomerBuilder();
             var reply = ModelBuilder.BuildRequestCustomerBuilder();
-            AssertingRequest("POST", $"customers", reply,
+            AssertingModelRequest("POST", $"customers", reply,
                 async ic => await ic.SetNewCustomerAsync(request.BuildModel<Customer>()),
                 request.BuildJson());
         }
 
         [Test]
-        public void RequestCompanyInfoAsync_correct()
+        public void GetCompanyInfoAsync_correct()
         {
             var builder = ModelBuilder.BuildReplyCompanyBuilder();
-            AssertingRequest("GET", "companies", builder,
+            AssertingModelRequest("GET", "companies", builder,
                 async ic => await ic.GetCompanyInfoAsync());
         }
 
 
         [Test]
-        public void RequestCompanyInfoAsync_fail404()
+        public void GetCompanyInfoAsync_fail404()
         {
             var ic = ConfigureIc("GET", "someunreachablepath", "{}");
             Assert.ThrowsAsync<WebException>(() => ic.GetCompanyInfoAsync());
         }
 
         [Test]
-        public void RequestCompanyInfoAsync_failRefuseConnection()
+        public void GetCompanyInfoAsync_failRefuseConnection()
         {
             var uri = new Uri("http://localhost:56087"); //shouldn't be in use
             Assert.ThrowsAsync<WebException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyInfoAsync());
         }
 
         [Test]
-        public void RequestCustomerInfoAsync_correct()
+        public void GetCustomerInfoAsync_correct()
         {
             var builder = ModelBuilder.BuildReplyCustomerBuilder();
-            AssertingRequest("GET", $"customers/{TestId}", builder,
+            AssertingModelRequest("GET", $"customers/{TestId}", builder,
                 async ic => await ic.GetCustomerInfoAsync(TestId));
         }
 
@@ -101,33 +134,12 @@ namespace test
         {
             var builder = ModelBuilder.BuildReplyCompanyBuilder();
             builder[Company.NotificationsName] = true;
-            AssertingRequest("PUT", "companies/enableNotifications", builder,
+            AssertingModelRequest("PUT", "companies/enableNotifications", builder,
                 async ic => await ic.SetCompanyNotificationsAsync(true));
 
             builder[Company.NotificationsName] = false;
-            AssertingRequest("PUT", "companies/disableNotifications", builder,
+            AssertingModelRequest("PUT", "companies/disableNotifications", builder,
                 async ic => await ic.SetCompanyNotificationsAsync(false));
-        }
-
-        [Test]
-        public void UpdateCompanyInfoAsync_correct()
-        {
-            var replyBuilder = ModelBuilder.BuildReplyCompanyBuilder();
-            var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder();
-            AssertingRequest("PUT", "companies", replyBuilder,
-                async ic => await ic.SetCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
-                requestBuilder.BuildJson());
-        }
-
-        [Test]
-        public void UpdateCustomerInfoAsync_correct()
-        {
-            var request = ModelBuilder.BuildRequestCustomerBuilder();
-            var reply = ModelBuilder.BuildReplyCustomerBuilder();
-            var requestModel = reply.BuildModel<Customer>();
-            AssertingRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
-                async ic => await ic.SetCustomerInfoAsync(requestModel),
-                request.BuildJson());
         }
 
         [Test]
@@ -137,25 +149,7 @@ namespace test
             var replyJson = ModelBuilder.DictToJson(Attributes2);
             var ic = ConfigureIc("POST", $"customers/{TestId}/attributes", replyJson, requestJson);
             var returnedAttributes = await ic.SetCustomerAttributesAsync(TestId, Attributes1);
-            Assert.True(Attributes2.EqualsDict(returnedAttributes));
-        }
-
-        [Test]
-        public async Task GetCustomerAttributesAsync_correct()
-        {
-            var replyJson = ModelBuilder.DictToJson(Attributes2);
-            var ic = ConfigureIc("GET", $"customers/{TestId}/attributes", replyJson);
-            var returnedAttributes = await ic.GetCustomerAttributesAsync(TestId);
-            Assert.True(Attributes2.EqualsDict(returnedAttributes));
-        }
-
-
-        [Test]
-        public void GetDebtAsync_correct()
-        {
-            var builder = ModelBuilder.BuildReplyDebtBuilder();
-            AssertingRequest("GET", $"debts/{TestId}", builder,
-                async ic => await ic.GetDebtAsync(TestId));
+            Assert.True(Attributes2.EqualsCollection(returnedAttributes));
         }
 
         [Test]
@@ -163,27 +157,30 @@ namespace test
         {
             var request = ModelBuilder.BuildRequestDebtBuilder();
             var reply = ModelBuilder.BuildReplyDebtBuilder();
-            AssertingRequest("POST", $"debts", reply,
+            AssertingModelRequest("POST", $"debts", reply,
                 async ic => await ic.SetNewDebtAsync(request.BuildModel<Debt>()),
                 request.BuildJson());
         }
 
         [Test]
-        public async Task GetCustomerDebtsAsync_correct()
+        public void SetCompanyInfoAsync_correct()
         {
-            var replyDebts = new List<Debt>
-            {
-                ModelBuilder.BuildReplyDebtBuilder("1", "10").BuildModel<Debt>(),
-                ModelBuilder.BuildReplyDebtBuilder("2", "20").BuildModel<Debt>(),
-            };
-
-            var replyJson = ModelBuilder.ToJson(replyDebts);
-
-            var ic = ConfigureIc("GET", $"customers/{TestId}/debts", replyJson);
-            var result = await ic.GetCustomerDebtsAsync(TestId);
-            for (int i = 0; i < replyDebts.Count; i++)
-                Assert.AreEqual(replyDebts[i], result[i]);
+            var replyBuilder = ModelBuilder.BuildReplyCompanyBuilder();
+            var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder();
+            AssertingModelRequest("PUT", "companies", replyBuilder,
+                async ic => await ic.SetCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
+                requestBuilder.BuildJson());
         }
 
+        [Test]
+        public void SetCustomerInfoAsync_correct()
+        {
+            var request = ModelBuilder.BuildRequestCustomerBuilder();
+            var reply = ModelBuilder.BuildReplyCustomerBuilder();
+            var requestModel = reply.BuildModel<Customer>();
+            AssertingModelRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
+                async ic => await ic.SetCustomerInfoAsync(requestModel),
+                request.BuildJson());
+        }
     }
 }

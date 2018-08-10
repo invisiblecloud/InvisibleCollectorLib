@@ -7,7 +7,7 @@ using test.Model;
 namespace test.Utils
 {
     [TestFixture]
-    internal class UtilsTest
+    internal class IcUtilsTest
     {
         [Test]
         public void ReferenceNullableEquals_Values()

@@ -47,5 +47,6 @@ namespace test.Connection
 
             Assert.AreEqual($"{BaseUri}/{Fragment1}/{Fragment2}", result.AbsoluteUri);
         }
+
     }
 }

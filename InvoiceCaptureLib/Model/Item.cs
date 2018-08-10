@@ -5,8 +5,6 @@ namespace InvisibleCollectorLib.Model
 {
     public class Item : Model, ICloneable
     {
-        private const double FloatingDelta = 0.0001;
-
         internal const string NameName = "name";
         internal const string DescriptionName = "description";
         internal const string QuantityName = "quantity";

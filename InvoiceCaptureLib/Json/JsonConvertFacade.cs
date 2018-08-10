@@ -51,7 +51,6 @@ namespace InvisibleCollectorLib.Json
             }
         }
         
-
         internal string DictionaryToJson<TValue>(IDictionary<string, TValue> dict)
         {
             try

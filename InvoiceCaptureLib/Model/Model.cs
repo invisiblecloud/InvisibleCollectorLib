@@ -62,7 +62,7 @@ namespace InvisibleCollectorLib.Model
         public static bool operator ==(Model left, Model right)
         {
             return IcUtils.ReferenceNullableEquals(left, right) ??
-                   left._fields.EqualsDict(right._fields);
+                   left._fields.EqualsCollection(right._fields);
         }
 
         public static bool operator !=(Model left, Model right)
