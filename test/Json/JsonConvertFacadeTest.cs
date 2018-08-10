@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using InvisibleCollectorLib.Exception;
 using InvisibleCollectorLib.Json;
+using InvisibleCollectorLib.Model;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using test.Utils;
 
 namespace test.Json
 {
+    // mostly testing for correct json serialization settings
     [TestFixture]
     class JsonConvertFacadeTest
     {
@@ -21,7 +23,8 @@ namespace test.Json
         private const string NullValue = null;
         private const string StringVal = "a string";
         private const string MalformedJson = "{\\/";
-
+        private const string DateString = "2015-05-05";
+        private static readonly DateTime MinimalDate = new DateTime(2015, 5, 5);
 
 
         [Test]
@@ -58,9 +61,6 @@ namespace test.Json
             Assert.That(() => new JsonConvertFacade().JsonStreamToStringDictionary(jsonStream), Throws.InstanceOf<IcException>());
         }
 
-        private const string DateString = "2015-05-05";
-        private static readonly DateTime MinimalDate = new DateTime(2015, 5, 5);
-
         [Test]
         public void ModelToSendableJson_Date()
         {
@@ -70,12 +70,11 @@ namespace test.Json
             TestingUtils.AssertStringContainsValues(returnedJson, Key1, DateString);
         }
 
-
         [Test]
         public void JsonToDictionary_Date()
         {
             var json = TestingUtils.BuildJson((Key1, DateString));
-            var dict = new JsonConvertFacade().JsonToDictionary<object>(json);
+            var dict = new JsonConvertFacade().JsonToObject<Dictionary<string, object>>(json);
             TestingUtils.AssertDictionaryContainsItems(dict, (Key1, MinimalDate));
             
         }
@@ -89,6 +88,26 @@ namespace test.Json
             TestingUtils.AssertStringContainsValues(returnedJson, Key1, DateString);
         }
 
+        [Test]
+        public void JsonToObject_IgnoreNulls()
+        {
+            string json = @"{""description"": null}";
+            var retDict = new JsonConvertFacade().JsonToObject<Item>(json);
+            Assert.AreEqual(0, retDict.Fields.Count);
+        }
+
+        [Test]
+        public void DictionaryToJson_IncludeNulls()
+        {
+            var dictionary = new Dictionary<string, string>()
+            {
+                { "a", null }
+            };
+
+            var json = new JsonConvertFacade().DictionaryToJson(dictionary);
+            TestingUtils.AssertStringContainsValues(json, "a", "null");
+
+        }
 
     }
 }

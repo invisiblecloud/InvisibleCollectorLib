@@ -63,16 +63,6 @@ namespace InvisibleCollectorLib.Json
             }
         }
 
-        internal IDictionary<string, TValue> JsonToDictionary<TValue>(string json)
-        {
-            try
-            { 
-                return JsonConvert.DeserializeObject<Dictionary<string, TValue>>(json, DeserializerSettings);
-            }
-            catch (JsonException e)
-            {
-                throw new IcException($"Failed to parse json: {e.Message}", e);
-            }
-        }
+      
     }
 }
