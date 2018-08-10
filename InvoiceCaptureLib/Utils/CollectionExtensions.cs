@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InvisibleCollectorLib.Utils
 {
-    internal static class DictionaryExtensions
+    internal static class CollectionExtensions
     {
         internal static bool EqualsDict<K, V>(this IDictionary<K, V> dict1, IDictionary<K, V> dict2)
         {
@@ -16,7 +16,13 @@ namespace InvisibleCollectorLib.Utils
         internal static string StringifyDictionary<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
         {
             return
-                $"{{ {string.Join(", ", dictionary.Select(pair => Convert.ToString(pair.Key) + "=" + Convert.ToString(pair.Value)).ToArray())} }}";
+                $"{{ {String.Join(", ", dictionary.Select(pair => Convert.ToString(pair.Key) + "=" + Convert.ToString(pair.Value)).ToArray())} }}";
+        }
+
+        internal static bool EqualsList<T>(this IList<T> list1, IList<T> list2)
+        {
+            return IcUtils.ReferenceNullableEquals(list1, list2) ??
+                   list1.Count == list2.Count && !list1.Except(list2).Any();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
@@ -20,6 +20,19 @@ namespace InvisibleCollectorLib.Model
         internal const string StatusName = "status";
         internal const string TaxName = "tax";
         internal const string TypeName = "type";
+
+        public Debt()
+        {
+        }
+
+        internal Debt(Debt other) : base(other)
+        {
+            if (other.InternalItems != null)
+                InternalItems = other.Items;
+
+            if (other.InternalAttributes != null)
+                InternalAttributes = other.Attributes;
+        }
 
         public IDictionary<string, string> Attributes
         {
@@ -41,11 +54,6 @@ namespace InvisibleCollectorLib.Model
             get => GetField<string>(CustomerIdName);
 
             set => this[CustomerIdName] = value;
-        }
-
-        public void SetCustomerId(Customer customer)
-        {
-            CustomerId = customer.Gid;
         }
 
         public DateTime Date
@@ -135,6 +143,18 @@ namespace InvisibleCollectorLib.Model
                 AttributesName
             };
 
+        internal override IDictionary<string, object> SendableDictionary
+        {
+            get
+            {
+                var fields = base.SendableDictionary;
+                if (InternalItems != null)
+                    fields[ItemsName] = InternalItems.Select(item => item.SendableDictionary).ToList();
+
+                return fields;
+            }
+        }
+
         private IDictionary<string, string> InternalAttributes
         {
             get => GetField<IDictionary<string, string>>(AttributesName);
@@ -149,17 +169,7 @@ namespace InvisibleCollectorLib.Model
             set => this[ItemsName] = value;
         }
 
-        internal override IDictionary<string, object> SendableDictionary
-        {
-            get
-            {
-                var fields = base.SendableDictionary;
-                if (InternalItems != null)
-                    fields[ItemsName] = InternalItems.Select(item => item.SendableDictionary).ToList();
-
-                return fields;
-            }
-        }
+        public string RoutableId => Id;
 
         public void AddItem(Item item)
         {
@@ -189,7 +199,31 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Debt left, Debt right)
         {
-            return left == (Model) right;
+            var refDebt = IcUtils.ReferenceNullableEquals(left, right);
+            if (refDebt != null)
+                return (bool) refDebt;
+
+            var leftCopy = new Debt(left) {InternalItems = null, InternalAttributes = null};
+            var rightCopy = new Debt(right) {InternalItems = null, InternalAttributes = null};
+
+            if (leftCopy != (Model) rightCopy) // compare non collection attributes
+                return false;
+
+            return KeyRefEquality(ItemsName) ??
+                   KeyRefEquality(AttributesName) ??
+                   left.InternalItems.EqualsList(right.InternalItems) &&
+                   left.InternalAttributes.EqualsDict(right.InternalAttributes);
+
+            bool? KeyRefEquality(string key)
+            {
+                var leftHas = left._fields.ContainsKey(key);
+                var rightHas = right._fields.ContainsKey(key);
+                if (leftHas == rightHas && rightHas) // both true
+                    return null;
+                if (leftHas == rightHas) // both false
+                    return true;
+                return false;
+            }
         }
 
         public static bool operator !=(Debt left, Debt right)
@@ -205,7 +239,10 @@ namespace InvisibleCollectorLib.Model
             InternalAttributes[key] = value;
         }
 
-        public string RoutableId => Id;
+        public void SetCustomerId(Customer customer)
+        {
+            CustomerId = customer.Gid;
+        }
 
         internal void AssertItemsHaveMandatoryFields(params string[] mandatoryFields)
         {

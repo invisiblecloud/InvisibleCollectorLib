@@ -18,32 +18,43 @@ namespace test
     {
         private const string TestId = "1234";
 
-        private InvisibleCollector ConfigureIc(string expectedMethod, string expectedPath, string responseJson,
+        private InvisibleCollector ConfigureIc(string expectedMethod, string expectedPath, string jsonReply,
             string expectedJson = null)
         {
             _mockServer.AddRequest(expectedMethod, expectedPath, expectedJson,
                     expectedJson is null ? BodylessHeaders : BodiedHeaders,
                     expectedJson is null ? BodyHeaderDifference : null)
-                .AddJsonResponse(responseJson);
+                .AddJsonResponse(jsonReply);
 
             var uri = _mockServer.GetUrl();
             return new InvisibleCollector(TestApiKey, uri);
         }
+
+        private static readonly IDictionary<string, string> Attributes1 = new Dictionary<string, string>
+        {
+            {"test-attr-1", "test-value-1"},
+            {"test-attr-2", "test-value-2"}
+        }.ToImmutableDictionary();
+
+        private static readonly IDictionary<string, string> Attributes2 = new Dictionary<string, string>(Attributes1)
+        {
+            {"test-attr-3", "test-value-3"}
+        }.ToImmutableDictionary();
 
         private void AssertingRequest<TModel>(string expectedMethod, string expectedPath,
             ModelBuilder replyModelBuilder,
             Func<InvisibleCollector, Task<TModel>> requestMethod, string expectedJson = null)
             where TModel : InvisibleCollectorLib.Model.Model, new()
         {
-            var returnedJson = replyModelBuilder.BuildJson();
+            var jsonReply = replyModelBuilder.BuildJson();
             // maybe not strip nulls
             var expectedModel = replyModelBuilder.BuildModel<TModel>(true);
 
-            var ic = ConfigureIc(expectedMethod, expectedPath, returnedJson, expectedJson);
+            var ic = ConfigureIc(expectedMethod, expectedPath, jsonReply, expectedJson);
             var result = requestMethod(ic).Result;
             Assert.AreEqual(expectedModel, result);
         }
-
+        
         [Test]
         public void RegisterNewCustomerAsync_correct()
         {
@@ -119,17 +130,6 @@ namespace test
                 request.BuildJson());
         }
 
-        private static readonly IDictionary<string, string> Attributes1 = new Dictionary<string, string>()
-        {
-            {"test-attr-1", "test-value-1"},
-            {"test-attr-2", "test-value-2"},
-        }.ToImmutableDictionary();
-
-        private static readonly IDictionary<string, string> Attributes2 = new Dictionary<string, string>(Attributes1)
-        {
-            {"test-attr-3", "test-value-3"},
-        }.ToImmutableDictionary();
-
         [Test]
         public async Task SetCustomerAttributesAsync_correct()
         {
@@ -150,13 +150,40 @@ namespace test
         }
 
 
-        //TODO fix test
         [Test]
-        public async Task GetDebtAsync_correct()
+        public void GetDebtAsync_correct()
         {
-            //var builder = ModelBuilder.BuildReplyDebtBuilder();
-            //AssertingRequest("GET", $"debts/{TestId}", builder,
-            //    async ic => await ic.GetDebtAsync(TestId));
+            var builder = ModelBuilder.BuildReplyDebtBuilder();
+            AssertingRequest("GET", $"debts/{TestId}", builder,
+                async ic => await ic.GetDebtAsync(TestId));
         }
+
+        [Test]
+        public void SetNewDebtAsync_correct()
+        {
+            var request = ModelBuilder.BuildRequestDebtBuilder();
+            var reply = ModelBuilder.BuildReplyDebtBuilder();
+            AssertingRequest("POST", $"debts", reply,
+                async ic => await ic.SetNewDebtAsync(request.BuildModel<Debt>()),
+                request.BuildJson());
+        }
+
+        [Test]
+        public async Task GetCustomerDebtsAsync_correct()
+        {
+            var replyDebts = new List<Debt>
+            {
+                ModelBuilder.BuildReplyDebtBuilder("1", "10").BuildModel<Debt>(),
+                ModelBuilder.BuildReplyDebtBuilder("2", "20").BuildModel<Debt>(),
+            };
+
+            var replyJson = ModelBuilder.ToJson(replyDebts);
+
+            var ic = ConfigureIc("GET", $"customers/{TestId}/debts", replyJson);
+            var result = await ic.GetCustomerDebtsAsync(TestId);
+            for (int i = 0; i < replyDebts.Count; i++)
+                Assert.AreEqual(replyDebts[i], result[i]);
+        }
+
     }
 }

@@ -3,27 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using InvisibleCollectorLib.Model;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using test.Utils;
 
 namespace test.Model
 {
     internal class DebtBuilder : ModelBuilder
     {
-        public DebtBuilder(Dictionary<string, object> fields): base(fields)
-        { }
+        public DebtBuilder(Dictionary<string, object> fields) : base(fields)
+        {
+        }
 
         public override string BuildJson()
         {
+            var copy = new ModelBuilder(this);
             var key = Debt.ItemsName;
             if (_fields.ContainsKey(key) && _fields[key] != null)
-            {
-                _fields[key] = ((IList<Item>) _fields[key]).Select(item => item.SendableDictionary)
+                copy._fields[key] = ((IList<Item>) copy._fields[key]).Select(item => item.SendableDictionary)
                     .ToList();
-            }
 
-            return base.BuildJson();
+            return copy.BuildJson();
         }
-    } 
+    }
 
     internal class ModelBuilder
     {
@@ -31,7 +32,13 @@ namespace test.Model
 
         private const string VatNumber = "510205933"; // is actually valid in pt
 
-        protected readonly IDictionary<string, object> _fields = new Dictionary<string, object>();
+        internal static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Include,
+            DateFormatString = "yyyy'-'MM'-'dd"
+        };
+
+        internal readonly IDictionary<string, object> _fields = new Dictionary<string, object>();
 
         public ModelBuilder()
         {
@@ -40,6 +47,10 @@ namespace test.Model
         public ModelBuilder(IDictionary<string, object> fields)
         {
             _fields = new Dictionary<string, object>(fields);
+        }
+
+        public ModelBuilder(ModelBuilder other) : this(other._fields)
+        {
         }
 
         public object this[string key]
@@ -51,6 +62,24 @@ namespace test.Model
                 _fields.TryGetValue(key, out var value);
                 return value;
             }
+        }
+
+        public static void AssertEquals<TModel>(TModel expectedModel, TModel result)
+            where TModel : InvisibleCollectorLib.Model.Model, new()
+        {
+            Assert.AreEqual(expectedModel, result);
+        }
+
+        public static Item BuildItem(string name = "item-name")
+        {
+            return new Item
+            {
+                Name = name,
+                Description = "a description",
+                Price = 12.0,
+                Quantity = 2,
+                Vat = 24
+            };
         }
 
         public virtual string BuildJson()
@@ -66,18 +95,6 @@ namespace test.Model
                 fields.StripNulls();
 
             return new T {Fields = fields};
-        }
-
-        public static Item BuildItem(string name = "item-name")
-        {
-            return new Item
-            {
-                Name = name,
-                Description = "a description",
-                Price = 12.0,
-                Quantity = 2,
-                Vat = 24
-            };
         }
 
         // should only add the id
@@ -99,9 +116,9 @@ namespace test.Model
         }
 
         // should only add the id
-        public static ModelBuilder BuildReplyDebtBuilder(string id = Id)
+        public static ModelBuilder BuildReplyDebtBuilder(string id = Id, string number = Id)
         {
-            var builder = BuildRequestDebtBuilder();
+            var builder = BuildRequestDebtBuilder(number);
             builder[Debt.IdName] = id;
 
             return builder;
@@ -162,15 +179,14 @@ namespace test.Model
             return new DebtBuilder(fields);
         }
 
-        internal static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Include,
-            DateFormatString = "yyyy'-'MM'-'dd"
-        };
-
         public static string DictToJson(IDictionary<string, string> dict)
         {
             return JsonConvert.SerializeObject(dict, SerializerSettings);
+        }
+
+        public static string ToJson(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, SerializerSettings);
         }
     }
 }

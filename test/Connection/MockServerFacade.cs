@@ -19,6 +19,16 @@ namespace test.Connection
             _mockServer = FluentMockServer.Start();
         }
 
+        public MockServerFacade AddHtmlResponse(string body = "{}", int statusCode = 200)
+        {
+            var request = requests.Pop();
+            var response = Response.Create().WithStatusCode(statusCode).WithBody(body)
+                .WithHeader("Content-Type", "text/html; charset=UTF-8");
+
+            _mockServer.Given(request).RespondWith(response);
+            return this;
+        }
+
         /**
          * Must have a previous mathing request
          */
@@ -27,16 +37,6 @@ namespace test.Connection
             var request = requests.Pop();
             var response = Response.Create().WithStatusCode(statusCode).WithBody(json)
                 .WithHeader("Content-Type", "application/json; charset=UTF-8");
-
-            _mockServer.Given(request).RespondWith(response);
-            return this;
-        }
-
-        public MockServerFacade AddHtmlResponse(string body = "{}", int statusCode = 200)
-        {
-            var request = requests.Pop();
-            var response = Response.Create().WithStatusCode(statusCode).WithBody(body)
-                .WithHeader("Content-Type", "text/html; charset=UTF-8");
 
             _mockServer.Given(request).RespondWith(response);
             return this;
@@ -60,7 +60,8 @@ namespace test.Connection
 
             if (notExpectedHeaders != null)
                 foreach (var pair in notExpectedHeaders)
-                    request.WithHeader(pair.Item1, $"*{pair.Item2}*", false, MatchBehaviour.RejectOnMatch); // should mimick String.Contains()
+                    request.WithHeader(pair.Item1, $"*{pair.Item2}*", false,
+                        MatchBehaviour.RejectOnMatch); // should mimick String.Contains()
 
 
             requests.Push(request);
