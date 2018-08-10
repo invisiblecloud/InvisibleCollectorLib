@@ -244,6 +244,71 @@ namespace InvisibleCollectorLib.Model
             CustomerId = customer.Gid;
         }
 
+        public void UnsetAttributes()
+        {
+            UnsetField(AttributesName);
+        }
+
+        public void UnsetCurrency()
+        {
+            UnsetField(CurrencyName);
+        }
+
+        public void UnsetCustomerId()
+        {
+            UnsetField(CustomerIdName);
+        }
+
+        public void UnsetDate()
+        {
+            UnsetField(DateName);
+        }
+
+        public void UnsetDueDate()
+        {
+            UnsetField(DueDateName);
+        }
+
+        public void UnsetGrossTotal()
+        {
+            UnsetField(GrossTotalName);
+        }
+
+        public void UnsetId()
+        {
+            UnsetField(IdName);
+        }
+
+        public void UnsetItems()
+        {
+            UnsetField(ItemsName);
+        }
+
+        public void UnsetNetTotal()
+        {
+            UnsetField(NetTotalName);
+        }
+
+        public void UnsetNumber()
+        {
+            UnsetField(NumberName);
+        }
+
+        public void UnsetStatus()
+        {
+            UnsetField(StatusName);
+        }
+
+        public void UnsetTax()
+        {
+            UnsetField(TaxName);
+        }
+
+        public void UnsetType()
+        {
+            UnsetField(TypeName);
+        }
+
         internal void AssertItemsHaveMandatoryFields(params string[] mandatoryFields)
         {
             InternalItems?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
