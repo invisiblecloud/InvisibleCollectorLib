@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using InvoiceCaptureLib.Exception;
+using InvisibleCollectorLib.Exception;
 using Newtonsoft.Json;
 
-namespace InvoiceCaptureLib.Json
+namespace InvisibleCollectorLib.Json
 {
     internal class JsonConvertFacade
     {
@@ -13,7 +13,14 @@ namespace InvoiceCaptureLib.Json
             DateFormatString = "yyyy'-'MM'-'dd"
         };
 
-        
+        //should nulls be ignored?
+        private static readonly JsonSerializerSettings DeserializerSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            DateFormatString = "yyyy'-'MM'-'dd"
+        };
+
+
         internal IDictionary<string, string> JsonStreamToStringDictionary(Stream stream)
         {
             try
@@ -31,18 +38,24 @@ namespace InvoiceCaptureLib.Json
             }
         }
 
-        internal T JsonToModel<T>(string json)
-            where T : Model.Model, new()
-        {
-            var fields = JsonToDictionary(json);
-            return new T {Fields = fields};
-        }
-
-        internal string ModelToSendableJson(Model.Model model)
+        internal T JsonToObject<T>(string json)
+            where T : new()
         {
             try
             {
-                return JsonConvert.SerializeObject(model.SendableDictionary, SerializerSettings);
+                return JsonConvert.DeserializeObject<T>(json, DeserializerSettings);
+            }
+            catch (JsonException e)
+            {
+                throw new IcException($"Failed to parse json: {e.Message}", e);
+            }
+        }
+        
+        internal string DictionaryToJson<TValue>(IDictionary<string, TValue> dict)
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(dict, SerializerSettings);
             }
             catch (JsonException e)
             {
@@ -50,16 +63,6 @@ namespace InvoiceCaptureLib.Json
             }
         }
 
-        private IDictionary<string, object> JsonToDictionary(string json)
-        {
-            try
-            { 
-                return JsonConvert.DeserializeObject<Dictionary<string, object>>(json, SerializerSettings);
-            }
-            catch (JsonException e)
-            {
-                throw new IcException($"Failed to parse json: {e.Message}", e);
-            }
-        }
+      
     }
 }

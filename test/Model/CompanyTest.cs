@@ -1,4 +1,4 @@
-﻿using InvoiceCaptureLib.Model;
+﻿using InvisibleCollectorLib.Model;
 using NUnit.Framework;
 
 namespace test.Model
@@ -15,7 +15,7 @@ namespace test.Model
                 VatNumber = "123"
             };
 
-            company.AssertHasMandatoryFields();
+            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace test.Model
                 Name = "a name"
             };
 
-            Assert.That(company.AssertHasMandatoryFields, Throws.Exception);
+            Assert.That(()=>company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName), Throws.Exception);
         }
 
         [Test]
@@ -211,12 +211,14 @@ namespace test.Model
             const string Id = null;
             bool? notifications = false;
 
-            var company = new Company();
-            company.Name = CompanyName;
-            company.Id = Id;
-            company.NotificationsEnabled = notifications;
+            var company = new Company
+            {
+                Name = CompanyName,
+                Gid = Id,
+                NotificationsEnabled = notifications
+            };
             Assert.AreEqual(company.Name, CompanyName);
-            Assert.AreEqual(company.Id, Id);
+            Assert.AreEqual(company.Gid, Id);
             Assert.AreEqual(company.NotificationsEnabled, notifications);
         }
 
@@ -227,14 +229,37 @@ namespace test.Model
             const string Id = null;
             bool? notifications = false;
 
-            var company = new Company();
-            company.Name = CompanyName;
-            company.Id = Id;
-            company.NotificationsEnabled = notifications;
+            var company = new Company
+            {
+                Name = CompanyName,
+                Gid = Id,
+                NotificationsEnabled = notifications
+            };
 
             company.UnsetName();
-            company.UnsetId();
+            company.UnsetGid();
             company.UnsetNotifications();
+
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.NotificationsEnabled);
+        }
+
+        [Test]
+        public void UnsetAll_correctlyUnset()
+        {
+            const string CompanyName = "hello";
+            const string Id = null;
+            bool? notifications = false;
+
+            var company = new Company
+            {
+                Name = CompanyName,
+                Gid = Id,
+                NotificationsEnabled = notifications
+            };
+
+            company.UnsetAll();
 
             Assert.IsNull(company.Name);
             Assert.IsNull(company.Name);

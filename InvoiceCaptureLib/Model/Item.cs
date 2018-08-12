@@ -1,61 +1,109 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
-    public class Item
+    public class Item : Model, ICloneable
     {
-        private string description;
-        private string name;
-        private double price;
-        private double quantity;
-        private double vat;
+        internal const string NameName = "name";
+        internal const string DescriptionName = "description";
+        internal const string QuantityName = "quantity";
+        internal const string VatName = "vat";
+        internal const string PriceName = "price";
 
         public Item()
         {
         }
 
-        public Item(string myName, double myVat, double myPrice)
+        private Item(Item other) : base(other)
         {
-            name = myName;
-            vat = myVat;
-            price = myPrice;
-        }
-
-        public string Name
-        {
-            get => name;
-            set => name = value;
         }
 
         public string Description
         {
-            get => description;
-            set => description = value;
+            get => GetField<string>(DescriptionName);
+
+            set => this[DescriptionName] = value;
         }
 
-        public double Quantity
+        public string Name
         {
-            get => quantity;
-            set => quantity = value;
+            get => GetField<string>(NameName);
+
+            set => this[NameName] = value;
         }
 
-        public double Vat
+        public double? Price
         {
-            get => vat;
-            set => vat = value;
+            get => GetField<double?>(PriceName);
+
+            set => this[PriceName] = value;
         }
 
-        public double Price
+        public double? Quantity
         {
-            get => price;
-            set => price = value;
+            get => GetField<double?>(QuantityName);
+
+            set => this[QuantityName] = value;
         }
 
-        public override string ToString()
+        public double? Vat
         {
-            return JsonConvert.SerializeObject(this,
-                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+            get => GetField<double?>(VatName);
+
+            set => this[VatName] = value;
+        }
+
+        protected override ISet<string> SendableFields => new SortedSet<string> { NameName, PriceName, QuantityName, VatName, DescriptionName };
+
+        public object Clone()
+        {
+            return new Item(this);
+        }
+
+        public override bool Equals(object other)
+        {
+            return other is Item item && this == item;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(Item left, Item right)
+        {
+            return left == (Model) right;
+        }
+
+        public static bool operator !=(Item left, Item right)
+        {
+            return !(left == right);
+        }
+
+        public void UnsetDescription()
+        {
+            UnsetField(DescriptionName);
+        }
+
+        public void UnsetName()
+        {
+            UnsetField(NameName);
+        }
+
+        public void UnsetPrice()
+        {
+            UnsetField(PriceName);
+        }
+
+        public void UnsetQuantity()
+        {
+            UnsetField(QuantityName);
+        }
+
+        public void UnsetVat()
+        {
+            UnsetField(VatName);
         }
     }
 }

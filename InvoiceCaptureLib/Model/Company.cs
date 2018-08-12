@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
-    public class Company : Model, IRoutableModel
+    public class Company : Model
     {
-        private const string AddressName = "address";
-        private const string CityName = "city";
-        private const string CountryName = "country";
-        private const string IdName = "gid";
-        private const string NameName = "name";
-        private const string NotificationsName = "notificationsEnabled";
-        private const string VatNumberName = "vatNumber";
-        private const string ZipCodeName = "zipCode";
+        internal const string AddressName = "address";
+        internal const string CityName = "city";
+        internal const string CountryName = "country";
+        internal const string IdName = "gid";
+        internal const string NameName = "name";
+        internal const string NotificationsName = "notificationsEnabled";
+        internal const string VatNumberName = "vatNumber";
+        internal const string ZipCodeName = "zipCode";
 
         public string Address
         {
@@ -34,7 +34,7 @@ namespace InvoiceCaptureLib.Model
             set => this[CountryName] = value;
         }
 
-        public string Id
+        public string Gid
         {
             get => GetField<string>(IdName);
 
@@ -69,13 +69,8 @@ namespace InvoiceCaptureLib.Model
             set => this[ZipCodeName] = value;
         }
 
-        protected override ISet<string> MandatoryFields =>
-            new SortedSet<string> {NameName, VatNumberName};
-
         protected override ISet<string> SendableFields =>
             new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName};
-
-        public string RoutableId => Id;
 
         public override bool Equals(object other)
         {
@@ -112,7 +107,7 @@ namespace InvoiceCaptureLib.Model
             UnsetField(CountryName);
         }
 
-        public void UnsetId()
+        public void UnsetGid()
         {
             UnsetField(IdName);
         }

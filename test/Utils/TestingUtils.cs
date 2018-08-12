@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using test.Model;
 
 namespace test.Utils
 {
@@ -63,9 +65,9 @@ namespace test.Utils
             return builder.ToString();
         }
 
-        public static InvoiceCaptureLib.Model.Model BuildModelMock(IDictionary<string, object> fields)
+        public static InvisibleCollectorLib.Model.Model BuildModelMock(IDictionary<string, object> fields)
         {
-            var mock = new Mock<InvoiceCaptureLib.Model.Model>();
+            var mock = new Mock<InvisibleCollectorLib.Model.Model>();
             mock.Setup(m => m.SendableDictionary).Returns(fields);
             return mock.Object;
         }
@@ -81,6 +83,14 @@ namespace test.Utils
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             return memoryStream;
+        }
+
+        public static void StripNulls<T>(this IDictionary<string, T> dictionary)
+        {
+            foreach (var nullEntry in dictionary.Where(entry => entry.Value == null).ToList())
+            {
+                dictionary.Remove(nullEntry.Key);
+            }
         }
     }
 }

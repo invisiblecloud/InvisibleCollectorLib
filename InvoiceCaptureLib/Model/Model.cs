@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using InvoiceCaptureLib.Utils;
+using InvisibleCollectorLib.Utils;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
     public abstract class Model
     {
-        private IDictionary<string, object> _fields;
+        protected IDictionary<string, object> _fields;
 
         protected Model()
         {
             _fields = new Dictionary<string, object>();
+        }
+
+        protected Model(Model model)
+        {
+            _fields = model._fields?.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
         protected object this[string key]
@@ -20,35 +25,24 @@ namespace InvoiceCaptureLib.Model
 
             private get
             {
-                object value = null;
-                _fields.TryGetValue(key, out value);
+                _fields.TryGetValue(key, out var value);
                 return value;
             }
         }
 
-        protected virtual ISet<string> MandatoryFields { get; }
-
         protected virtual ISet<string> SendableFields { get; }
 
-        // don't use this
+        // don't use this, will fail on null value
         internal IDictionary<string, object> Fields
         {
             set => _fields = new Dictionary<string, object>(value);
+
+            get => new Dictionary<string, object>(_fields);
         }
 
         internal virtual IDictionary<string, object> SendableDictionary => _fields
             .Where(pair => SendableFields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
-
-        public void AssertHasMandatoryFields()
-        {
-            foreach (var mandatoryField in MandatoryFields)
-                if (!_fields.ContainsKey(mandatoryField))
-                {
-                    var msg = $"Model is missing mandatory field: {mandatoryField}";
-                    throw new ArgumentException(msg);
-                }
-        }
 
         public override bool Equals(object other)
         {
@@ -67,8 +61,8 @@ namespace InvoiceCaptureLib.Model
 
         public static bool operator ==(Model left, Model right)
         {
-            return IcUtils.ReferenceNullableEquals(left, right) ?? 
-                   IcUtils.EqualsDict(left._fields, right._fields);
+            return IcUtils.ReferenceNullableEquals(left, right) ??
+                   left._fields.EqualsCollection(right._fields);
         }
 
         public static bool operator !=(Model left, Model right)
@@ -78,7 +72,12 @@ namespace InvoiceCaptureLib.Model
 
         public override string ToString()
         {
-            return IcUtils.StringifyDictionary(_fields);
+            return _fields.StringifyDictionary();
+        }
+
+        public void UnsetAll()
+        {
+            _fields = new Dictionary<string, object>();
         }
 
         protected T GetField<T>(string key)
@@ -89,6 +88,21 @@ namespace InvoiceCaptureLib.Model
         protected void UnsetField(string fieldName)
         {
             _fields.Remove(fieldName);
+        }
+
+        /// <summary>
+        ///     checks if all mandatory fields are present
+        /// </summary>
+        /// <param name="mandatoryFields">the mndatory fields names</param>
+        /// <exception cref="ArgumentException">thrown if a field isn't present</exception>
+        internal void AssertHasMandatoryFields(params string[] mandatoryFields)
+        {
+            foreach (var mandatoryField in mandatoryFields)
+                if (!_fields.ContainsKey(mandatoryField))
+                {
+                    var msg = $"Model is missing mandatory field: {mandatoryField}";
+                    throw new ArgumentException(msg);
+                }
         }
     }
 }

@@ -1,106 +1,182 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using System.Collections.Generic;
 
-namespace InvoiceCaptureLib.Model
+namespace InvisibleCollectorLib.Model
 {
-    public class Customer
+    public class Customer : Model, IRoutableModel
     {
-        private string address;
-        private string city;
-        private string country;
-        private string email;
-        private string externalId;
-        private string gid;
-        private string name;
-        private string phone;
-        private string vatNumber;
-        private string zipCode;
-
-        public Customer(string myName, string myVatNumber, string myCountry)
-        {
-            name = myName;
-            vatNumber = myVatNumber;
-            country = myCountry;
-        }
-
-        protected Customer()
-        {
-        }
-
-        public string Name
-        {
-            get => name;
-
-            set => name = value;
-        }
-
-        public string ExternalId
-        {
-            get => externalId;
-
-            set => externalId = value;
-        }
-
-        public string VatNumber
-        {
-            get => vatNumber;
-
-            set => vatNumber = value;
-        }
+        internal const string AddressName = "address";
+        internal const string CityName = "city";
+        internal const string CountryName = "country";
+        internal const string EmailName = "email";
+        internal const string ExternalIdName = "externalId";
+        internal const string IdName = "gid";
+        internal const string NameName = "name";
+        internal const string PhoneName = "phone";
+        internal const string VatNumberName = "vatNumber";
+        internal const string ZipCodeName = "zipCode";
 
         public string Address
         {
-            get => address;
+            get => GetField<string>(AddressName);
 
-            set => address = value;
-        }
-
-        public string ZipCode
-        {
-            get => zipCode;
-
-            set => zipCode = value;
+            set => this[AddressName] = value;
         }
 
         public string City
         {
-            get => city;
+            get => GetField<string>(CityName);
 
-            set => city = value;
+            set => this[CityName] = value;
         }
 
         public string Country
         {
-            get => country;
+            get => GetField<string>(CountryName);
 
-            set => country = value;
+            set => this[CountryName] = value;
         }
 
         public string Email
         {
-            get => email;
+            get => GetField<string>(EmailName);
 
-            set => email = value;
+            set => this[EmailName] = value;
         }
 
-        public string Phone
+        public string ExternalId
         {
-            get => phone;
+            get => GetField<string>(ExternalIdName);
 
-            set => phone = value;
+            set => this[ExternalIdName] = value;
         }
 
         public string Gid
         {
-            get => gid;
+            get => GetField<string>(IdName);
 
-            set => gid = value;
+            set => this[IdName] = value;
         }
 
-        public override string ToString()
+        public string Name
         {
-            return JsonConvert.SerializeObject(this,
-                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+            get => GetField<string>(NameName);
+
+            set => this[NameName] = value;
+        }
+
+        public string Phone
+        {
+            get => GetField<string>(PhoneName);
+
+            set => this[PhoneName] = value;
+        }
+
+        public string VatNumber
+        {
+            get => GetField<string>(VatNumberName);
+
+            set => this[VatNumberName] = value;
+        }
+
+        public string ZipCode
+        {
+            get => GetField<string>(ZipCodeName);
+
+            set => this[ZipCodeName] = value;
+        }
+
+        protected override ISet<string> SendableFields =>
+            new SortedSet<string>
+            {
+                NameName,
+                ExternalIdName,
+                VatNumberName,
+                AddressName,
+                ZipCodeName,
+                CityName,
+                CountryName,
+                EmailName,
+                PhoneName
+            };
+
+        public string RoutableId
+        {
+            get
+            {
+                if (!(Gid is null) && Gid != "")
+                    return Gid;
+                return ExternalId;
+            }
+        }
+
+        public override bool Equals(object other)
+        {
+            return other is Customer customer && this == customer;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(Customer left, Customer right)
+        {
+            return left == (Model) right;
+        }
+
+        public static bool operator !=(Customer left, Customer right)
+        {
+            return !(left == right);
+        }
+
+        public void UnsetAddress()
+        {
+            UnsetField(AddressName);
+        }
+
+        public void UnsetCity()
+        {
+            UnsetField(CityName);
+        }
+
+        public void UnsetCountry()
+        {
+            UnsetField(CountryName);
+        }
+
+        public void UnsetEmail()
+        {
+            UnsetField(EmailName);
+        }
+
+        public void UnsetExternalId()
+        {
+            UnsetField(ExternalIdName);
+        }
+
+        public void UnsetGid()
+        {
+            UnsetField(IdName);
+        }
+
+        public void UnsetName()
+        {
+            UnsetField(NameName);
+        }
+
+        public void UnsetPhone()
+        {
+            UnsetField(PhoneName);
+        }
+
+        public void UnsetVatNumber()
+        {
+            UnsetField(VatNumberName);
+        }
+
+        public void UnsetZipCode()
+        {
+            UnsetField(ZipCodeName);
         }
     }
 }

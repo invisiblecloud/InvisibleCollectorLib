@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using InvoiceCaptureLib.Connection;
+using InvisibleCollectorLib.Connection;
 using NUnit.Framework;
 
 namespace test.Connection
@@ -47,5 +47,6 @@ namespace test.Connection
 
             Assert.AreEqual($"{BaseUri}/{Fragment1}/{Fragment2}", result.AbsoluteUri);
         }
+
     }
 }
