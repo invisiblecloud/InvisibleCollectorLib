@@ -29,16 +29,16 @@ namespace InvisibleCollectorLib
             _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary);
             _logger = logger ?? NullLogger<InvisibleCollector>.Instance;
 
-            _logger.LogInformation("Started InvisibleCollector instance");
+            _logger.LogInformation("Started Instance");
         }
 
-        public InvisibleCollector(string apiKey, Uri remoteUri) : this(apiKey, remoteUri.AbsoluteUri)
+        public InvisibleCollector(string apiKey, Uri remoteUri, ILogger<InvisibleCollector> logger = null) : this(apiKey, remoteUri.AbsoluteUri, logger)
         {
         }
 
         ~InvisibleCollector()
         {
-            _logger.LogInformation("InvisibleCollector Instance destroyed");
+            _logger.LogInformation("Instance destroyed");
         }
 
         public async Task<Company> GetCompanyInfoAsync()
@@ -175,7 +175,7 @@ namespace InvisibleCollectorLib
             }
             catch (System.Exception e)
             {
-                _logger.LogError(e, "An InvisibleCollector error occured");
+                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
                 throw;
             }
         }
