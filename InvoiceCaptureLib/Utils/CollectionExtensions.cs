@@ -15,21 +15,12 @@ namespace InvisibleCollectorLib.Utils
         internal static string StringifyDictionary<TValue>(this IDictionary<string, TValue> dictionary)
         {
             return
-                "{" + string.Join(", ", dictionary.Select(pair => $"{Convert.ToString(pair.Key)} = {pair.Value.StringifyObject<TValue>()}").ToList()) + "}";
+                "{" + string.Join(", ", dictionary.Select(pair => $"{Convert.ToString(pair.Key)} = {Convert.ToString(pair.Value)}").ToList()) + "}";
         }
 
         internal static string StringifyList<TValue>(this IList<TValue> list)
         {
-            return $"[ {string.Join(",", list.Select(val => val.StringifyObject<TValue>()).ToList())} ]";
-        }
-
-        internal static string StringifyObject<TValue>(this object value)
-        {
-            if (value is IList<TValue> list)
-                return list.StringifyList();
-            if (value is IDictionary<string, TValue> dictionary)
-                return dictionary.StringifyDictionary();
-            return Convert.ToString(value);
+            return $"[ {string.Join(",", list.Select(val => Convert.ToString(val)).ToList())} ]";
         }
     }
 }

@@ -324,5 +324,13 @@ namespace InvisibleCollectorLib.Model
         {
             InternalItems?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
         }
+
+        public override string ToString()
+        {
+            var fields = Fields;
+            fields[ItemsName] = InternalItems?.StringifyList();
+            fields[AttributesName] = InternalAttributes?.StringifyDictionary();
+            return fields.StringifyDictionary();
+        }
     }
 }
