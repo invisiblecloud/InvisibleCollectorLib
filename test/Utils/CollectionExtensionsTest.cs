@@ -20,14 +20,14 @@ namespace test.Utils
         [Test]
         public void StringifyDictionary_Correct()
         {
-            IDictionary<object, object> dictionary = new Dictionary<object, object>
+            IDictionary<string, object> dictionary = new Dictionary<string, object>
             {
-                [12] = "test",
+                ["a"] = "test",
                 ["test2"] = (double)0.9
             };
 
             string result = dictionary.StringifyDictionary();
-            TestingUtils.AssertStringContainsValues(result, "12", "test", "test2", "9");
+            TestingUtils.AssertStringContainsValues(result, "a", "test", "test2", "9");
         }
 
         [Test]

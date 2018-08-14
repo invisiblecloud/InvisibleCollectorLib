@@ -209,20 +209,31 @@ namespace InvisibleCollectorLib.Model
             if (leftCopy != (Model) rightCopy) // compare non collection attributes
                 return false;
 
-            return KeyRefEquality(ItemsName) ??
-                   KeyRefEquality(AttributesName) ??
-                   left.InternalItems.EqualsCollection(right.InternalItems) &&
-                   left.InternalAttributes.EqualsCollection(right.InternalAttributes);
+            var itemRef = KeyRefEquality(ItemsName);
+            var attributesRef = KeyRefEquality(AttributesName);
+
+            if (itemRef == false || attributesRef == false)
+                return false;
+            else if (itemRef == true && attributesRef == true)
+                return true;
+            else if (itemRef == null && attributesRef == null)
+                return left.InternalItems.EqualsCollection(right.InternalItems) &&
+                       left.InternalAttributes.EqualsCollection(right.InternalAttributes);
+            else if (itemRef == null)
+                return left.InternalItems.EqualsCollection(right.InternalItems);
+            else
+                return left.InternalAttributes.EqualsCollection(right.InternalAttributes);
 
             bool? KeyRefEquality(string key)
             {
                 var leftHas = left._fields.ContainsKey(key);
                 var rightHas = right._fields.ContainsKey(key);
-                if (leftHas == rightHas && rightHas) // both true
+                if (leftHas == rightHas && rightHas) // both true, both have key => inconclusive equality
                     return null;
-                if (leftHas == rightHas) // both false
+                else if (leftHas == rightHas) // both false, neither have key => equals
                     return true;
-                return false;
+                else 
+                    return false; // one has and the other doesn't have keu => unequal
             }
         }
 
@@ -312,6 +323,14 @@ namespace InvisibleCollectorLib.Model
         internal void AssertItemsHaveMandatoryFields(params string[] mandatoryFields)
         {
             InternalItems?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
+        }
+
+        public override string ToString()
+        {
+            var fields = Fields;
+            fields[ItemsName] = InternalItems?.StringifyList();
+            fields[AttributesName] = InternalAttributes?.StringifyDictionary();
+            return fields.StringifyDictionary();
         }
     }
 }

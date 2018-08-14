@@ -160,9 +160,82 @@ namespace test.Model
             var debt1 = new Debt() { Id = id };
             var debt2 = new Debt() { Id = id };
 
+            var items = new List<Item>();
 
-
+            debt1.Items = items;
+            debt2.Items = items;
             Assert.True(debt1 == debt2);
+
+            items.Add(new Item() { Name = "a name" });
+            debt1.Items = items;
+            debt2.Items = items;
+            Assert.True(debt1 == debt2);
+
+
+            items[0] = new Item() { Name = "a different name" };
+            debt2.Items = items;
+            Assert.False(debt1 == debt2);
+
+            items.Clear();
+            debt2.Items = items;
+            Assert.False(debt1 == debt2);
+        }
+
+        [Test]
+        public void EqualityOperator_AttributesCorrectness()
+        {
+            var id = "1234";
+
+            var debt1 = new Debt() { Id = id };
+            var debt2 = new Debt() { Id = id };
+
+            var attributes = new Dictionary<string, string>();
+
+            debt1.Attributes = attributes;
+            debt2.Attributes = attributes;
+            Assert.True(debt1 == debt2);
+
+            attributes["a"] = "b";
+            debt1.Attributes = attributes;
+            debt2.Attributes = attributes;
+            Assert.True(debt1 == debt2);
+
+
+            attributes["a"] = "0";
+            debt2.Attributes = attributes;
+            Assert.False(debt1 == debt2);
+
+            attributes.Clear();
+            debt2.Attributes = attributes;
+            Assert.False(debt1 == debt2);
+        }
+
+
+        [Test]
+        public void EqualityOperator_ItemsAndAttributesCorrectness()
+        {
+            var id = "1234";
+
+            var debt1 = new Debt() { Id = id };
+            var debt2 = new Debt() { Id = id };
+
+            var attributes = new Dictionary<string, string>() { { "a", "b" } };
+            var items = new List<Item>() {new Item() {Name = "a name"}};
+
+            debt1.Items = items;
+            debt2.Items = items;
+            debt1.Attributes = attributes;
+            debt2.Attributes = attributes;
+            Assert.True(debt1 == debt2);
+
+            attributes["a"] = "0";
+            debt2.Attributes = attributes;
+            Assert.False(debt1 == debt2);
+
+            debt2.Attributes = debt1.Attributes;
+            items[0] = new Item() { Name = "a different name" };
+            debt2.Items = items;
+            Assert.False(debt1 == debt2);
         }
 
     }
