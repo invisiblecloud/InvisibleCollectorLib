@@ -41,6 +41,10 @@ namespace InvisibleCollectorLib
             _logger.LogInformation("Instance destroyed");
         }
 
+        /// <summary>
+        /// Get company information
+        /// </summary>
+        /// <returns></returns>
         public async Task<Company> GetCompanyInfoAsync()
         {
             _logger.LogDebug("Making a request to get company information");

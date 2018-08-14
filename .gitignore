@@ -8,3 +8,5 @@ packages
 /test/ManualTests.cs
 /test/obj
 /InvoiceCaptureLib/obj
+/obj
+/api
