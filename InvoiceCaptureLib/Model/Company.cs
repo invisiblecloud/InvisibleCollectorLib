@@ -2,6 +2,9 @@
 
 namespace InvisibleCollectorLib.Model
 {
+    /// <summary>
+    /// The company model
+    /// </summary>
     public class Company : Model
     {
         internal const string AddressName = "address";
@@ -27,6 +30,9 @@ namespace InvisibleCollectorLib.Model
             set => this[CityName] = value;
         }
 
+        /// <summary>
+        /// The company's country. Must be a ISO 3166-1 country code
+        /// </summary>
         public string Country
         {
             get => GetField<string>(CountryName);
@@ -34,6 +40,9 @@ namespace InvisibleCollectorLib.Model
             set => this[CountryName] = value;
         }
 
+        /// <summary>
+        /// The company Id
+        /// </summary>
         public string Gid
         {
             get => GetField<string>(IdName);
@@ -48,6 +57,9 @@ namespace InvisibleCollectorLib.Model
             set => this[NameName] = value;
         }
 
+        /// <summary>
+        /// Represents wheter the company notifications are enabled. Set by a request.
+        /// </summary>
         public bool? NotificationsEnabled
         {
             get => GetField<bool?>(NotificationsName);
@@ -55,6 +67,9 @@ namespace InvisibleCollectorLib.Model
             set => this[NotificationsName] = value;
         }
 
+        /// <summary>
+        /// Must be a valid vat number as specified by the <see cref="Country"/>.
+        /// </summary>
         public string VatNumber
         {
             get => GetField<string>(VatNumberName);
@@ -81,7 +96,7 @@ namespace InvisibleCollectorLib.Model
         {
             return base.GetHashCode();
         }
-
+        
         public static bool operator ==(Company left, Company right)
         {
             return left == (Model) right;

@@ -86,6 +86,8 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="customerId">The ID of the customer whose attributes are to be retrieved. It can be the 'gid' or 'externalId' of the customer (or just use <see cref="Customer.RoutableId"/>)</param>
         /// <returns>The up-to-date customer attributes.</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         /// <seealso cref="SetCustomerAttributesAsync"/>
         public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
         {
@@ -102,6 +104,8 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="customerId">The ID of the customer whose debts are to be retrieved. It can be the 'gid' or 'externalId' of the customer (or just use <see cref="Customer.RoutableId"/>)</param>
         /// <returns>The up-to-date list of debts</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         /// <seealso cref="SetNewDebtAsync"/>
         public async Task<IList<Debt>> GetCustomerDebtsAsync(string customerId)
         {
@@ -118,6 +122,8 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="customerId">The ID of the customer whose information is to be retrieved. It can be the 'gid' or 'externalId' of the customer (or just use <see cref="Customer.RoutableId"/>)</param>
         /// <returns>The up-to-date customer information</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         public async Task<Customer> GetCustomerInfoAsync(string customerId)
         {
             var id = HttpUriBuilder.NormalizeUriComponent(customerId);
@@ -132,6 +138,8 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="debtId">The debt id, you can use <see cref="Debt.RoutableId"/></param>
         /// <returns>The up-to-date debt</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         /// <seealso cref="SetNewDebtAsync"/>
         public async Task<Debt> GetDebtAsync(string debtId)
         {
@@ -150,6 +158,8 @@ namespace InvisibleCollectorLib
         /// </remarks>
         /// <param name="company">The company information to be updated. It the following mandatory fields used for validation: <see cref="Company.Name"/> and <see cref="Company.VatNumber"/></param>
         /// <returns>The updated up-to-date company information </returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         /// <seealso cref="GetCompanyInfoAsync"/>
         /// <seealso cref="SetCompanyNotificationsAsync"/>
         public async Task<Company> SetCompanyInfoAsync(Company company)
@@ -166,6 +176,8 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="bEnableNotifications">set to <c>true</c> to enable notifications and <c>false</c> to disable</param>
         /// <returns>The updated up-to-date compay information</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         /// <seealso cref="GetCompanyInfoAsync"/>
         /// <seealso cref="SetCompanyInfoAsync"/>
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
@@ -189,6 +201,8 @@ namespace InvisibleCollectorLib
         /// <param name="customerId">The ID of the customer whose information is to be retrieved. It can be the 'gid' or 'externalId' of the customer (or just use <see cref="Customer.RoutableId"/>)</param>
         /// <param name="attributes">The attributes to be set</param>
         /// <returns>All of the customer's up-to-date updated attributes</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         /// <seealso cref="GetCustomerAttributesAsync"/>
         public async Task<IDictionary<string, string>> SetCustomerAttributesAsync(string customerId,
             IDictionary<string, string> attributes)
@@ -206,6 +220,8 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="customer">The customer information to be updated. The <see cref="Customer.Gid"/> or <see cref="Customer.ExternalId"/> field must be set, since they contain the id of the customer. The <see cref="Customer.Country"/> field is mandatory.</param>
         /// <returns>The up-to-date updated customer information</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         /// <seealso cref="GetCustomerInfoAsync"/>
         /// <seealso cref="SetNewCustomerAsync"/>
         /// <seealso cref="Customer.RoutableId"/>
@@ -224,6 +240,9 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="customer">The customer to be created. The <see cref="Customer.Name"/>, <see cref="Customer.VatNumber"/> and <see cref="Customer.Country"/> fields are mandatory.</param>
         /// <returns>The up-to-date created customer.</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
+        /// <exception cref="IcModelConflictException">When a customer with the same customer Gid or externalId already exists in the database.</exception>
         public async Task<Customer> SetNewCustomerAsync(Customer customer)
         {
             customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
@@ -238,6 +257,9 @@ namespace InvisibleCollectorLib
         /// </summary>
         /// <param name="debt">The debt to be created. The <see cref="Debt.Number"/>, <see cref="Debt.CustomerId"/>, <see cref="Debt.Type"/>, <see cref="Debt.Date"/> and <see cref="Debt.DueDate"/> fields are mandatory. If it has items (<see cref="Debt.Items"/>) they must have the <see cref="Item.Name"/> field </param>
         /// <returns>The up-to-date created debt.</returns>
+        /// <exception cref="IcException">On bad json (sent or received) and when the server rejects the request (conflict, bad request, invalid parameters, etc)</exception>
+        /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
+        /// <exception cref="IcModelConflictException">When a debt with the same number already exists.</exception>
         public async Task<Debt> SetNewDebtAsync(Debt debt)
         {
             debt.AssertHasMandatoryFields(Debt.NumberName, Debt.CustomerIdName, Debt.TypeName, Debt.DateName,
@@ -259,6 +281,7 @@ namespace InvisibleCollectorLib
         /// Makes an api request
         /// </summary>
         /// <typeparam name="TReturn"></typeparam>
+        /// <typeparam name="TDictValue"></typeparam>
         /// <param name="method"></param>
         /// <param name="requestBody"> if null the request doesn't have a body</param>
         /// <param name="pathFragments"></param>

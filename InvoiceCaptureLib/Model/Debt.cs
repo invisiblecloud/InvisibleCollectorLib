@@ -5,6 +5,9 @@ using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
+    /// <summary>
+    /// The debt model
+    /// </summary>
     public class Debt : Model, IRoutableModel
     {
         internal const string AttributesName = "attributes";
@@ -42,6 +45,9 @@ namespace InvisibleCollectorLib.Model
             set => this[AttributesName] = value?.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
+        /// <summary>
+        /// The currency. Must be an ISO 4217 currency code.
+        /// </summary>
         public string Currency
         {
             get => GetField<string>(CurrencyName);
@@ -49,6 +55,11 @@ namespace InvisibleCollectorLib.Model
             set => this[CurrencyName] = value;
         }
 
+        /// <summary>
+        /// The Id of the customer to whom the debt is issued.
+        /// </summary>
+        /// <remarks>It must be the customer's <see cref="Customer.Gid"/> itself and not the <see cref="Customer.ExternalId"/></remarks>
+        /// <seealso cref="SetCustomerId"/>
         public string CustomerId
         {
             get => GetField<string>(CustomerIdName);
@@ -56,6 +67,9 @@ namespace InvisibleCollectorLib.Model
             set => this[CustomerIdName] = value;
         }
 
+        /// <summary>
+        /// The detb date. Only the years, month and days are considered.
+        /// </summary>
         public DateTime Date
         {
             get => GetField<DateTime>(DateName);
@@ -63,6 +77,9 @@ namespace InvisibleCollectorLib.Model
             set => this[DateName] = value;
         }
 
+        /// <summary>
+        /// The debt due date. Only the years, month and days are considered.
+        /// </summary>
         public DateTime DueDate
         {
             get => GetField<DateTime>(DueDateName);
@@ -105,6 +122,9 @@ namespace InvisibleCollectorLib.Model
             set => this[NumberName] = value;
         }
 
+        /// <summary>
+        /// The debt status. Can be one of: "PENDING" - the default value; "PAID"; "CANCELLED"
+        /// </summary>
         public string Status
         {
             get => GetField<string>(StatusName);
@@ -112,6 +132,9 @@ namespace InvisibleCollectorLib.Model
             set => this[StatusName] = value;
         }
 
+        /// <summary>
+        /// The total amount being paid in tax.
+        /// </summary>
         public double? Tax
         {
             get => GetField<double?>(TaxName);
@@ -119,6 +142,9 @@ namespace InvisibleCollectorLib.Model
             set => this[TaxName] = value;
         }
 
+        /// <summary>
+        /// The debt type. Can be one of: "FT", "FS", "SD"
+        /// </summary>
         public string Type
         {
             get => GetField<string>(TypeName);
@@ -250,6 +276,10 @@ namespace InvisibleCollectorLib.Model
             InternalAttributes[key] = value;
         }
 
+        /// <summary>
+        /// A convenience method to set the customer id.
+        /// </summary>
+        /// <param name="customer">The customer</param>
         public void SetCustomerId(Customer customer)
         {
             CustomerId = customer.Gid;

@@ -2,6 +2,9 @@
 
 namespace InvisibleCollectorLib.Model
 {
+    /// <summary>
+    /// The customer model.
+    /// </summary>
     public class Customer : Model, IRoutableModel
     {
         internal const string AddressName = "address";
@@ -29,6 +32,9 @@ namespace InvisibleCollectorLib.Model
             set => this[CityName] = value;
         }
 
+        /// <summary>
+        /// The customer's country. Must be a ISO 3166-1 country code
+        /// </summary>
         public string Country
         {
             get => GetField<string>(CountryName);
@@ -43,6 +49,10 @@ namespace InvisibleCollectorLib.Model
             set => this[EmailName] = value;
         }
 
+        /// <summary>
+        /// Represent a 'secondary' id for the customer assigned by the library user. Used for convenience.
+        /// </summary>
+        /// <remarks>This externalId can be used to retrieve customers from the API. It can be for example the customer id from your DB.</remarks>
         public string ExternalId
         {
             get => GetField<string>(ExternalIdName);
@@ -50,6 +60,9 @@ namespace InvisibleCollectorLib.Model
             set => this[ExternalIdName] = value;
         }
 
+        /// <summary>
+        /// The customer id.
+        /// </summary>
         public string Gid
         {
             get => GetField<string>(IdName);
@@ -71,6 +84,9 @@ namespace InvisibleCollectorLib.Model
             set => this[PhoneName] = value;
         }
 
+        /// <summary>
+        /// Must be a valid vat number as specified by the <see cref="Country"/>.
+        /// </summary>
         public string VatNumber
         {
             get => GetField<string>(VatNumberName);
