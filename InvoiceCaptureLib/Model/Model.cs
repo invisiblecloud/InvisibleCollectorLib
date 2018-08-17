@@ -44,11 +44,20 @@ namespace InvisibleCollectorLib.Model
             .Where(pair => SendableFields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
 
+        /// <summary>
+        /// Test the object for equality with the model.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public override bool Equals(object other)
         {
             return other is Model model && this == model;
         }
 
+        /// <summary>
+        /// Compute the model's hashcode
+        /// </summary>
+        /// <returns>the hash code</returns>
         public override int GetHashCode()
         {
             var hash = 0;
@@ -59,22 +68,42 @@ namespace InvisibleCollectorLib.Model
             return hash;
         }
 
+        /// <summary>
+        /// Test models for equality
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator ==(Model left, Model right)
         {
             return IcUtils.ReferenceNullableEquals(left, right) ??
                    left._fields.EqualsCollection(right._fields);
         }
 
+        /// <summary>
+        /// Test models for inequality
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator !=(Model left, Model right)
         {
             return !(left == right);
         }
 
+        /// <summary>
+        /// String representation of the model
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return _fields.StringifyDictionary();
         }
 
+        /// <summary>
+        /// Unsets all of the model's fields.
+        /// </summary>
+        /// <remarks>'Unset fields' are fields that are not sent on any requests. They are different from null fields where a null value is sent.</remarks>
         public void UnsetAll()
         {
             _fields = new Dictionary<string, object>();

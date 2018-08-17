@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace InvisibleCollectorLib.Model
 {
+    /// <summary>
+    /// Represents a debt's item model
+    /// </summary>
     public class Item : Model, ICloneable
     {
         internal const string NameName = "name";
@@ -47,6 +50,9 @@ namespace InvisibleCollectorLib.Model
             set => this[QuantityName] = value;
         }
 
+        /// <summary>
+        /// The VAT percentage (0.0 to 100.0).
+        /// </summary>
         public double? Vat
         {
             get => GetField<double?>(VatName);
