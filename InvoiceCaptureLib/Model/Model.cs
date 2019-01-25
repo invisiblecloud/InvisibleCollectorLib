@@ -122,7 +122,7 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         ///     checks if all mandatory fields are present
         /// </summary>
-        /// <param name="mandatoryFields">the mndatory fields names</param>
+        /// <param name="mandatoryFields">the mandatory fields names</param>
         /// <exception cref="ArgumentException">thrown if a field isn't present</exception>
         internal void AssertHasMandatoryFields(params string[] mandatoryFields)
         {

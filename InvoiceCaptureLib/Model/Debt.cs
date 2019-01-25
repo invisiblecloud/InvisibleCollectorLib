@@ -68,7 +68,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The detb date. Only the years, month and days are considered.
+        /// The debt date. Only the years, month and days are considered.
         /// </summary>
         public DateTime Date
         {
