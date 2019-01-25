@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace InvisibleCollectorLib.Model
 {
@@ -13,14 +15,14 @@ namespace InvisibleCollectorLib.Model
         public FindDebts()
         {    
         }
-        
+
         public string Number
         {
             get => GetField<string>(NumberName);
 
             set => this[NumberName] = value;
         }
-        
+
         /// <summary>
             /// The debt date lower limit. Only the years, month and days are considered.
         /// </summary>
@@ -40,7 +42,7 @@ namespace InvisibleCollectorLib.Model
 
             set => this[ToDateName] = value; // datetime is immutable
         }
-        
+
         /// <summary>
         /// The due debt date lower limit. Only the years, month and days are considered.
         /// </summary>
@@ -60,5 +62,18 @@ namespace InvisibleCollectorLib.Model
 
             set => this[ToDueDateName] = value; // datetime is immutable
         }
+
+        protected override ISet<string> SendableFields =>
+            new SortedSet<string> {NumberName, FromDateName, ToDateName, FromDueDateName, ToDueDateName};
+
+        internal IDictionary<string, string> SendableStringDictionary => 
+                SendableDictionary.ToDictionary(p => p.Key, p =>
+                {
+                    if (p.Value is DateTime date)
+                        return date.ToString("yyyy'-'MM'-'dd");
+                    
+                    return Convert.ToString(p.Value);
+                });
+            
     }
 }

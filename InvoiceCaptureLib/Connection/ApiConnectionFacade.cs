@@ -25,7 +25,7 @@ namespace InvisibleCollectorLib.Connection
         }
 
         /// <summary>
-        ///     Make an Api Request.
+        ///     Make an Api Request. JSON content type and accept-type
         /// </summary>
         /// <param name="requestUri">The absolute request Url</param>
         /// the absolute uri of the request
@@ -37,21 +37,12 @@ namespace InvisibleCollectorLib.Connection
             return await CallApiAsync(requestUri, method, IcConstants.JsonMimeType, jsonString);
         }
         
-        
-        /// <summary>
-        ///     Make an Api Request.
-        /// </summary>
-        /// <param name="requestUri">The absolute request Url</param>
-        /// the absolute uri of the request
-        /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
-        /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
-        /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
         private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType, string jsonString = null)
         {
             var client = BuildWebClient(requestUri.Host);
-            if (string.IsNullOrEmpty(jsonString))
+            if (jsonString == null) 
                 jsonString = "";
-            else
+            if (!string.IsNullOrEmpty(jsonString))
                 client.Headers.Set("Content-Type", $"{contentType}; charset=UTF-8");
                 
             string response;

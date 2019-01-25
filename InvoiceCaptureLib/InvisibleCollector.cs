@@ -91,7 +91,7 @@ namespace InvisibleCollectorLib
         /// <seealso cref="SetCustomerAttributesAsync"/>
         public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
         {
-            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
+            var id = HttpUriBuilder.UriEscape(customerId);
             _logger.LogDebug("Making a request to get customer attributes for customer ID: {Id}", customerId);
             var ret = await MakeBodylessRequestAsync<Dictionary<string, string>>("GET", CustomersEndpoint, id,
                 CustomersAttributesPath);
@@ -110,7 +110,7 @@ namespace InvisibleCollectorLib
         public async Task<IList<Debt>> GetCustomerDebtsAsync(string customerId)
         {
             _logger.LogDebug("Making a request to get customer debts for customer ID: {Id}", customerId);
-            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
+            var id = HttpUriBuilder.UriEscape(customerId);
             var ret = await MakeBodylessRequestAsync<List<Debt>>("GET", CustomersEndpoint, id, "debts");
             _logger.LogDebug("Received for customer with id: {Id} debts: {Models}", customerId, ret.StringifyList());
             return ret;
@@ -125,7 +125,7 @@ namespace InvisibleCollectorLib
         /// <exception cref="WebException">On connection or protocol related errors (except for the protocol errors sent by the Invisible Collector)</exception>
         public async Task<Customer> GetCustomerInfoAsync(string customerId)
         {
-            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
+            var id = HttpUriBuilder.UriEscape(customerId);
             _logger.LogDebug("Making request to get customer information for customer ID: {Id}", customerId);
             var ret = await MakeBodylessRequestAsync<Customer>("GET", CustomersEndpoint, id);
             _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerId, ret);
@@ -142,7 +142,7 @@ namespace InvisibleCollectorLib
         /// <seealso cref="SetNewDebtAsync"/>
         public async Task<Debt> GetDebtAsync(string debtId)
         {
-            var id = HttpUriBuilder.NormalizeUriComponent(debtId);
+            var id = HttpUriBuilder.UriEscape(debtId);
             _logger.LogDebug("Making request to get debt information for debt ID: {Id}", debtId);
             var ret = await MakeBodylessRequestAsync<Debt>("GET", DebtsEndpoint, id);
             _logger.LogDebug("Received for debt with id: {Id} information: {Model}", debtId, ret);
@@ -206,7 +206,7 @@ namespace InvisibleCollectorLib
         public async Task<IDictionary<string, string>> SetCustomerAttributesAsync(string customerId,
             IDictionary<string, string> attributes)
         {
-            var id = HttpUriBuilder.NormalizeUriComponent(customerId);
+            var id = HttpUriBuilder.UriEscape(customerId);
             _logger.LogDebug("Making a request to set or update the customer's with ID: {Id} attributes: {Attributes}", customerId, attributes.StringifyDictionary());
             var ret = await MakeRequestAsync<Dictionary<string, string>, string>("POST", attributes, CustomersEndpoint, id,
                 CustomersAttributesPath);
@@ -226,7 +226,7 @@ namespace InvisibleCollectorLib
         /// <seealso cref="Customer.RoutableId"/>
         public async Task<Customer> SetCustomerInfoAsync(Customer customer)
         {
-            var id = HttpUriBuilder.NormalizeUriComponent(customer.RoutableId);
+            var id = HttpUriBuilder.UriEscape(customer.RoutableId);
             customer.AssertHasMandatoryFields(Customer.CountryName);
             _logger.LogDebug("Making a request to update the customer's with ID: {Id} information: {Model}", customer.RoutableId, customer);
             var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint, id);
@@ -274,11 +274,14 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
             string requestJson = null;
-            var requestUri = _uriBuilder.Clone().WithPath(DebtsEndpoint, "find").BuildUri();
             
             IList<Debt> ret;
             try
             {
+                var requestUri = _uriBuilder.Clone()
+                    .WithPath(DebtsEndpoint, "find")
+                    .WithQuery(findDebts.SendableStringDictionary)
+                    .BuildUri();
                 var json = await _apiFacade.CallJsonToJsonApi(requestUri, "GET", requestJson);
                 ret = _jsonFacade.JsonToObject<List<Debt>>(json);
             }

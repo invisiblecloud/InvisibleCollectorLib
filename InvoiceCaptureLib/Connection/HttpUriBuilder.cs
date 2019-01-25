@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -25,7 +26,7 @@ namespace InvisibleCollectorLib.Connection
             _uriBuilder.Path = path;
             return this;
         }
-        
+
         internal Uri BuildUri()
         {
             AssertValidHttpUri(_uriBuilder.Uri);
@@ -37,6 +38,19 @@ namespace InvisibleCollectorLib.Connection
             return new HttpUriBuilder(_uriBuilder.Uri);
         }
 
+        internal HttpUriBuilder WithQuery(IDictionary<string, string> values)
+        {
+            if (values.Count == 0)
+                return this;
+
+            string query = string.Join("&",
+                values.Select(pair => $"{UriEscape(pair.Key)}={UriEscape(pair.Value)}")
+                    .ToArray()
+                );
+            _uriBuilder.Query = query;
+            return this;
+        }
+
         private static void AssertValidHttpUri(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
@@ -46,7 +60,7 @@ namespace InvisibleCollectorLib.Connection
                 throw new ArgumentException("Not an HTTP Url: " + uri);
         }
 
-        internal static string NormalizeUriComponent(string uriComponent)
+        internal static string UriEscape(string uriComponent)
         {
             if (String.IsNullOrWhiteSpace(uriComponent))
                 throw new ArgumentException("Illegal uri component: " + uriComponent);
