@@ -90,15 +90,10 @@ namespace InvisibleCollectorLib.Model
         internal IDictionary<string, string> SendableStringDictionary => 
                 SendableDictionary.ToDictionary(p => p.Key, p =>
                 {
-                    switch (p.Value)
-                    {
-                        case null:
-                            return null;
-                        case DateTime date:
-                            return date.ToString(IcConstants.DateTimeFormat);
-                        default:
-                            return Convert.ToString(p.Value);
-                    }
+                    if (p.Value is DateTime date)
+                        return date.ToString(IcConstants.DateTimeFormat);
+                    
+                    return Convert.ToString(p.Value);
                 });
             
     }

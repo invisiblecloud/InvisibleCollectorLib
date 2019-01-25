@@ -44,7 +44,8 @@ namespace test.Connection
 
         public MockServerFacade AddRequest(string httpMethod, string pathRegex, string expectedJson = null,
             IEnumerable<(string, string)> expectedHeaders = null,
-            IEnumerable<(string, string)> notExpectedHeaders = null)
+            IEnumerable<(string, string)> notExpectedHeaders = null,
+            IEnumerable<string> expectedQuery = null)
         {
             var request = Request.Create();
 
@@ -62,6 +63,10 @@ namespace test.Connection
                 foreach (var pair in notExpectedHeaders)
                     request.WithHeader(pair.Item1, $"*{pair.Item2}*", false,
                         MatchBehaviour.RejectOnMatch); // should mimick String.Contains()
+
+            if (expectedQuery != null)
+                foreach (var query in expectedQuery)
+                    request.WithUrl($"*?*{query}*"); 
 
 
             requests.Push(request);

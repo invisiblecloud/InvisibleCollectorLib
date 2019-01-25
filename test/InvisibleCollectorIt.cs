@@ -17,11 +17,13 @@ namespace test
         private const string TestId = "1234";
 
         private InvisibleCollector ConfigureIc(string expectedMethod, string expectedPath, string jsonReply,
-            string expectedJson = null)
+            string expectedJson = null, IEnumerable<string> expectedQuery = null)
         {
+            var expectingJson = expectedJson is null;
             _mockServer.AddRequest(expectedMethod, expectedPath, expectedJson,
-                    expectedJson is null ? BodylessHeaders : BodiedHeaders,
-                    expectedJson is null ? BodyHeaderDifference : null)
+                    expectingJson ? BodylessHeaders : BodiedHeaders,
+                    expectingJson ? BodyHeaderDifference : null,
+                    expectedQuery)
                 .AddJsonResponse(jsonReply);
 
             var uri = _mockServer.GetUrl();
@@ -99,12 +101,15 @@ namespace test
 
             var replyJson = ModelBuilder.ToJson(replyDebts);
 
-            var ic = ConfigureIc("GET", "debts/find", replyJson);
-            
             var findDebts = new FindDebts
             {
-                Number = "123"
+                Number = "123",
+                ToDate = new DateTime(2010, 1, 1)
             };
+            var expectedQueryParams = new List<string> {"123", "number", "to_date", "2010-01-01"};
+            
+            var ic = ConfigureIc("GET", "debts/find", replyJson, null, expectedQueryParams);
+
             var result = await ic.GetFindDebts(findDebts);
             
             for (var i = 0; i < replyDebts.Count; i++)
