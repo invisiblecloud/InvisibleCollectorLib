@@ -109,10 +109,9 @@ namespace InvisibleCollectorLib
         /// <seealso cref="SetNewDebtAsync"/>
         public async Task<IList<Debt>> GetCustomerDebtsAsync(string customerId)
         {
-            const string customerDebtsPath = "debts";
             _logger.LogDebug("Making a request to get customer debts for customer ID: {Id}", customerId);
             var id = HttpUriBuilder.NormalizeUriComponent(customerId);
-            var ret = await MakeBodylessRequestAsync<List<Debt>>("GET", CustomersEndpoint, id, customerDebtsPath);
+            var ret = await MakeBodylessRequestAsync<List<Debt>>("GET", CustomersEndpoint, id, "debts");
             _logger.LogDebug("Received for customer with id: {Id} debts: {Models}", customerId, ret.StringifyList());
             return ret;
         }
@@ -271,6 +270,28 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        public async Task<IList<Debt>> FindDebts(FindDebts findDebts)
+        {
+            _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
+            string requestJson = null;
+            var requestUri = _uriBuilder.BuildUri(DebtsEndpoint, "find");
+            
+            IList<Debt> ret;
+            try
+            {
+                var json = await _apiFacade.CallApiAsync(requestUri, "GET", requestJson);
+                ret = _jsonFacade.JsonToObject<List<Debt>>(json);
+            }
+            catch (System.Exception e)
+            {
+                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
+                throw;
+            }
+
+            _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
+            return ret;
+        }
+        
         private async Task<TReturn> MakeBodylessRequestAsync<TReturn>(string method, params string[] pathFragments)
             where TReturn : new()
         {
