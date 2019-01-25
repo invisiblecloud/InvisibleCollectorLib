@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using InvisibleCollectorLib.Connection;
 using NUnit.Framework;
-using NUnit.Framework.Internal.Execution;
 
 namespace test.Connection
 {
@@ -13,9 +10,11 @@ namespace test.Connection
         [Test]
         public void Constructor_CorrectUri()
         {
-            new HttpUriBuilder("http://ahost.adomain:4000");
-
-            new HttpUriBuilder("https://host/");
+            var uri = new HttpUriBuilder("http://ahost.adomain:4000/").BuildUri();
+            Assert.AreEqual("http://ahost.adomain:4000/", uri.ToString());
+            
+            var uri2 = new HttpUriBuilder("https://host").BuildUri();
+            Assert.AreEqual("https://host/", uri2.ToString());
         }
 
         [Test]
@@ -36,7 +35,7 @@ namespace test.Connection
         {
             Assert.That(() => new HttpUriBuilder("ftp://host.domain"), Throws.Exception);
         }
-
+        
         [Test]
         public void WithPath_MultipleFragments()
         {
