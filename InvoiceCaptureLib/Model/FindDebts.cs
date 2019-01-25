@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
@@ -66,11 +67,30 @@ namespace InvisibleCollectorLib.Model
         protected override ISet<string> SendableFields =>
             new SortedSet<string> {NumberName, FromDateName, ToDateName, FromDueDateName, ToDueDateName};
 
+        public override bool Equals(object other)
+        {
+            return other is FindDebts find && this == find;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        
+        public static bool operator ==(FindDebts left, FindDebts right)
+        {
+            return left == (Model) right;
+        }
+
+        public static bool operator !=(FindDebts left, FindDebts right)
+        {
+            return !(left == right);
+        }
         internal IDictionary<string, string> SendableStringDictionary => 
                 SendableDictionary.ToDictionary(p => p.Key, p =>
                 {
                     if (p.Value is DateTime date)
-                        return date.ToString("yyyy'-'MM'-'dd");
+                        return date.ToString(IcConstants.DateTimeFormat);
                     
                     return Convert.ToString(p.Value);
                 });
