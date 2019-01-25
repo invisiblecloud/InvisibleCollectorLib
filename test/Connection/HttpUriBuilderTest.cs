@@ -43,7 +43,7 @@ namespace test.Connection
             const string Fragment1 = "company";
             const string Fragment2 = "123";
             var builder = new HttpUriBuilder(BaseUri);
-            var result = builder.BuildUri(Fragment1, Fragment2);
+            var result = builder.WithPath(Fragment1, Fragment2).BuildUri();
 
             Assert.AreEqual($"{BaseUri}/{Fragment1}/{Fragment2}", result.AbsoluteUri);
         }

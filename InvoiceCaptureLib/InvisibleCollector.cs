@@ -274,12 +274,12 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
             string requestJson = null;
-            var requestUri = _uriBuilder.BuildUri(DebtsEndpoint, "find");
+            var requestUri = _uriBuilder.Clone().WithPath(DebtsEndpoint, "find").BuildUri();
             
             IList<Debt> ret;
             try
             {
-                var json = await _apiFacade.CallApiAsync(requestUri, "GET", requestJson);
+                var json = await _apiFacade.CallJsonToJsonApi(requestUri, "GET", requestJson);
                 ret = _jsonFacade.JsonToObject<List<Debt>>(json);
             }
             catch (System.Exception e)
@@ -313,8 +313,8 @@ namespace InvisibleCollectorLib
             try
             {
                 var requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
-                var requestUri = _uriBuilder.BuildUri(pathFragments);
-                var json = await _apiFacade.CallApiAsync(requestUri, method, requestJson);
+                var requestUri = _uriBuilder.Clone().WithPath(pathFragments).BuildUri();
+                var json = await _apiFacade.CallJsonToJsonApi(requestUri, method, requestJson);
                 return _jsonFacade.JsonToObject<TReturn>(json);
             }
             catch (System.Exception e)
