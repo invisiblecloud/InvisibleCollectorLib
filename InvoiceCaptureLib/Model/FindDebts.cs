@@ -5,6 +5,9 @@ using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
+    /// <summary>
+    ///     The model that represent a debt search query
+    /// </summary>
     public class FindDebts : Model
     {
         internal const string NumberName = "number";

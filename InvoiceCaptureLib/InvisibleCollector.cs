@@ -380,6 +380,19 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        ///     Get the debts that math the search query
+        /// </summary>
+        /// <param name="findDebts">the search query</param>
+        /// <returns>the debts list</returns>
+        /// <exception cref="IcException">
+        ///     On bad json (received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
         public async Task<IList<Debt>> GetFindDebts(FindDebts findDebts)
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);

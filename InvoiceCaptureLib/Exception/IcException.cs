@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace InvisibleCollectorLib.Exception
+﻿namespace InvisibleCollectorLib.Exception
 {
     /// <summary>
     ///     The exception used by this library to wrap around other 3rd party libraries and to throw error messages.
