@@ -33,12 +33,29 @@ namespace InvisibleCollectorLib.Connection
         /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
         internal async Task<string> CallJsonToJsonApi(Uri requestUri, string method, string jsonString = null)
         {
+            return await CallApiAsync(requestUri, method, IcConstants.JsonMimeType, jsonString);
+        }
+        
+        
+        /// <summary>
+        ///     Make an Api Request.
+        /// </summary>
+        /// <param name="requestUri">The absolute request Url</param>
+        /// the absolute uri of the request
+        /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
+        /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
+        /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
+        internal async Task<string> CallApiAsync(Uri requestUri, string method, string contentType, string jsonString = null)
+        {
             HttpUriBuilder.AssertValidHttpUri(requestUri);
-            var requestHasBody = !string.IsNullOrEmpty(jsonString);
-            jsonString = requestHasBody ? jsonString : "";
-            var client = BuildWebClient(requestUri.Host, requestHasBody);
-            string response = "";
-
+            
+            var client = BuildWebClient(requestUri.Host);
+            if (string.IsNullOrEmpty(jsonString))
+                jsonString = "";
+            else
+                client.Headers.Set("Content-Type", $"{contentType}; charset=UTF-8");
+                
+            string response;
             try
             {
                 switch (method)
@@ -75,60 +92,6 @@ namespace InvisibleCollectorLib.Connection
 
             return response;
         }
-        
-        
-        /// <summary>
-        ///     Make an Api Request.
-        /// </summary>
-        /// <param name="requestUri">The absolute request Url</param>
-        /// the absolute uri of the request
-        /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
-        /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
-        /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
-//        internal async Task<string> CallApiAsync(Uri requestUri, string method, string jsonString = null)
-//        {
-//            HttpUriBuilder.AssertValidHttpUri(requestUri);
-//            var requestHasBody = !string.IsNullOrEmpty(jsonString);
-//            jsonString = requestHasBody ? jsonString : "";
-//            var client = BuildWebClient(requestUri.Host, requestHasBody);
-//            string response = "";
-//
-//            try
-//            {
-//                switch (method)
-//                {
-//                    case "POST":
-//                    case "PUT":
-//                    // does DELETE have a return json?
-//                    case "DELETE":
-//                        response = await client.UploadStringTaskAsync(requestUri, method, jsonString);
-//                        break;
-//                    case "GET":
-//                        response = await client.DownloadStringTaskAsync(requestUri);
-//                        break;
-//                    default:
-//                        throw new ArgumentException("Invalid HTTP method");
-//                }
-//            }
-//            catch (WebException webException)
-//            {
-//                var errorResponse = webException.Response;
-//                if (webException.Status != WebExceptionStatus.ProtocolError || errorResponse?.GetResponseStream() is null || !IsContentTypeJson(errorResponse.Headers))
-//                    throw;
-//
-//                var ex = BuildException(errorResponse.GetResponseStream());
-//                if (!(ex is null))
-//                    throw ex;
-//                
-//                throw;
-//            }
-//
-//            // check that the response has 'Content-Type' header set to json
-//            if (!IsContentTypeJson(client.ResponseHeaders))
-//                throw new IcException("Request valid but no JSON response HTTP header received");
-//
-//            return response;
-//        }
 
         private bool IsContentTypeJson(WebHeaderCollection headers)
         {
@@ -157,16 +120,13 @@ namespace InvisibleCollectorLib.Connection
                              jsonObject.TryGetValue(idName, out conflictingId); 
             if (containsId)
                 return new IcModelConflictException(jsonObject[messageName], conflictingId);
-            else 
-                return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
+            
+            return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
         }
 
-        private WebClient BuildWebClient(string requestUriHost, bool requestHasBody)
+        private WebClient BuildWebClient(string requestUriHost)
         {
-
             var client = new WebClient();
-            if (requestHasBody)
-                client.Headers.Set("Content-Type", $"{IcConstants.JsonMimeType}; charset=UTF-8");
             client.Headers.Set("Accept", IcConstants.JsonMimeType);
             client.Headers.Set("Authorization", $"Bearer {_apiKey}");
             client.Headers.Set("Host", requestUriHost);
