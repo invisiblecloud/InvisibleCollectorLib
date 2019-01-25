@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -45,10 +46,8 @@ namespace InvisibleCollectorLib.Connection
         /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
         /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
         /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
-        internal async Task<string> CallApiAsync(Uri requestUri, string method, string contentType, string jsonString = null)
+        private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType, string jsonString = null)
         {
-            HttpUriBuilder.AssertValidHttpUri(requestUri);
-            
             var client = BuildWebClient(requestUri.Host);
             if (string.IsNullOrEmpty(jsonString))
                 jsonString = "";
@@ -93,7 +92,7 @@ namespace InvisibleCollectorLib.Connection
             return response;
         }
 
-        private bool IsContentTypeJson(WebHeaderCollection headers)
+        private static bool IsContentTypeJson(NameValueCollection headers)
         {
             if (headers is null)
                 return false;

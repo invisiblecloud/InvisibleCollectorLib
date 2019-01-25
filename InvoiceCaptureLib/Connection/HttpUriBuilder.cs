@@ -28,6 +28,7 @@ namespace InvisibleCollectorLib.Connection
         
         internal Uri BuildUri()
         {
+            AssertValidHttpUri(_uriBuilder.Uri);
             return _uriBuilder.Uri;
         }
 
@@ -35,8 +36,8 @@ namespace InvisibleCollectorLib.Connection
         {
             return new HttpUriBuilder(_uriBuilder.Uri);
         }
-        
-        internal static void AssertValidHttpUri(Uri uri)
+
+        private static void AssertValidHttpUri(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
                 throw new ArgumentException("Must be an absolute uri: " + uri);
