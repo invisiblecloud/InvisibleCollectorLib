@@ -89,6 +89,29 @@ namespace test
         }
 
         [Test]
+        public async Task GetFindDebts_correct()
+        {
+            var replyDebts = new List<Debt>
+            {
+                ModelBuilder.BuildReplyDebtBuilder("1", "10").BuildModel<Debt>(),
+                ModelBuilder.BuildReplyDebtBuilder("2", "20").BuildModel<Debt>()
+            };
+
+            var replyJson = ModelBuilder.ToJson(replyDebts);
+
+            var ic = ConfigureIc("GET", "debts/find", replyJson);
+            
+            var findDebts = new FindDebts
+            {
+                Number = "123"
+            };
+            var result = await ic.GetFindDebts(findDebts);
+            
+            for (var i = 0; i < replyDebts.Count; i++)
+                Assert.AreEqual(replyDebts[i], result[i]);
+        }
+        
+        [Test]
         public void SetNewCustomerAsync_correct()
         {
             var request = ModelBuilder.BuildRequestCustomerBuilder();

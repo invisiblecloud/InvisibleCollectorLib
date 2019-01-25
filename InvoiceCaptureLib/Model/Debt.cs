@@ -70,9 +70,9 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         /// The debt date. Only the years, month and days are considered.
         /// </summary>
-        public DateTime Date
+        public DateTime? Date
         {
-            get => GetField<DateTime>(DateName);
+            get => GetField<DateTime?>(DateName);
 
             set => this[DateName] = value;
         }
@@ -80,9 +80,9 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         /// The debt due date. Only the years, month and days are considered.
         /// </summary>
-        public DateTime DueDate
+        public DateTime? DueDate
         {
-            get => GetField<DateTime>(DueDateName);
+            get => GetField<DateTime?>(DueDateName);
 
             set => this[DueDateName] = value; // datetime is immutable
         }

@@ -270,7 +270,7 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
-        public async Task<IList<Debt>> FindDebts(FindDebts findDebts)
+        public async Task<IList<Debt>> GetFindDebts(FindDebts findDebts)
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
             string requestJson = null;

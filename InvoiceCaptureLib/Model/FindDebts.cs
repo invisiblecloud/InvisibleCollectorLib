@@ -27,9 +27,9 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
             /// The debt date lower limit. Only the years, month and days are considered.
         /// </summary>
-        public DateTime FromDate
+        public DateTime? FromDate
         {
-            get => GetField<DateTime>(FromDateName);
+            get => GetField<DateTime?>(FromDateName);
 
             set => this[FromDateName] = value;
         }
@@ -37,9 +37,9 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         /// The debt date higher limit. Only the years, month and days are considered.
         /// </summary>
-        public DateTime ToDate
+        public DateTime? ToDate
         {
-            get => GetField<DateTime>(ToDateName);
+            get => GetField<DateTime?>(ToDateName);
 
             set => this[ToDateName] = value; // datetime is immutable
         }
@@ -47,9 +47,9 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         /// The due debt date lower limit. Only the years, month and days are considered.
         /// </summary>
-        public DateTime FromDueDate
+        public DateTime? FromDueDate
         {
-            get => GetField<DateTime>(FromDueDateName);
+            get => GetField<DateTime?>(FromDueDateName);
 
             set => this[FromDueDateName] = value;
         }
@@ -57,9 +57,9 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         /// The due debt date higher limit. Only the years, month and days are considered.
         /// </summary>
-        public DateTime ToDueDate
+        public DateTime? ToDueDate
         {
-            get => GetField<DateTime>(ToDueDateName);
+            get => GetField<DateTime?>(ToDueDateName);
 
             set => this[ToDueDateName] = value; // datetime is immutable
         }
@@ -86,13 +86,19 @@ namespace InvisibleCollectorLib.Model
         {
             return !(left == right);
         }
+        
         internal IDictionary<string, string> SendableStringDictionary => 
                 SendableDictionary.ToDictionary(p => p.Key, p =>
                 {
-                    if (p.Value is DateTime date)
-                        return date.ToString(IcConstants.DateTimeFormat);
-                    
-                    return Convert.ToString(p.Value);
+                    switch (p.Value)
+                    {
+                        case null:
+                            return null;
+                        case DateTime date:
+                            return date.ToString(IcConstants.DateTimeFormat);
+                        default:
+                            return Convert.ToString(p.Value);
+                    }
                 });
             
     }
