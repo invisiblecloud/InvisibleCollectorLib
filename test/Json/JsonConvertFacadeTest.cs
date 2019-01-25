@@ -41,7 +41,7 @@ namespace test.Json
             var json = TestingUtils.BuildJson(pairs);
             var jsonStream = TestingUtils.StringToStream(json);
 
-            var correctPairs = new(string, string)[]
+            var correctPairs = new[]
             {
                 (Key1, IntVal.ToString()),
                 (Key2, StringVal),
