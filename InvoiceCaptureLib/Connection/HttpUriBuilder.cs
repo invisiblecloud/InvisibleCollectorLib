@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace InvisibleCollectorLib.Connection
 {
     internal class HttpUriBuilder
     {
-        private UriBuilder _uriBuilder;
+        private readonly UriBuilder _uriBuilder;
 
         internal HttpUriBuilder(string absoluteBaseUri) : this(new Uri(absoluteBaseUri))
         {
@@ -43,10 +42,10 @@ namespace InvisibleCollectorLib.Connection
             if (values.Count == 0)
                 return this;
 
-            string query = string.Join("&",
+            var query = string.Join("&",
                 values.Select(pair => $"{UriEscape(pair.Key)}={UriEscape(pair.Value)}")
                     .ToArray()
-                );
+            );
             _uriBuilder.Query = query;
             return this;
         }

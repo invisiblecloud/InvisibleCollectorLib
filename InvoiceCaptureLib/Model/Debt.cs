@@ -6,7 +6,7 @@ using InvisibleCollectorLib.Utils;
 namespace InvisibleCollectorLib.Model
 {
     /// <summary>
-    /// The debt model
+    ///     The debt model
     /// </summary>
     public class Debt : Model, IRoutableModel
     {
@@ -46,7 +46,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The currency. Must be an ISO 4217 currency code.
+        ///     The currency. Must be an ISO 4217 currency code.
         /// </summary>
         public string Currency
         {
@@ -56,10 +56,12 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The Id of the customer to whom the debt is issued.
+        ///     The Id of the customer to whom the debt is issued.
         /// </summary>
-        /// <remarks>It must be the customer's <see cref="Customer.Gid"/> itself and not the <see cref="Customer.ExternalId"/></remarks>
-        /// <seealso cref="SetCustomerId"/>
+        /// <remarks>
+        ///     It must be the customer's <see cref="Customer.Gid" /> itself and not the <see cref="Customer.ExternalId" />
+        /// </remarks>
+        /// <seealso cref="SetCustomerId" />
         public string CustomerId
         {
             get => GetField<string>(CustomerIdName);
@@ -68,7 +70,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The debt date. Only the years, month and days are considered.
+        ///     The debt date. Only the years, month and days are considered.
         /// </summary>
         public DateTime? Date
         {
@@ -78,7 +80,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The debt due date. Only the years, month and days are considered.
+        ///     The debt due date. Only the years, month and days are considered.
         /// </summary>
         public DateTime? DueDate
         {
@@ -123,7 +125,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The debt status. Can be one of: "PENDING" - the default value; "PAID"; "CANCELLED"
+        ///     The debt status. Can be one of: "PENDING" - the default value; "PAID"; "CANCELLED"
         /// </summary>
         public string Status
         {
@@ -133,7 +135,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The total amount being paid in tax.
+        ///     The total amount being paid in tax.
         /// </summary>
         public double? Tax
         {
@@ -143,7 +145,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The debt type. Can be one of: "FT", "FS", "SD"
+        ///     The debt type. Can be one of: "FT", "FS", "SD"
         /// </summary>
         public string Type
         {
@@ -240,15 +242,14 @@ namespace InvisibleCollectorLib.Model
 
             if (itemRef == false || attributesRef == false)
                 return false;
-            else if (itemRef == true && attributesRef == true)
+            if (itemRef == true && attributesRef == true)
                 return true;
-            else if (itemRef == null && attributesRef == null)
+            if (itemRef == null && attributesRef == null)
                 return left.InternalItems.EqualsCollection(right.InternalItems) &&
                        left.InternalAttributes.EqualsCollection(right.InternalAttributes);
-            else if (itemRef == null)
+            if (itemRef == null)
                 return left.InternalItems.EqualsCollection(right.InternalItems);
-            else
-                return left.InternalAttributes.EqualsCollection(right.InternalAttributes);
+            return left.InternalAttributes.EqualsCollection(right.InternalAttributes);
 
             bool? KeyRefEquality(string key)
             {
@@ -256,10 +257,9 @@ namespace InvisibleCollectorLib.Model
                 var rightHas = right._fields.ContainsKey(key);
                 if (leftHas == rightHas && rightHas) // both true, both have key => inconclusive equality
                     return null;
-                else if (leftHas == rightHas) // both false, neither have key => equals
+                if (leftHas == rightHas) // both false, neither have key => equals
                     return true;
-                else 
-                    return false; // one has and the other doesn't have keu => unequal
+                return false; // one has and the other doesn't have keu => unequal
             }
         }
 
@@ -277,7 +277,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// A convenience method to set the customer id.
+        ///     A convenience method to set the customer id.
         /// </summary>
         /// <param name="customer">The customer</param>
         public void SetCustomerId(Customer customer)

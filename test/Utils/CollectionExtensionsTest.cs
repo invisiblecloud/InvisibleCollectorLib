@@ -4,14 +4,14 @@ using NUnit.Framework;
 
 namespace test.Utils
 {
-    class CollectionExtensionsTest
+    internal class CollectionExtensionsTest
     {
         private IDictionary<string, int> BuildDict()
         {
-            return new Dictionary<string, int>()
+            return new Dictionary<string, int>
             {
-                { "a" , 1 },
-                { "b", 2 }
+                {"a", 1},
+                {"b", 2}
             };
         }
 
@@ -21,10 +21,10 @@ namespace test.Utils
             IDictionary<string, object> dictionary = new Dictionary<string, object>
             {
                 ["a"] = "test",
-                ["test2"] = (double)0.9
+                ["test2"] = 0.9
             };
 
-            string result = dictionary.StringifyDictionary();
+            var result = dictionary.StringifyDictionary();
             TestingUtils.AssertStringContainsValues(result, "a", "test", "test2", "9");
         }
 
@@ -43,11 +43,10 @@ namespace test.Utils
         [Test]
         public void EqualsCollection_DictionaryInequality()
         {
-
             var dict1 = BuildDict();
-            var dict2 = new Dictionary<string, int>()
+            var dict2 = new Dictionary<string, int>
             {
-                { "c", 3 },
+                {"c", 3}
             };
             Assert.False(dict1.EqualsCollection(dict2));
 
@@ -62,7 +61,7 @@ namespace test.Utils
         {
             Assert.True(new List<string>().EqualsCollection(new List<string>()));
 
-            var list1 = new List<string>() {"a", "b"};
+            var list1 = new List<string> {"a", "b"};
             Assert.True(list1.EqualsCollection(list1));
 
             var list2 = new List<string>(list1);
@@ -72,8 +71,8 @@ namespace test.Utils
         [Test]
         public void EqualsCollection_ListInequality()
         {
-            var list1 = new List<string>() { "a", "b" };
-            var list2 = new List<string>() { "a" };
+            var list1 = new List<string> {"a", "b"};
+            var list2 = new List<string> {"a"};
             Assert.False(list1.EqualsCollection(list2));
 
             var list3 = new List<string>(list1);
@@ -81,6 +80,5 @@ namespace test.Utils
 
             Assert.False(list1.EqualsCollection(list3));
         }
-        
     }
 }

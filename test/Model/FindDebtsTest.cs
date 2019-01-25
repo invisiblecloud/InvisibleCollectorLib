@@ -19,15 +19,12 @@ namespace test.Model
             };
 
 
-
             var dictionary = findDebts.SendableStringDictionary;
             TestingUtils.AssertDictionaryContainsItems(dictionary,
-                    ("number", "123"),
-                    ("to_date", "2010-01-01"),
-                    ("from_date", "")
-                );
+                ("number", "123"),
+                ("to_date", "2010-01-01"),
+                ("from_date", "")
+            );
         }
-        
-        
     }
 }

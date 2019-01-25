@@ -66,7 +66,7 @@ namespace test.Connection
 
             if (expectedQuery != null)
                 foreach (var query in expectedQuery)
-                    request.WithUrl($"*?*{query}*"); 
+                    request.WithUrl($"*?*{query}*");
 
 
             requests.Push(request);

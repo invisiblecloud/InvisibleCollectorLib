@@ -13,10 +13,6 @@ namespace InvisibleCollectorLib.Model
         internal const string FromDueDateName = "from_duedate";
         internal const string ToDueDateName = "to_duedate";
 
-        public FindDebts()
-        {    
-        }
-
         public string Number
         {
             get => GetField<string>(NumberName);
@@ -25,7 +21,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-            /// The debt date lower limit. Only the years, month and days are considered.
+        ///     The debt date lower limit. Only the years, month and days are considered.
         /// </summary>
         public DateTime? FromDate
         {
@@ -35,7 +31,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The debt date higher limit. Only the years, month and days are considered.
+        ///     The debt date higher limit. Only the years, month and days are considered.
         /// </summary>
         public DateTime? ToDate
         {
@@ -45,7 +41,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The due debt date lower limit. Only the years, month and days are considered.
+        ///     The due debt date lower limit. Only the years, month and days are considered.
         /// </summary>
         public DateTime? FromDueDate
         {
@@ -55,7 +51,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The due debt date higher limit. Only the years, month and days are considered.
+        ///     The due debt date higher limit. Only the years, month and days are considered.
         /// </summary>
         public DateTime? ToDueDate
         {
@@ -67,6 +63,15 @@ namespace InvisibleCollectorLib.Model
         protected override ISet<string> SendableFields =>
             new SortedSet<string> {NumberName, FromDateName, ToDateName, FromDueDateName, ToDueDateName};
 
+        internal IDictionary<string, string> SendableStringDictionary =>
+            SendableDictionary.ToDictionary(p => p.Key, p =>
+            {
+                if (p.Value is DateTime date)
+                    return date.ToString(IcConstants.DateTimeFormat);
+
+                return Convert.ToString(p.Value);
+            });
+
         public override bool Equals(object other)
         {
             return other is FindDebts find && this == find;
@@ -76,7 +81,7 @@ namespace InvisibleCollectorLib.Model
         {
             return base.GetHashCode();
         }
-        
+
         public static bool operator ==(FindDebts left, FindDebts right)
         {
             return left == (Model) right;
@@ -86,15 +91,5 @@ namespace InvisibleCollectorLib.Model
         {
             return !(left == right);
         }
-        
-        internal IDictionary<string, string> SendableStringDictionary => 
-                SendableDictionary.ToDictionary(p => p.Key, p =>
-                {
-                    if (p.Value is DateTime date)
-                        return date.ToString(IcConstants.DateTimeFormat);
-                    
-                    return Convert.ToString(p.Value);
-                });
-            
     }
 }

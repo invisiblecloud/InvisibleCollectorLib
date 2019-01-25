@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Connection;
 using InvisibleCollectorLib.Exception;
-using InvisibleCollectorLib.Utils;
 using Moq;
 using NUnit.Framework;
 using test.Utils;
@@ -17,7 +15,6 @@ namespace test.Connection
     [TestFixture]
     internal class ApiConnectionFacadeTest : MockServerTesterBase
     {
-        
         private const string DefaultErorMessage = "an error occured";
         private const string DefaultErrorCode = "400";
         private const string DefaultConflictingId = "3456";
@@ -29,7 +26,8 @@ namespace test.Connection
             {"message", DefaultErorMessage}
         }.ToImmutableDictionary();
 
-        private static readonly ImmutableDictionary<string, string> EmptyDictionary = new Dictionary<string, string>().ToImmutableDictionary();
+        private static readonly ImmutableDictionary<string, string> EmptyDictionary =
+            new Dictionary<string, string>().ToImmutableDictionary();
 
         private static readonly ImmutableDictionary<string, string> ConflictErrorDictionary =
             new Dictionary<string, string>(ErrorDictionary) {{"gid", DefaultConflictingId}}
@@ -41,6 +39,26 @@ namespace test.Connection
 
             mock.Setup(m => m(It.IsAny<Stream>())).Returns(errorJsonObject);
             return new ApiConnectionFacade(TestApiKey, mock.Object);
+        }
+
+        [Test]
+        public void CallApiAsync_200FailNotJsonResponse()
+        {
+            _mockServer.AddRequest("GET", TestPath)
+                .AddHtmlResponse("", 200);
+            Assert.ThrowsAsync<IcException>(() =>
+                BuildApiFacade(ErrorDictionary)
+                    .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
+        }
+
+        [Test]
+        public void CallApiAsync_404Error()
+        {
+            _mockServer.AddRequest("GET", "unreachablPath")
+                .AddJsonResponse("", 200);
+            Assert.ThrowsAsync<WebException>(() =>
+                BuildApiFacade(EmptyDictionary)
+                    .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
         }
 
         [Test]
@@ -56,30 +74,10 @@ namespace test.Connection
         }
 
         [Test]
-        public void CallApiAsync_FailNotJsonResponse()
-        {
-            _mockServer.AddRequest("GET", TestPath)
-                .AddHtmlResponse("", 400); // supposed to fail here
-            Assert.ThrowsAsync<WebException>(() =>
-                BuildApiFacade(ErrorDictionary)
-                    .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
-        }
-
-        [Test]
-        public void CallApiAsync_200FailNotJsonResponse()
-        {
-            _mockServer.AddRequest("GET", TestPath)
-                .AddHtmlResponse("", 200); 
-            Assert.ThrowsAsync<IcException>(() =>
-                BuildApiFacade(ErrorDictionary)
-                    .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
-        }
-
-        [Test]
         public void CallApiAsync_ErrorConflict()
         {
             _mockServer.AddRequest("GET", TestPath)
-                .AddJsonResponse("", 400); 
+                .AddJsonResponse("", 400);
             var exception = Assert.ThrowsAsync<IcModelConflictException>(() =>
                 BuildApiFacade(ConflictErrorDictionary)
                     .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
@@ -91,19 +89,19 @@ namespace test.Connection
         public void CallApiAsync_ErrorMissingFields()
         {
             _mockServer.AddRequest("GET", TestPath)
-                .AddJsonResponse("", 400); 
+                .AddJsonResponse("", 400);
             Assert.ThrowsAsync<WebException>(() =>
                 BuildApiFacade(EmptyDictionary)
                     .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
         }
 
         [Test]
-        public void CallApiAsync_404Error()
+        public void CallApiAsync_FailNotJsonResponse()
         {
-            _mockServer.AddRequest("GET", "unreachablPath")
-                .AddJsonResponse("", 200); 
+            _mockServer.AddRequest("GET", TestPath)
+                .AddHtmlResponse("", 400); // supposed to fail here
             Assert.ThrowsAsync<WebException>(() =>
-                BuildApiFacade(EmptyDictionary)
+                BuildApiFacade(ErrorDictionary)
                     .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
         }
 

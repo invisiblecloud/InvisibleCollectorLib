@@ -15,7 +15,9 @@ namespace InvisibleCollectorLib.Utils
         internal static string StringifyDictionary<TValue>(this IDictionary<string, TValue> dictionary)
         {
             return
-                "{" + string.Join(", ", dictionary.Select(pair => $"{Convert.ToString(pair.Key)} = {Convert.ToString(pair.Value)}").ToList()) + "}";
+                "{" + string.Join(", ",
+                    dictionary.Select(pair => $"{Convert.ToString(pair.Key)} = {Convert.ToString(pair.Value)}")
+                        .ToList()) + "}";
         }
 
         internal static string StringifyList<TValue>(this IList<TValue> list)

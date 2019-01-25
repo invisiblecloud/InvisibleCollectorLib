@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Exception;
 using InvisibleCollectorLib.Utils;
@@ -36,7 +35,7 @@ namespace InvisibleCollectorLib.Connection
         {
             return await CallApiAsync(requestUri, method, IcConstants.JsonMimeType, jsonString);
         }
-        
+
         /// <summary>
         ///     Make an Api Request. x-www-form-url-encoded content type and JSON accept-type
         /// </summary>
@@ -49,15 +48,16 @@ namespace InvisibleCollectorLib.Connection
         {
             return await CallApiAsync(requestUri, method, null, jsonString);
         }
-        
-        private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType, string jsonString = null)
+
+        private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType,
+            string jsonString = null)
         {
             var client = BuildWebClient(requestUri.Host);
-            if (jsonString == null) 
+            if (jsonString == null)
                 jsonString = "";
             if (!string.IsNullOrEmpty(jsonString))
                 client.Headers.Set("Content-Type", $"{contentType}; charset=UTF-8");
-                
+
             string response;
             try
             {
@@ -79,13 +79,14 @@ namespace InvisibleCollectorLib.Connection
             catch (WebException webException)
             {
                 var errorResponse = webException.Response;
-                if (webException.Status != WebExceptionStatus.ProtocolError || errorResponse?.GetResponseStream() is null || !IsContentTypeJson(errorResponse.Headers))
+                if (webException.Status != WebExceptionStatus.ProtocolError ||
+                    errorResponse?.GetResponseStream() is null || !IsContentTypeJson(errorResponse.Headers))
                     throw;
 
                 var ex = BuildException(errorResponse.GetResponseStream());
                 if (!(ex is null))
                     throw ex;
-                
+
                 throw;
             }
 
@@ -119,11 +120,11 @@ namespace InvisibleCollectorLib.Connection
 
             // will check for the various ways a model ID can be named.
             // First accepted key will also initialize the previous local
-            var containsId = jsonObject.TryGetValue(gidName, out var conflictingId) || 
-                             jsonObject.TryGetValue(idName, out conflictingId); 
+            var containsId = jsonObject.TryGetValue(gidName, out var conflictingId) ||
+                             jsonObject.TryGetValue(idName, out conflictingId);
             if (containsId)
                 return new IcModelConflictException(jsonObject[messageName], conflictingId);
-            
+
             return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
         }
 

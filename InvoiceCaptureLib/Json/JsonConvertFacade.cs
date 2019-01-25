@@ -51,7 +51,7 @@ namespace InvisibleCollectorLib.Json
                 throw new IcException($"Failed to parse json: {e.Message}", e);
             }
         }
-        
+
         internal string DictionaryToJson<TValue>(IDictionary<string, TValue> dict)
         {
             try
@@ -63,7 +63,5 @@ namespace InvisibleCollectorLib.Json
                 throw new IcException($"Failed to create json: {e.Message}", e);
             }
         }
-
-      
     }
 }
