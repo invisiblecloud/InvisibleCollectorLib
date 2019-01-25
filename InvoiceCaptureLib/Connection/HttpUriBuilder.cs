@@ -22,7 +22,7 @@ namespace InvisibleCollectorLib.Connection
 
         internal HttpUriBuilder WithPath(params string[] pathFragments)
         {
-            var path = String.Join("/", pathFragments);
+            var path = string.Join("/", pathFragments.Select(UriEscape));
             _uriBuilder.Path = path;
             return this;
         }
