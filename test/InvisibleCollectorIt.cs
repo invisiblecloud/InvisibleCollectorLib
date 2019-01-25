@@ -104,9 +104,10 @@ namespace test
             var findDebts = new FindDebts
             {
                 Number = "123",
-                ToDate = new DateTime(2010, 1, 1)
+                ToDate = new DateTime(2010, 1, 1),
+                FromDate = null
             };
-            var expectedQueryParams = new List<string> {"123", "number", "to_date", "2010-01-01"};
+            var expectedQueryParams = new List<string> {"123", "number", "to_date", "2010-01-01", "from_date"};
             
             var ic = ConfigureIc("GET", "debts/find", replyJson, null, expectedQueryParams);
 

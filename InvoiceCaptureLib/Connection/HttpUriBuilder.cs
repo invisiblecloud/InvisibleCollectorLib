@@ -62,7 +62,7 @@ namespace InvisibleCollectorLib.Connection
 
         internal static string UriEscape(string uriComponent)
         {
-            if (String.IsNullOrWhiteSpace(uriComponent))
+            if (uriComponent == null)
                 throw new ArgumentException("Illegal uri component: " + uriComponent);
 
             return WebUtility.UrlEncode(uriComponent);
