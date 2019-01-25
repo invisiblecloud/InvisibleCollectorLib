@@ -282,7 +282,7 @@ namespace InvisibleCollectorLib
                     .WithPath(DebtsEndpoint, "find")
                     .WithQuery(findDebts.SendableStringDictionary)
                     .BuildUri();
-                var json = await _apiFacade.CallJsonToJsonApi(requestUri, "GET", requestJson);
+                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET", requestJson);
                 ret = _jsonFacade.JsonToObject<List<Debt>>(json);
             }
             catch (System.Exception e)

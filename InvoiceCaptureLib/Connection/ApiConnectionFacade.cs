@@ -37,6 +37,19 @@ namespace InvisibleCollectorLib.Connection
             return await CallApiAsync(requestUri, method, IcConstants.JsonMimeType, jsonString);
         }
         
+        /// <summary>
+        ///     Make an Api Request. x-www-form-url-encoded content type and JSON accept-type
+        /// </summary>
+        /// <param name="requestUri">The absolute request Url</param>
+        /// the absolute uri of the request
+        /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
+        /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
+        /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
+        internal async Task<string> CallUrlEncodedToJsonApi(Uri requestUri, string method, string jsonString = null)
+        {
+            return await CallApiAsync(requestUri, method, null, jsonString);
+        }
+        
         private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType, string jsonString = null)
         {
             var client = BuildWebClient(requestUri.Host);
