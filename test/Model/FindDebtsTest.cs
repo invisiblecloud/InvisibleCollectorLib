@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using InvisibleCollectorLib.Model;
 using NUnit.Framework;
 using test.Utils;
-using InvisibleCollectorLib.Utils;
 
 namespace test.Model
 {
