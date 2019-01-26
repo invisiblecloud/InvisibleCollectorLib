@@ -3,7 +3,7 @@
 namespace InvisibleCollectorLib.Model
 {
     /// <summary>
-    /// The company model
+    ///     The company model
     /// </summary>
     public class Company : Model
     {
@@ -31,7 +31,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The company's country. Must be a ISO 3166-1 country code
+        ///     The company's country. Must be a ISO 3166-1 country code
         /// </summary>
         public string Country
         {
@@ -41,7 +41,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The company Id
+        ///     The company Id
         /// </summary>
         public string Gid
         {
@@ -58,7 +58,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// Represents wheter the company notifications are enabled. Set by a request.
+        ///     Represents wheter the company notifications are enabled. Set by a request.
         /// </summary>
         public bool? NotificationsEnabled
         {
@@ -68,7 +68,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// Must be a valid vat number as specified by the <see cref="Country"/>.
+        ///     Must be a valid vat number as specified by the <see cref="Country" />.
         /// </summary>
         public string VatNumber
         {
@@ -96,7 +96,7 @@ namespace InvisibleCollectorLib.Model
         {
             return base.GetHashCode();
         }
-        
+
         public static bool operator ==(Company left, Company right)
         {
             return left == (Model) right;

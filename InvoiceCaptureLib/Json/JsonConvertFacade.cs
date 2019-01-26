@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using InvisibleCollectorLib.Exception;
+using InvisibleCollectorLib.Utils;
 using Newtonsoft.Json;
 
 namespace InvisibleCollectorLib.Json
@@ -10,14 +11,14 @@ namespace InvisibleCollectorLib.Json
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Include,
-            DateFormatString = "yyyy'-'MM'-'dd"
+            DateFormatString = IcConstants.DateTimeFormat
         };
 
         //should nulls be ignored?
         private static readonly JsonSerializerSettings DeserializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
-            DateFormatString = "yyyy'-'MM'-'dd"
+            DateFormatString = IcConstants.DateTimeFormat
         };
 
 
@@ -50,7 +51,7 @@ namespace InvisibleCollectorLib.Json
                 throw new IcException($"Failed to parse json: {e.Message}", e);
             }
         }
-        
+
         internal string DictionaryToJson<TValue>(IDictionary<string, TValue> dict)
         {
             try
@@ -62,7 +63,5 @@ namespace InvisibleCollectorLib.Json
                 throw new IcException($"Failed to create json: {e.Message}", e);
             }
         }
-
-      
     }
 }

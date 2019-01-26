@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using InvisibleCollectorLib.Model;
+﻿using InvisibleCollectorLib.Model;
 using NUnit.Framework;
 
 namespace test.Model
 {
     [TestFixture]
-    class ItemTest
+    internal class ItemTest
     {
         [Test]
         public void Clone_correctness()
         {
             const string name = "a name";
-            var item1 = new Item()
+            var item1 = new Item
             {
                 Name = name
             };

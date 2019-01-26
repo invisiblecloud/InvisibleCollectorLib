@@ -17,11 +17,13 @@ namespace test
         private const string TestId = "1234";
 
         private InvisibleCollector ConfigureIc(string expectedMethod, string expectedPath, string jsonReply,
-            string expectedJson = null)
+            string expectedJson = null, IEnumerable<string> expectedQuery = null)
         {
+            var expectingJson = expectedJson is null;
             _mockServer.AddRequest(expectedMethod, expectedPath, expectedJson,
-                    expectedJson is null ? BodylessHeaders : BodiedHeaders,
-                    expectedJson is null ? BodyHeaderDifference : null)
+                    expectingJson ? BodylessHeaders : BodiedHeaders,
+                    expectingJson ? BodyHeaderDifference : null,
+                    expectedQuery)
                 .AddJsonResponse(jsonReply);
 
             var uri = _mockServer.GetUrl();
@@ -54,6 +56,29 @@ namespace test
         }
 
         [Test]
+        public void GetCompanyInfoAsync_correct()
+        {
+            var builder = ModelBuilder.BuildReplyCompanyBuilder();
+            AssertingModelRequest("GET", "companies", builder,
+                async ic => await ic.GetCompanyInfoAsync());
+        }
+
+
+        [Test]
+        public void GetCompanyInfoAsync_fail404()
+        {
+            var ic = ConfigureIc("GET", "someunreachablepath", "{}");
+            Assert.ThrowsAsync<WebException>(() => ic.GetCompanyInfoAsync());
+        }
+
+        [Test]
+        public void GetCompanyInfoAsync_failRefuseConnection()
+        {
+            var uri = new Uri("http://localhost:56087"); //shouldn't be in use
+            Assert.ThrowsAsync<WebException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyInfoAsync());
+        }
+
+        [Test]
         public async Task GetCustomerAttributesAsync_correct()
         {
             var replyJson = ModelBuilder.DictToJson(Attributes2);
@@ -79,6 +104,14 @@ namespace test
                 Assert.AreEqual(replyDebts[i], result[i]);
         }
 
+        [Test]
+        public void GetCustomerInfoAsync_correct()
+        {
+            var builder = ModelBuilder.BuildReplyCustomerBuilder();
+            AssertingModelRequest("GET", $"customers/{TestId}", builder,
+                async ic => await ic.GetCustomerInfoAsync(TestId));
+        }
+
 
         [Test]
         public void GetDebtAsync_correct()
@@ -89,44 +122,40 @@ namespace test
         }
 
         [Test]
-        public void SetNewCustomerAsync_correct()
+        public async Task GetFindDebts_correct()
         {
-            var request = ModelBuilder.BuildRequestCustomerBuilder();
-            var reply = ModelBuilder.BuildRequestCustomerBuilder();
-            AssertingModelRequest("POST", $"customers", reply,
-                async ic => await ic.SetNewCustomerAsync(request.BuildModel<Customer>()),
-                request.BuildJson());
+            var replyDebts = new List<Debt>
+            {
+                ModelBuilder.BuildReplyDebtBuilder("1", "10").BuildModel<Debt>(),
+                ModelBuilder.BuildReplyDebtBuilder("2", "20").BuildModel<Debt>()
+            };
+
+            var replyJson = ModelBuilder.ToJson(replyDebts);
+
+            var findDebts = new FindDebts
+            {
+                Number = "123",
+                ToDate = new DateTime(2010, 1, 1),
+                FromDate = null
+            };
+            var expectedQueryParams = new List<string> {"123", "number", "to_date", "2010-01-01", "from_date"};
+
+            var ic = ConfigureIc("GET", "debts/find", replyJson, null, expectedQueryParams);
+
+            var result = await ic.GetFindDebts(findDebts);
+
+            for (var i = 0; i < replyDebts.Count; i++)
+                Assert.AreEqual(replyDebts[i], result[i]);
         }
 
         [Test]
-        public void GetCompanyInfoAsync_correct()
+        public void SetCompanyInfoAsync_correct()
         {
-            var builder = ModelBuilder.BuildReplyCompanyBuilder();
-            AssertingModelRequest("GET", "companies", builder,
-                async ic => await ic.GetCompanyInfoAsync());
-        }
-
-
-        [Test]
-        public void GetCompanyInfoAsync_fail404()
-        {
-            var ic = ConfigureIc("GET", "someunreachablepath", "{}");
-            Assert.ThrowsAsync<WebException>(() => ic.GetCompanyInfoAsync());
-        }
-
-        [Test]
-        public void GetCompanyInfoAsync_failRefuseConnection()
-        {
-            var uri = new Uri("http://localhost:56087"); //shouldn't be in use
-            Assert.ThrowsAsync<WebException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyInfoAsync());
-        }
-
-        [Test]
-        public void GetCustomerInfoAsync_correct()
-        {
-            var builder = ModelBuilder.BuildReplyCustomerBuilder();
-            AssertingModelRequest("GET", $"customers/{TestId}", builder,
-                async ic => await ic.GetCustomerInfoAsync(TestId));
+            var replyBuilder = ModelBuilder.BuildReplyCompanyBuilder();
+            var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder();
+            AssertingModelRequest("PUT", "companies", replyBuilder,
+                async ic => await ic.SetCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
+                requestBuilder.BuildJson());
         }
 
         [Test]
@@ -153,26 +182,6 @@ namespace test
         }
 
         [Test]
-        public void SetNewDebtAsync_correct()
-        {
-            var request = ModelBuilder.BuildRequestDebtBuilder();
-            var reply = ModelBuilder.BuildReplyDebtBuilder();
-            AssertingModelRequest("POST", $"debts", reply,
-                async ic => await ic.SetNewDebtAsync(request.BuildModel<Debt>()),
-                request.BuildJson());
-        }
-
-        [Test]
-        public void SetCompanyInfoAsync_correct()
-        {
-            var replyBuilder = ModelBuilder.BuildReplyCompanyBuilder();
-            var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder();
-            AssertingModelRequest("PUT", "companies", replyBuilder,
-                async ic => await ic.SetCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
-                requestBuilder.BuildJson());
-        }
-
-        [Test]
         public void SetCustomerInfoAsync_correct()
         {
             var request = ModelBuilder.BuildRequestCustomerBuilder();
@@ -180,6 +189,26 @@ namespace test
             var requestModel = reply.BuildModel<Customer>();
             AssertingModelRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
                 async ic => await ic.SetCustomerInfoAsync(requestModel),
+                request.BuildJson());
+        }
+
+        [Test]
+        public void SetNewCustomerAsync_correct()
+        {
+            var request = ModelBuilder.BuildRequestCustomerBuilder();
+            var reply = ModelBuilder.BuildRequestCustomerBuilder();
+            AssertingModelRequest("POST", "customers", reply,
+                async ic => await ic.SetNewCustomerAsync(request.BuildModel<Customer>()),
+                request.BuildJson());
+        }
+
+        [Test]
+        public void SetNewDebtAsync_correct()
+        {
+            var request = ModelBuilder.BuildRequestDebtBuilder();
+            var reply = ModelBuilder.BuildReplyDebtBuilder();
+            AssertingModelRequest("POST", "debts", reply,
+                async ic => await ic.SetNewDebtAsync(request.BuildModel<Debt>()),
                 request.BuildJson());
         }
     }

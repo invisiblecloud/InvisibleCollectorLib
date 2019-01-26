@@ -3,7 +3,7 @@
 namespace InvisibleCollectorLib.Model
 {
     /// <summary>
-    /// The customer model.
+    ///     The customer model.
     /// </summary>
     public class Customer : Model, IRoutableModel
     {
@@ -33,7 +33,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The customer's country. Must be a ISO 3166-1 country code
+        ///     The customer's country. Must be a ISO 3166-1 country code
         /// </summary>
         public string Country
         {
@@ -50,9 +50,12 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// Represent a 'secondary' id for the customer assigned by the library user. Used for convenience.
+        ///     Represent a 'secondary' id for the customer assigned by the library user. Used for convenience.
         /// </summary>
-        /// <remarks>This externalId can be used to retrieve customers from the API. It can be for example the customer id from your DB.</remarks>
+        /// <remarks>
+        ///     This externalId can be used to retrieve customers from the API. It can be for example the customer id from
+        ///     your DB.
+        /// </remarks>
         public string ExternalId
         {
             get => GetField<string>(ExternalIdName);
@@ -61,7 +64,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The customer id.
+        ///     The customer id.
         /// </summary>
         public string Gid
         {
@@ -85,7 +88,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// Must be a valid vat number as specified by the <see cref="Country"/>.
+        ///     Must be a valid vat number as specified by the <see cref="Country" />.
         /// </summary>
         public string VatNumber
         {

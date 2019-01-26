@@ -1,9 +1,7 @@
-﻿using System.Runtime.Serialization;
-
-namespace InvisibleCollectorLib.Exception
+﻿namespace InvisibleCollectorLib.Exception
 {
     /// <summary>
-    /// The exception used by this library to wrap around other 3rd party libraries and to throw error messages.
+    ///     The exception used by this library to wrap around other 3rd party libraries and to throw error messages.
     /// </summary>
     public class IcException : System.Exception
     {
@@ -14,7 +12,5 @@ namespace InvisibleCollectorLib.Exception
         public IcException(string message, System.Exception exception) : base(message, exception)
         {
         }
-
-        public IcException(SerializationInfo info, StreamingContext context) { }
     }
 }

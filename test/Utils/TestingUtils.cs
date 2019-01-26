@@ -4,9 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using test.Model;
 
 namespace test.Utils
 {
@@ -88,9 +86,7 @@ namespace test.Utils
         public static void StripNulls<T>(this IDictionary<string, T> dictionary)
         {
             foreach (var nullEntry in dictionary.Where(entry => entry.Value == null).ToList())
-            {
                 dictionary.Remove(nullEntry.Key);
-            }
         }
     }
 }

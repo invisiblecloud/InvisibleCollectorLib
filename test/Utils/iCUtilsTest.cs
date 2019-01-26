@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using InvisibleCollectorLib.Utils;
-using Newtonsoft.Json;
+﻿using InvisibleCollectorLib.Utils;
 using NUnit.Framework;
-using test.Model;
 
 namespace test.Utils
 {
