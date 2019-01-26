@@ -8,6 +8,19 @@
 
 Download the [latest release] or via [NuGet].
 
+
+## How to build docs
+
+TO build the docs you need to have mono installed
+
+### For Linux (bash)
+
+```bash
+cd docfx_project # from project root
+./docs.sh install # downloads docfx binary
+./docs.sh build # builds the statis api docs pages, needs mono, this will build into /docs
+```
+
 #### License
 
 [MIT]
