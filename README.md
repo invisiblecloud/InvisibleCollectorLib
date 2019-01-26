@@ -9,7 +9,7 @@
 Download the [latest release] or via [NuGet].
 
 
-## How to build docs
+## Docs Build Instructions
 
 TO build the docs you need to have mono installed
 
@@ -19,6 +19,15 @@ TO build the docs you need to have mono installed
 cd docfx_project # from project root
 ./docs.sh install # downloads docfx binary
 ./docs.sh build # builds the statis api docs pages, needs mono, this will build into /docs
+```
+
+### For Windows (cmd)
+
+[docfx](https://dotnet.github.io/docfx/) should be installed before running this script:
+
+```cmd
+cd docfx_project
+docfx docfx.json
 ```
 
 #### License
