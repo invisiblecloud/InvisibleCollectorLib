@@ -16,7 +16,7 @@ TO build the docs you need to have mono installed
 ### For Linux and Mac (bash)
 
 ```bash
-cd docfx_project # from project root
+cd docfx # from project root
 ./docs.sh install # downloads docfx binary
 ./docs.sh build # builds the statis api docs pages, needs mono, this will build into /docs
 ```
@@ -26,8 +26,8 @@ cd docfx_project # from project root
 [docfx](https://dotnet.github.io/docfx/) should be installed before running this script:
 
 ```cmd
-cd docfx_project
-docfx docfx.json
+cd docfx
+docfx docfx.jsonmono docfx/docfx.exe docfx.json
 ```
 
 #### License
