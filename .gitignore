@@ -10,3 +10,6 @@ packages
 /InvoiceCaptureLib/obj
 /obj
 /api
+
+.idea
+**/obj
