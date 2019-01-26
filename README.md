@@ -13,7 +13,7 @@ Download the [latest release] or via [NuGet].
 
 TO build the docs you need to have mono installed
 
-### For Linux (bash)
+### For Linux and Mac (bash)
 
 ```bash
 cd docfx_project # from project root
