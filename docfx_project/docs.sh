@@ -1,3 +1,4 @@
+# helper script for building docs with bash
 set -e
 
 if [ "$#" = "0" ]; then
