@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InvisibleCollectorLib.Model
+﻿namespace InvisibleCollectorLib.Model
 {
-    interface IRoutableModel
+    internal interface IRoutableModel
     {
         /// <summary>
-        /// The model's id taht can be used on requests to retrieve models, update models, etc
+        ///     The model's id taht can be used on requests to retrieve models, update models, etc
         /// </summary>
         string RoutableId { get; }
     }

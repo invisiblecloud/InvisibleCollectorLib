@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace InvisibleCollectorLib.Model
 {
     /// <summary>
-    /// Represents a debt's item model
+    ///     Represents a debt's item model
     /// </summary>
     public class Item : Model, ICloneable
     {
@@ -51,7 +51,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        /// The VAT percentage (0.0 to 100.0).
+        ///     The VAT percentage (0.0 to 100.0).
         /// </summary>
         public double? Vat
         {
@@ -60,7 +60,8 @@ namespace InvisibleCollectorLib.Model
             set => this[VatName] = value;
         }
 
-        protected override ISet<string> SendableFields => new SortedSet<string> { NameName, PriceName, QuantityName, VatName, DescriptionName };
+        protected override ISet<string> SendableFields => new SortedSet<string>
+            {NameName, PriceName, QuantityName, VatName, DescriptionName};
 
         public object Clone()
         {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Exception;
 using InvisibleCollectorLib.Utils;
@@ -24,21 +24,41 @@ namespace InvisibleCollectorLib.Connection
         }
 
         /// <summary>
-        ///     Make an Api Request.
+        ///     Make an Api Request. JSON content type and accept-type
         /// </summary>
         /// <param name="requestUri">The absolute request Url</param>
         /// the absolute uri of the request
         /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
         /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
         /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
-        internal async Task<string> CallApiAsync(Uri requestUri, string method, string jsonString = null)
+        internal async Task<string> CallJsonToJsonApi(Uri requestUri, string method, string jsonString = null)
         {
-            HttpUriBuilder.AssertValidHttpUri(requestUri);
-            var requestHasBody = !string.IsNullOrEmpty(jsonString);
-            jsonString = requestHasBody ? jsonString : "";
-            var client = BuildWebClient(requestUri.Host, requestHasBody);
-            string response = "";
+            return await CallApiAsync(requestUri, method, IcConstants.JsonMimeType, jsonString);
+        }
 
+        /// <summary>
+        ///     Make an Api Request. x-www-form-url-encoded content type and JSON accept-type
+        /// </summary>
+        /// <param name="requestUri">The absolute request Url</param>
+        /// the absolute uri of the request
+        /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
+        /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
+        /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
+        internal async Task<string> CallUrlEncodedToJsonApi(Uri requestUri, string method, string jsonString = null)
+        {
+            return await CallApiAsync(requestUri, method, null, jsonString);
+        }
+
+        private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType,
+            string jsonString = null)
+        {
+            var client = BuildWebClient(requestUri.Host);
+            if (jsonString == null)
+                jsonString = "";
+            if (!string.IsNullOrEmpty(jsonString))
+                client.Headers.Set("Content-Type", $"{contentType}; charset=UTF-8");
+
+            string response;
             try
             {
                 switch (method)
@@ -59,14 +79,15 @@ namespace InvisibleCollectorLib.Connection
             catch (WebException webException)
             {
                 var errorResponse = webException.Response;
-                if (webException.Status != WebExceptionStatus.ProtocolError || errorResponse?.GetResponseStream() is null || !IsContentTypeJson(errorResponse.Headers))
+                if (webException.Status != WebExceptionStatus.ProtocolError ||
+                    errorResponse?.GetResponseStream() is null || !IsContentTypeJson(errorResponse.Headers))
                     throw;
 
                 var ex = BuildException(errorResponse.GetResponseStream());
                 if (!(ex is null))
                     throw ex;
-                else
-                    throw;
+
+                throw;
             }
 
             // check that the response has 'Content-Type' header set to json
@@ -76,7 +97,7 @@ namespace InvisibleCollectorLib.Connection
             return response;
         }
 
-        private bool IsContentTypeJson(WebHeaderCollection headers)
+        private static bool IsContentTypeJson(NameValueCollection headers)
         {
             if (headers is null)
                 return false;
@@ -99,20 +120,17 @@ namespace InvisibleCollectorLib.Connection
 
             // will check for the various ways a model ID can be named.
             // First accepted key will also initialize the previous local
-            var containsId = jsonObject.TryGetValue(gidName, out var conflictingId) || 
-                             jsonObject.TryGetValue(idName, out conflictingId); 
+            var containsId = jsonObject.TryGetValue(gidName, out var conflictingId) ||
+                             jsonObject.TryGetValue(idName, out conflictingId);
             if (containsId)
                 return new IcModelConflictException(jsonObject[messageName], conflictingId);
-            else 
-                return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
+
+            return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
         }
 
-        private WebClient BuildWebClient(string requestUriHost, bool requestHasBody)
+        private WebClient BuildWebClient(string requestUriHost)
         {
-
             var client = new WebClient();
-            if (requestHasBody)
-                client.Headers.Set("Content-Type", $"{IcConstants.JsonMimeType}; charset=UTF-8");
             client.Headers.Set("Accept", IcConstants.JsonMimeType);
             client.Headers.Set("Authorization", $"Bearer {_apiKey}");
             client.Headers.Set("Host", requestUriHost);

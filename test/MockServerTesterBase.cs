@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using InvisibleCollectorLib.Utils;
 using NUnit.Framework;
 using test.Connection;
 
 namespace test
 {
-    class MockServerTesterBase
+    internal class MockServerTesterBase
     {
         protected const string TestApiKey = "12345";
 
@@ -20,10 +18,10 @@ namespace test
         protected static readonly (string, string) HostHeader = ("Host", "localhost");
 
         protected static readonly ImmutableList<(string, string)> BodylessHeaders =
-            new List<(string, string)> { AcceptHeader, AuthorizationHeader, HostHeader }.ToImmutableList();
+            new List<(string, string)> {AcceptHeader, AuthorizationHeader, HostHeader}.ToImmutableList();
 
         protected static readonly ImmutableList<(string, string)> BodiedHeaders =
-            new List<(string, string)>(BodylessHeaders) { ContentHeader, ContentHeaderEncoding }.ToImmutableList();
+            new List<(string, string)>(BodylessHeaders) {ContentHeader, ContentHeaderEncoding}.ToImmutableList();
 
         protected static readonly ImmutableList<(string, string)> BodyHeaderDifference =
             BodiedHeaders.Except(BodylessHeaders).ToImmutableList();

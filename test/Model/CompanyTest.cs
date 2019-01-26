@@ -26,7 +26,8 @@ namespace test.Model
                 Name = "a name"
             };
 
-            Assert.That(()=>company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName), Throws.Exception);
+            Assert.That(() => company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName),
+                Throws.Exception);
         }
 
         [Test]
@@ -223,6 +224,27 @@ namespace test.Model
         }
 
         [Test]
+        public void UnsetAll_correctlyUnset()
+        {
+            const string CompanyName = "hello";
+            const string Id = null;
+            bool? notifications = false;
+
+            var company = new Company
+            {
+                Name = CompanyName,
+                Gid = Id,
+                NotificationsEnabled = notifications
+            };
+
+            company.UnsetAll();
+
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.Name);
+            Assert.IsNull(company.NotificationsEnabled);
+        }
+
+        [Test]
         public void UnsetProperties_correctlyUnset()
         {
             const string CompanyName = "hello";
@@ -239,27 +261,6 @@ namespace test.Model
             company.UnsetName();
             company.UnsetGid();
             company.UnsetNotifications();
-
-            Assert.IsNull(company.Name);
-            Assert.IsNull(company.Name);
-            Assert.IsNull(company.NotificationsEnabled);
-        }
-
-        [Test]
-        public void UnsetAll_correctlyUnset()
-        {
-            const string CompanyName = "hello";
-            const string Id = null;
-            bool? notifications = false;
-
-            var company = new Company
-            {
-                Name = CompanyName,
-                Gid = Id,
-                NotificationsEnabled = notifications
-            };
-
-            company.UnsetAll();
 
             Assert.IsNull(company.Name);
             Assert.IsNull(company.Name);
