@@ -10,5 +10,6 @@ packages
 /InvoiceCaptureLib/obj
 /obj
 /api
-/.idea
+.idea
+**/obj
 /*DotSettings.user
