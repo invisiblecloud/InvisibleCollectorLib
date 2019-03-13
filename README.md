@@ -30,7 +30,26 @@ cd docfx
 docfx docfx.jsonmono docfx/docfx.exe docfx.json
 ```
 
-#### License
+## Build Instructions
+
+To build from command line run:
+```bash
+$ msbuild 
+```
+
+or to build for release:
+```bash
+$ msbuild -p:Configuration=Release
+```
+
+To create a nuget package run:
+```bash
+$ msbuild -t:pack -p:Configuration=Release
+```
+
+The generated `.nukpg` will be `/InvoiceCaptureLib/bin/Release/InvoiceCaptureLib<version>.nupkg`
+
+## License
 
 [MIT]
 

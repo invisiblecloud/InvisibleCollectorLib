@@ -38,7 +38,7 @@
     parallel: true
     verbosity: normal
   after_build:
-    - ps: nuget pack InvisibleCollectorLib.nuspec -Version $env:APPVEYOR_BUILD_VERSION
+    - msbuild -t:pack -p:Configuration=Release
   artifacts:
   - path: '**\InvisibleCollectorLib.*.nupkg'
   deploy:

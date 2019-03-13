@@ -1,7 +1,7 @@
 .vs
 .git
 packages
-/InvoiceCaptureLib/bin/Debug
+/InvoiceCaptureLib/bin
 /InvoiceCaptureLib/obj/Debug
 /test/bin/Debug
 /test/obj/Debug
@@ -13,3 +13,5 @@ packages
 .idea
 **/obj
 /*DotSettings.user
+
+test/bin/
