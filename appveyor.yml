@@ -23,7 +23,7 @@
   branches:
     only:
       - releases
-  version: 0.1.{build}
+  version: 0.2.{build}
   image: Visual Studio 2017
   environment:
     matrix:
