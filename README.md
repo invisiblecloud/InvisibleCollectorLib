@@ -32,6 +32,8 @@ docfx docfx.jsonmono docfx/docfx.exe docfx.json
 
 ## Build Instructions
 
+Node: on windows replace `-` with `/` on flags
+
 To build from command line run:
 ```bash
 $ msbuild 
@@ -45,6 +47,12 @@ $ msbuild -p:Configuration=Release
 To create a nuget package run:
 ```bash
 $ msbuild -t:pack -p:Configuration=Release
+```
+
+or with a specific version:
+
+```bash
+$ msbuild -t:pack -p:Configuration=Release -p:Version=1.2.3
 ```
 
 The generated `.nukpg` will be `/InvoiceCaptureLib/bin/Release/InvoiceCaptureLib<version>.nupkg`
