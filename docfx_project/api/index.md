@@ -1,1 +1,0 @@
-The API Documentation for the C# InvisibleCollector client
