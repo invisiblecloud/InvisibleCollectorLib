@@ -1,6 +1,6 @@
 # Invoice Capture SDK for .NET
 
-[![Build status](https://ci.appveyor.com/api/projects/status/bvvchuog648l3dlo?svg=true)](https://ci.appveyor.com/project/jmadureira/invoicecapturelib)
+[![Build status](https://ci.appveyor.com/api/projects/status/bvvchuog648l3dlo?svg=true)](https://ci.appveyor.com/project/jmadureira/invisiblecollectorlib)
 [![NuGet](https://img.shields.io/nuget/v/InvoiceCaptureLib.svg?label=NuGet&style=flat-square)](https://www.nuget.org/packages/InvoiceCaptureLib/)
 [![Issues](https://img.shields.io/github/issues/invisiblecloud/InvisibleCollectorLib.svg?style=flat-square)](https://github.com/invisiblecloud/InvisibleCollectorLib/issues)
 
