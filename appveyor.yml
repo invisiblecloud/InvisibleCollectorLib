@@ -38,7 +38,7 @@
     parallel: true
     verbosity: normal
   after_build:
-    - msbuild /t:pack /p:Configuration=Release /p:Version=$env:APPVEYOR_BUILD_VERSION
+    - msbuild /t:pack /p:Configuration=Release /p:Version=$env:version
   artifacts:
   - path: '**\InvisibleCollectorLib.*.nupkg'
   deploy:
