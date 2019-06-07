@@ -15,7 +15,6 @@ namespace InvisibleCollectorLib.Model
         internal const string LinesName = "lines";
         internal const string ExternalIdName = "externalId";
 
-        
         public Payment()
         {
                    
