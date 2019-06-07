@@ -13,5 +13,5 @@ packages
 .idea
 **/obj
 /*DotSettings.user
-
+bin
 test/bin/
