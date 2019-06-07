@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
@@ -19,7 +22,12 @@ namespace InvisibleCollectorLib.Model
         {
                    
         }
-        
+
+        public Payment(Payment other) : base(other)
+        {
+            if (other.InternalLines != null)
+                InternalLines = other.Lines;
+        }
         
         /// <summary>
         ///     The currency. Must be an ISO 4217 currency code.
@@ -99,6 +107,31 @@ namespace InvisibleCollectorLib.Model
 
             set => this[TaxName] = value;
         }
+        
+        private IList<PaymentLine> InternalLines
+        {
+            get => GetField<IList<PaymentLine>>(LinesName);
+
+            set => this[LinesName] = value;
+        }
+
+        public IList<PaymentLine> Lines
+        {
+            get => InternalLines.Clone();
+
+            set => InternalLines = value?.Clone();
+        }
+
+        public void AddLine(PaymentLine line)
+        {
+            if (line is null)
+                throw new ArgumentException("Invalid argument");
+
+            if (InternalLines is null)
+                InternalLines = new List<PaymentLine>();
+
+            InternalLines.Add((PaymentLine) line.Clone());
+        }
 
         public void UnsetExternalId()
         {
@@ -144,6 +177,57 @@ namespace InvisibleCollectorLib.Model
         {
             UnsetField(TypeName);
         }
+
+        public void UnsetLines()
+        {
+            UnsetField(LinesName);
+        }
         
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        
+        public override bool Equals(object other)
+        {
+            return other is Payment payment && this == payment;
+        }
+
+        public static bool operator ==(Payment left, Payment right)
+        {
+            var refDebt = IcUtils.ReferenceQuality(left, right);
+            if (refDebt != null)
+                return (bool) refDebt;
+
+            var leftCopy = new Payment(left) {InternalLines = null};
+            var rightCopy = new Payment(right) {InternalLines = null};
+
+            if (leftCopy != (Model) rightCopy) // compare non collection attributes
+                return false;
+
+            var lineReg = left.KeyRefEquality(right, LinesName);
+            if (lineReg != null)
+                return (bool) lineReg;
+
+            // compare lines
+            return left.InternalLines.EqualsCollection(right.InternalLines);
+        }
+
+        public static bool operator !=(Payment left, Payment right)
+        {
+            return !(left == right);
+        }
+        
+        internal void AssertLinesHaveMandatoryFields(params string[] mandatoryFields)
+        {
+            InternalLines?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
+        }
+        
+        public override string ToString()
+        {
+            var fields = FieldsShallow;
+            fields[LinesName] = InternalLines?.StringifyList();
+            return fields.StringifyDictionary();
+        }
     }
 }

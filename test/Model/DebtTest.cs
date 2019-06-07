@@ -204,7 +204,7 @@ namespace test.Model
         public void SendableDictionary_correctness()
         {
             var debt = new Debt();
-            Assert.AreEqual(debt.Fields.Count, 0);
+            Assert.AreEqual(debt.FieldsShallow.Count, 0);
 
             debt.Items = new List<Item>();
             var items = (IList<IDictionary<string, object>>) debt.SendableDictionary[Debt.ItemsName];

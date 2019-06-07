@@ -94,7 +94,7 @@ namespace test.Model
             if (bStripNull)
                 fields.StripNulls();
 
-            return new T {Fields = fields};
+            return new T {FieldsShallow = fields};
         }
 
         // should only add the id

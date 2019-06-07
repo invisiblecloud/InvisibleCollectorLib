@@ -34,7 +34,7 @@ namespace InvisibleCollectorLib.Model
         protected virtual ISet<string> SendableFields { get; }
 
         // don't use this, will fail on null value
-        internal IDictionary<string, object> Fields
+        internal IDictionary<string, object> FieldsShallow
         {
             set => _fields = new Dictionary<string, object>(value);
 
@@ -79,7 +79,7 @@ namespace InvisibleCollectorLib.Model
         /// <returns></returns>
         public static bool operator ==(Model left, Model right)
         {
-            return IcUtils.ReferenceNullableEquals(left, right) ??
+            return IcUtils.ReferenceQuality(left, right) ??
                    left._fields.EqualsCollection(right._fields);
         }
 
@@ -138,6 +138,17 @@ namespace InvisibleCollectorLib.Model
                     var msg = $"Model is missing mandatory field: {mandatoryField}";
                     throw new ArgumentException(msg);
                 }
+        }
+        
+        protected bool? KeyRefEquality(Model other, string key)
+        {
+            var leftHas = _fields.ContainsKey(key);
+            var rightHas = other._fields.ContainsKey(key);
+            if (leftHas == rightHas && rightHas) // both true, both have key => inconclusive equality
+                return null;
+            if (leftHas == rightHas) // both false, neither have key => equals
+                return true;
+            return false; // one has and the other doesn't have key => unequal
         }
     }
 }

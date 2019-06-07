@@ -3,7 +3,7 @@
     internal static class IcUtils
     {
         // returns null if inconclusive equality
-        internal static bool? ReferenceNullableEquals(object left, object right)
+        internal static bool? ReferenceQuality(object left, object right)
         {
             if (left is null && right is null)
                 return true;

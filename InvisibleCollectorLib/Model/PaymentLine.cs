@@ -66,5 +66,15 @@ namespace InvisibleCollectorLib.Model
         {
             UnsetField(AmountName);
         }
+        
+        public static bool operator ==(PaymentLine left, PaymentLine right)
+        {
+            return left == (Model) right;
+        }
+
+        public static bool operator !=(PaymentLine left, PaymentLine right)
+        {
+            return !(left == right);
+        }
     }
 }
