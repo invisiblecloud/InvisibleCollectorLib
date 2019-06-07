@@ -20,7 +20,6 @@ namespace InvisibleCollectorLib.Model
 
         public Payment()
         {
-                   
         }
 
         public Payment(Payment other) : base(other)
@@ -28,7 +27,7 @@ namespace InvisibleCollectorLib.Model
             if (other.InternalLines != null)
                 InternalLines = other.Lines;
         }
-        
+
         /// <summary>
         ///     The currency. Must be an ISO 4217 currency code.
         /// </summary>
@@ -38,7 +37,7 @@ namespace InvisibleCollectorLib.Model
 
             set => this[CurrencyName] = value;
         }
-         
+
         /// <summary>
         ///     The payment date. Only the years, month and days are considered.
         /// </summary>
@@ -48,22 +47,22 @@ namespace InvisibleCollectorLib.Model
 
             set => this[DateName] = value;
         }
-        
-        
+
+
         public double? GrossTotal
         {
             get => GetField<double?>(GrossTotalName);
 
             set => this[GrossTotalName] = value;
         }
-        
+
         public double? NetTotal
         {
             get => GetField<double?>(NetTotalName);
 
             set => this[NetTotalName] = value;
         }
-        
+
         /// <summary>
         ///     The payment status. Can be one of: "FINAL"; "CANCELLED"
         /// </summary>
@@ -73,7 +72,7 @@ namespace InvisibleCollectorLib.Model
 
             set => this[StatusName] = value;
         }
-        
+
         /// <summary>
         ///     The payment type.
         /// </summary>
@@ -83,21 +82,21 @@ namespace InvisibleCollectorLib.Model
 
             set => this[TypeName] = value;
         }
-        
+
         public string Number
         {
             get => GetField<string>(NumberName);
 
             set => this[NumberName] = value;
         }
-        
+
         public string ExternalId
         {
             get => GetField<string>(ExternalIdName);
 
             set => this[ExternalIdName] = value;
         }
-        
+
         /// <summary>
         ///     The total amount being paid in tax.
         /// </summary>
@@ -107,7 +106,7 @@ namespace InvisibleCollectorLib.Model
 
             set => this[TaxName] = value;
         }
-        
+
         private IList<PaymentLine> InternalLines
         {
             get => GetField<IList<PaymentLine>>(LinesName);
@@ -117,7 +116,7 @@ namespace InvisibleCollectorLib.Model
 
         public IList<PaymentLine> Lines
         {
-            get => InternalLines.Clone();
+            get => InternalLines?.Clone();
 
             set => InternalLines = value?.Clone();
         }
@@ -182,12 +181,12 @@ namespace InvisibleCollectorLib.Model
         {
             UnsetField(LinesName);
         }
-        
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
-        
+
         public override bool Equals(object other)
         {
             return other is Payment payment && this == payment;
@@ -217,17 +216,36 @@ namespace InvisibleCollectorLib.Model
         {
             return !(left == right);
         }
-        
+
         internal void AssertLinesHaveMandatoryFields(params string[] mandatoryFields)
         {
             InternalLines?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
         }
-        
+
         public override string ToString()
         {
             var fields = FieldsShallow;
             fields[LinesName] = InternalLines?.StringifyList();
             return fields.StringifyDictionary();
+        }
+
+        protected override ISet<string> SendableFields =>
+            new SortedSet<string>
+            {
+                NumberName, CurrencyName, GrossTotalName, TypeName, TaxName, NetTotalName, DateName, StatusName,
+                LinesName, ExternalIdName
+            };
+
+        internal override IDictionary<string, object> SendableDictionary
+        {
+            get
+            {
+                var fields = base.SendableDictionary;
+                if (InternalLines != null)
+                    fields[LinesName] = InternalLines.Select(item => item.SendableDictionary).ToList();
+
+                return fields;
+            }
         }
     }
 }
