@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Connection;
 using InvisibleCollectorLib.Exception;
@@ -25,6 +26,7 @@ namespace InvisibleCollectorLib
         private const string CustomersAttributesPath = "attributes";
         private const string CustomersEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
+        private const string PaymentsEndpoint = "payment";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
         private readonly ApiConnectionFacade _apiFacade;
         private readonly JsonConvertFacade _jsonFacade;
@@ -415,6 +417,18 @@ namespace InvisibleCollectorLib
             }
 
             _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
+            return ret;
+        }
+
+        public async Task<Payment> SetNewPayment(Payment payment)
+        {
+            payment.AssertHasMandatoryFields(Payment.NumberName, Payment.StatusName, Payment.TypeName, Payment.DateName, Payment.CurrencyName);
+            _logger.LogDebug("Making a request to create a new payment with information: {Model}", payment);
+
+            var spendableFields = new HashSet<string> {Payment.NumberName, Payment.CurrencyName, Payment.GrossTotalName, Payment.TypeName, Payment.TaxName, Payment.NetTotalName, Payment.DateName, Payment.StatusName, Payment.LinesName, Payment.ExternalIdName};
+            var model = payment.FieldsSubset(spendableFields);
+            var ret = await MakeRequestAsync<Payment, object>("POST", model, PaymentsEndpoint);
+            _logger.LogDebug("Created a new payment with the information: {Model}", ret);
             return ret;
         }
 

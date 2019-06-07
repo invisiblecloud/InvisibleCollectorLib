@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using InvisibleCollectorLib.Utils;
 
@@ -40,8 +41,10 @@ namespace InvisibleCollectorLib.Model
             get => new Dictionary<string, object>(_fields);
         }
 
-        internal virtual IDictionary<string, object> SendableDictionary => _fields
-            .Where(pair => SendableFields.Contains(pair.Key))
+        internal virtual IDictionary<string, object> SendableDictionary => FieldsSubset(SendableFields);
+
+        internal IDictionary<string, object> FieldsSubset(ICollection<string> fields) => _fields
+            .Where(pair => fields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
 
         /// <summary>
