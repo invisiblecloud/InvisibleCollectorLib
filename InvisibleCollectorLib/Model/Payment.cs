@@ -64,7 +64,7 @@ namespace InvisibleCollectorLib.Model
         }
 
         /// <summary>
-        ///     The payment status. Can be one of: "FINAL"; "CANCELLED"
+        ///     The payment status. Can be one of: "FINAL" - default; "CANCELLED"
         /// </summary>
         public string Status
         {
@@ -90,6 +90,9 @@ namespace InvisibleCollectorLib.Model
             set => this[NumberName] = value;
         }
 
+        /// <summary>
+        /// The 'id' of the payment, which will be used to identify this payment on future requests.
+        /// </summary>
         public string ExternalId
         {
             get => GetField<string>(ExternalIdName);
@@ -114,6 +117,9 @@ namespace InvisibleCollectorLib.Model
             set => this[LinesName] = value;
         }
 
+        /// <summary>
+        /// A list of debts being paid.
+        /// </summary>
         public IList<PaymentLine> Lines
         {
             get => InternalLines?.Clone();

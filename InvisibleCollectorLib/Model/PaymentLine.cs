@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace InvisibleCollectorLib.Model
 {
+    /// <summary>
+    /// Represents a Payment's Line
+    /// </summary>
     public class PaymentLine: Model, ICloneable
     {
         internal const string NumberName = "number";
@@ -38,6 +41,9 @@ namespace InvisibleCollectorLib.Model
             return new PaymentLine(this);
         }
         
+        /// <summary>
+        /// Identifier of the Debt being paid
+        /// </summary>
         public string Number
         {
             get => GetField<string>(NumberName);
@@ -45,6 +51,9 @@ namespace InvisibleCollectorLib.Model
             set => this[NumberName] = value;
         }
         
+        /// <summary>
+        /// Reference to credit or debit note
+        /// </summary>
         public string ReferenceNumber
         {
             get => GetField<string>(ReferenceNumberName);

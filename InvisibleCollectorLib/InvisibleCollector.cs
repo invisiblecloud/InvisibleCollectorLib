@@ -420,6 +420,26 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Create a new payment.
+        /// </summary>
+        /// <param name="payment">
+        ///     The payment to be created. The <see cref="Payment.Number" />, <see cref="Payment.Status" />,
+        ///     <see cref="Payment.Type" />, <see cref="Payment.Date" />, <see cref="Debt.DueDate" /> and <see cref="Payment.Lines" /> fields are mandatory. 
+        ///     Lines must have the <see cref="PaymentLine.Number" /> and <see cref="PaymentLine.Amount" /> fields.
+        /// </param>
+        /// <returns>
+        ///    The up-to-date created payment
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
+        /// <exception cref="IcModelConflictException">When a payment with the same number already exists.</exception>
         public async Task<Payment> SetNewPayment(Payment payment)
         {
             payment.AssertHasMandatoryFields(Payment.NumberName, Payment.TypeName, Payment.DateName, Payment.CurrencyName);
