@@ -9,15 +9,14 @@ namespace test.Model
         [Test]
         public void Clone_correctness()
         {
-            const string Number = "123";
+            const string number = "123";
             var line1 = new PaymentLine
             {
-                Number = Number
+                Number = number
             };
 
             var line2 = line1.Clone();
             Assert.AreEqual(line1, line2);
         }
-        
     }
 }

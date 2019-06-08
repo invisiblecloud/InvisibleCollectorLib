@@ -42,8 +42,7 @@ namespace test
         }.ToImmutableDictionary();
 
         private void AssertingModelRequest<TModel>(string expectedMethod, string expectedPath,
-            ModelBuilder replyModelBuilder,
-            Func<InvisibleCollector, Task<TModel>> requestMethod, string expectedJson = null)
+            ModelBuilder replyModelBuilder, Func<InvisibleCollector, Task<TModel>> requestMethod, string expectedJson = null)
             where TModel : InvisibleCollectorLib.Model.Model, new()
         {
             var jsonReply = replyModelBuilder.BuildJson();
@@ -209,6 +208,16 @@ namespace test
             var reply = ModelBuilder.BuildReplyDebtBuilder();
             AssertingModelRequest("POST", "debts", reply,
                 async ic => await ic.SetNewDebtAsync(request.BuildModel<Debt>()),
+                request.BuildJson());
+        }
+        
+        [Test]
+        public void SetNewPaymentAsync_correct()
+        {
+            var request = ModelBuilder.BuildReplyPaymentBuilder();
+            var reply = ModelBuilder.BuildReplyPaymentBuilder();
+            AssertingModelRequest("POST", "payments", reply,
+                async ic => await ic.SetNewPayment(request.BuildModel<Payment>()),
                 request.BuildJson());
         }
     }

@@ -422,7 +422,7 @@ namespace InvisibleCollectorLib
 
         public async Task<Payment> SetNewPayment(Payment payment)
         {
-            payment.AssertHasMandatoryFields(Payment.NumberName, Payment.StatusName, Payment.TypeName, Payment.DateName, Payment.CurrencyName);
+            payment.AssertHasMandatoryFields(Payment.NumberName, Payment.TypeName, Payment.DateName, Payment.CurrencyName);
             payment.AssertLinesHaveMandatoryFields();
             _logger.LogDebug("Making a request to create a new payment with information: {Model}", payment);
 
