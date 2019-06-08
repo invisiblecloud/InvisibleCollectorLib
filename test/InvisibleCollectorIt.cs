@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using InvisibleCollectorLib;
 using InvisibleCollectorLib.Model;
@@ -214,11 +215,44 @@ namespace test
         [Test]
         public void SetNewPaymentAsync_correct()
         {
-            var request = ModelBuilder.BuildReplyPaymentBuilder();
+            var actual = new Payment
+            {
+                Number = "123",
+                Status = "FINAL",
+                Type = "RG",
+                Date = new DateTime(2018, 10, 5),
+                Currency = "EUR",
+                Tax = null,
+                Lines = new List<PaymentLine>
+                {
+                    new PaymentLine
+                    {
+                        Number = "1",
+                        Amount = 10
+                    }
+                }
+            };
+
+            // check for correct json serialization (no null in lines, etc)
+            var expectedJson = @"{
+                ""number"": ""123"",
+                ""status"": ""FINAL"",
+                ""type"": ""RG"",
+                ""date"": ""2018-10-05"",
+                ""currency"": ""EUR"",
+                ""tax"": null,
+                ""lines"": [
+                    {
+                        ""number"": ""1"",
+                        ""amount"": 10.0
+                    }
+                ]
+            }";
+
             var reply = ModelBuilder.BuildReplyPaymentBuilder();
             AssertingModelRequest("POST", "payments", reply,
-                async ic => await ic.SetNewPayment(request.BuildModel<Payment>()),
-                request.BuildJson());
+                async ic => await ic.SetNewPayment(actual),
+                expectedJson);
         }
     }
 }
