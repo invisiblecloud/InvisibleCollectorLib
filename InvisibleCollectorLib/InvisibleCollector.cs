@@ -451,6 +451,21 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Get the payment specified by id.
+        /// </summary>
+        /// <param name="paymentId">The <see cref="Payment.ExternalId"/> of the payment.</param>
+        /// <returns>
+        ///     The up-to-date payment
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
         public async Task<Payment> GetPaymentAsync(string paymentId)
         {
             var id = HttpUriBuilder.UriEscape(paymentId);
@@ -460,6 +475,21 @@ namespace InvisibleCollectorLib
             return ret;
         }
         
+        /// <summary>
+        /// Cancel the payment.
+        /// </summary>
+        /// <param name="paymentId">The <see cref="Payment.ExternalId"/> of the payment.</param>
+        /// <returns>
+        ///     The up-to-date canceled payment
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
         public async Task<Payment> CancelPaymentAsync(string paymentId)
         {
             var id = HttpUriBuilder.UriEscape(paymentId);
@@ -469,6 +499,21 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Delete the payment. Not idempotent.
+        /// </summary>
+        /// <param name="paymentId">The <see cref="Payment.ExternalId"/> of the payment.</param>
+        /// <returns>
+        ///     The deleted payment.
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
         public async Task<Payment> DeletePaymentAsync(string paymentId)
         {
             var id = HttpUriBuilder.UriEscape(paymentId);
