@@ -205,17 +205,57 @@ namespace test
         [Test]
         public void SetNewDebtAsync_correct()
         {
-            var request = ModelBuilder.BuildRequestDebtBuilder();
+            var sentModel = new Debt()
+            {
+                Number = "1",
+                CustomerId = "abcd",
+                Type = "FT",
+                Date = new DateTime(2018, 10, 5),
+                DueDate = new DateTime(2019, 10, 5),
+                Currency = null,
+                Items = new List<Item>()
+                {
+                    new Item
+                    {
+                        Name = "jory",
+                        Description = null
+                    }
+                },
+                Attributes = new Dictionary<string, string>()
+                {
+                    {"key1", "val1"}
+                }
+            };
+            
+            // check for correct json serialization (no null in lines, etc)
+            var expectedJson = @"{
+                ""number"": ""1"",
+                ""customerId"": ""abcd"",
+                ""type"": ""FT"",
+                ""date"": ""2018-10-05"",
+                ""dueDate"": ""2019-10-05"",
+                ""currency"": null,
+                ""items"": [
+                    {
+                        ""name"": ""jory"",
+                        ""description"": null
+                    }
+                ],
+                ""attributes"": {
+                    ""key1"": ""val1""
+                }
+            }";
+            
             var reply = ModelBuilder.BuildReplyDebtBuilder();
             AssertingModelRequest("POST", "debts", reply,
-                async ic => await ic.SetNewDebtAsync(request.BuildModel<Debt>()),
-                request.BuildJson());
+                async ic => await ic.SetNewDebtAsync(sentModel),
+                expectedJson);
         }
         
         [Test]
         public void SetNewPaymentAsync_correct()
         {
-            var actual = new Payment
+            var sentModel = new Payment
             {
                 Number = "123",
                 Status = "FINAL",
@@ -251,7 +291,7 @@ namespace test
 
             var reply = ModelBuilder.BuildReplyPaymentBuilder();
             AssertingModelRequest("POST", "payments", reply,
-                async ic => await ic.SetNewPayment(actual),
+                async ic => await ic.SetNewPayment(sentModel),
                 expectedJson);
         }
     }
