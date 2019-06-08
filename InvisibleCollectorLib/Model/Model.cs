@@ -124,21 +124,6 @@ namespace InvisibleCollectorLib.Model
         {
             _fields.Remove(fieldName);
         }
-
-        /// <summary>
-        ///     checks if all mandatory fields are present
-        /// </summary>
-        /// <param name="mandatoryFields">the mandatory fields names</param>
-        /// <exception cref="ArgumentException">thrown if a field isn't present</exception>
-        internal void AssertHasMandatoryFields(params string[] mandatoryFields)
-        {
-            foreach (var mandatoryField in mandatoryFields)
-                if (!_fields.ContainsKey(mandatoryField))
-                {
-                    var msg = $"Model is missing mandatory field: {mandatoryField}";
-                    throw new ArgumentException(msg);
-                }
-        }
         
         protected bool? KeyRefEquality(Model other, string key)
         {

@@ -223,11 +223,6 @@ namespace InvisibleCollectorLib.Model
             return !(left == right);
         }
 
-        internal void AssertLinesHaveMandatoryFields(params string[] mandatoryFields)
-        {
-            InternalLines?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
-        }
-
         public override string ToString()
         {
             var fields = FieldsShallow;

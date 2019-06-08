@@ -26,30 +26,6 @@ namespace test.Model
         }
 
         [Test]
-        public void AssertItemsHaveMandatoryFields_correctness()
-        {
-            var debt = new Debt();
-            debt.AssertItemsHaveMandatoryFields(Item.NameName);
-
-            debt.Items = new List<Item>();
-            debt.AssertItemsHaveMandatoryFields(Item.NameName);
-
-            var list = new List<Item>
-            {
-                new Item
-                {
-                    Name = "new name"
-                }
-            };
-            debt.Items = list;
-            debt.AssertItemsHaveMandatoryFields(Item.NameName);
-
-            list.Add(new Item());
-            debt.Items = list;
-            Assert.Throws<ArgumentException>(() => debt.AssertItemsHaveMandatoryFields(Item.NameName));
-        }
-
-        [Test]
         public void Attributes_Immutability()
         {
             var attributes = new Dictionary<string, string>

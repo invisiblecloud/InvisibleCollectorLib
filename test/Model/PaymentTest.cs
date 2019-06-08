@@ -25,31 +25,7 @@ namespace test.Model
             Assert.AreEqual(debt.Lines.Count, 1);
             Assert.AreEqual(debt.Lines[0], item);
         }
-        
-        [Test]
-        public void AssertLinesHaveMandatoryFields_correctness()
-        {
-            var debt = new Payment();
-            debt.AssertLinesHaveMandatoryFields(Item.NameName);
 
-            debt.Lines = new List<PaymentLine>();
-            debt.AssertLinesHaveMandatoryFields(Item.NameName);
-
-            var list = new List<PaymentLine>
-            {
-                new PaymentLine()
-                {
-                    Number = "123"
-                }
-            };
-            debt.Lines = list;
-            debt.AssertLinesHaveMandatoryFields(PaymentLine.NumberName);
-
-            list.Add(new PaymentLine());
-            debt.Lines = list;
-            Assert.Throws<ArgumentException>(() => debt.AssertLinesHaveMandatoryFields(Item.NameName));
-        }
-        
         [Test]
         public void EqualityOperator_NoNestedCollection()
         {

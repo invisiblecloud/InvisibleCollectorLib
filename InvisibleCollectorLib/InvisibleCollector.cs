@@ -220,7 +220,6 @@ namespace InvisibleCollectorLib
         /// <seealso cref="SetCompanyNotificationsAsync" />
         public async Task<Company> SetCompanyInfoAsync(Company company)
         {
-            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
             _logger.LogDebug("Making request to update company information with the following info: {Model}", company);
             var ret = await MakeRequestAsync<Company, object>("PUT", company.SendableDictionary, CompaniesEndpoint);
             _logger.LogDebug("Updated company with new information: {Model}", ret);
@@ -315,7 +314,6 @@ namespace InvisibleCollectorLib
         public async Task<Customer> SetCustomerInfoAsync(Customer customer)
         {
             var id = HttpUriBuilder.UriEscape(customer.RoutableId);
-            customer.AssertHasMandatoryFields(Customer.CountryName);
             _logger.LogDebug("Making a request to update the customer's with ID: {Id} information: {Model}",
                 customer.RoutableId, customer);
             var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint,
@@ -346,7 +344,6 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Customer> SetNewCustomerAsync(Customer customer)
         {
-            customer.AssertHasMandatoryFields(Customer.NameName, Customer.VatNumberName, Customer.CountryName);
             _logger.LogDebug("Making a request to create a new customer with information: {Model}", customer);
             var ret = await MakeRequestAsync<Customer, object>("POST", customer.SendableDictionary, CustomersEndpoint);
             _logger.LogDebug("Created a new customer with the information: {Model}", ret);
@@ -373,9 +370,6 @@ namespace InvisibleCollectorLib
         /// <exception cref="IcModelConflictException">When a debt with the same number already exists.</exception>
         public async Task<Debt> SetNewDebtAsync(Debt debt)
         {
-            debt.AssertHasMandatoryFields(Debt.NumberName, Debt.CustomerIdName, Debt.TypeName, Debt.DateName,
-                Debt.DueDateName);
-            debt.AssertItemsHaveMandatoryFields(Item.NameName);
             _logger.LogDebug("Making a request to create a new debt with information: {Model}", debt);
             var ret = await MakeRequestAsync<Debt, object>("POST", debt.SendableDictionary, DebtsEndpoint);
             _logger.LogDebug("Created a new debt with the information: {Model}", ret);
@@ -442,8 +436,6 @@ namespace InvisibleCollectorLib
         /// <exception cref="IcModelConflictException">When a payment with the same number already exists.</exception>
         public async Task<Payment> SetNewPayment(Payment payment)
         {
-            payment.AssertHasMandatoryFields(Payment.NumberName, Payment.TypeName, Payment.DateName, Payment.CurrencyName);
-            payment.AssertLinesHaveMandatoryFields();
             _logger.LogDebug("Making a request to create a new payment with information: {Model}", payment);
 
             var ret = await MakeRequestAsync<Payment, object>("POST", payment.SendableDictionary, PaymentsEndpoint);

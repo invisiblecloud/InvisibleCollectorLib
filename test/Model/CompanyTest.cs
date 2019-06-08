@@ -7,30 +7,6 @@ namespace test.Model
     public class CompanyTest
     {
         [Test]
-        public void AssertHasMandatoryFields_HasAllFields()
-        {
-            var company = new Company
-            {
-                Name = "a name",
-                VatNumber = "123"
-            };
-
-            company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName);
-        }
-
-        [Test]
-        public void AssertHasMandatoryFields_MissingFields()
-        {
-            var company = new Company
-            {
-                Name = "a name"
-            };
-
-            Assert.That(() => company.AssertHasMandatoryFields(Company.NameName, Company.VatNumberName),
-                Throws.Exception);
-        }
-
-        [Test]
         public void EqualityOperator_EqualCompany()
         {
             const string Name = "a name";
