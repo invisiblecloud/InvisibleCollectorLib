@@ -99,7 +99,7 @@ namespace test.Model
         }
         
         [Test]
-        public void Items_Immutability()
+        public void Lines_Immutability()
         {
             var expected = BuildList();
 
