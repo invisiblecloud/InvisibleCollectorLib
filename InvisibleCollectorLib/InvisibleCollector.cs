@@ -451,6 +451,33 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        public async Task<Payment> GetPaymentAsync(string paymentId)
+        {
+            var id = HttpUriBuilder.UriEscape(paymentId);
+            _logger.LogDebug("Making request to get payment information for payment ID: {Id}", paymentId);
+            var ret = await MakeBodylessRequestAsync<Payment>("GET", PaymentsEndpoint, id);
+            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            return ret;
+        }
+        
+        public async Task<Payment> CancelPaymentAsync(string paymentId)
+        {
+            var id = HttpUriBuilder.UriEscape(paymentId);
+            _logger.LogDebug("Making request to cancel payment information for payment ID: {Id}", paymentId);
+            var ret = await MakeBodylessRequestAsync<Payment>("PUT", PaymentsEndpoint, id, "cancel");
+            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            return ret;
+        }
+
+        public async Task<Payment> DeletePaymentAsync(string paymentId)
+        {
+            var id = HttpUriBuilder.UriEscape(paymentId);
+            _logger.LogDebug("Making request to delete payment information for payment ID: {Id}", paymentId);
+            var ret = await MakeBodylessRequestAsync<Payment>("DELETE", PaymentsEndpoint, id);
+            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            return ret;
+        }
+        
         private async Task<TReturn> MakeBodylessRequestAsync<TReturn>(string method, params string[] pathFragments)
             where TReturn : new()
         {
