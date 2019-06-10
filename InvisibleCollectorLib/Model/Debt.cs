@@ -340,11 +340,6 @@ namespace InvisibleCollectorLib.Model
             UnsetField(TypeName);
         }
 
-        internal void AssertItemsHaveMandatoryFields(params string[] mandatoryFields)
-        {
-            InternalItems?.ToList().ForEach(entry => entry.AssertHasMandatoryFields(mandatoryFields));
-        }
-
         public override string ToString()
         {
             var fields = FieldsShallow;
