@@ -443,6 +443,78 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Get the payment specified by id.
+        /// </summary>
+        /// <param name="paymentId">The <see cref="Payment.ExternalId"/> of the payment.</param>
+        /// <returns>
+        ///     The up-to-date payment
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
+        public async Task<Payment> GetPaymentAsync(string paymentId)
+        {
+            var id = HttpUriBuilder.UriEscape(paymentId);
+            _logger.LogDebug("Making request to get payment information for payment ID: {Id}", paymentId);
+            var ret = await MakeBodylessRequestAsync<Payment>("GET", PaymentsEndpoint, id);
+            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            return ret;
+        }
+        
+        /// <summary>
+        /// Cancel the payment.
+        /// </summary>
+        /// <param name="paymentId">The <see cref="Payment.ExternalId"/> of the payment.</param>
+        /// <returns>
+        ///     The up-to-date canceled payment
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
+        public async Task<Payment> CancelPaymentAsync(string paymentId)
+        {
+            var id = HttpUriBuilder.UriEscape(paymentId);
+            _logger.LogDebug("Making request to cancel payment information for payment ID: {Id}", paymentId);
+            var ret = await MakeBodylessRequestAsync<Payment>("PUT", PaymentsEndpoint, id, "cancel");
+            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            return ret;
+        }
+
+        /// <summary>
+        /// Delete the payment. Not idempotent.
+        /// </summary>
+        /// <param name="paymentId">The <see cref="Payment.ExternalId"/> of the payment.</param>
+        /// <returns>
+        ///     The deleted payment.
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
+        public async Task<Payment> DeletePaymentAsync(string paymentId)
+        {
+            var id = HttpUriBuilder.UriEscape(paymentId);
+            _logger.LogDebug("Making request to delete payment information for payment ID: {Id}", paymentId);
+            var ret = await MakeBodylessRequestAsync<Payment>("DELETE", PaymentsEndpoint, id);
+            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            return ret;
+        }
+        
         private async Task<TReturn> MakeBodylessRequestAsync<TReturn>(string method, params string[] pathFragments)
             where TReturn : new()
         {

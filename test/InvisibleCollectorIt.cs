@@ -294,5 +294,29 @@ namespace test
                 async ic => await ic.SetNewPayment(sentModel),
                 expectedJson);
         }
+        
+        [Test]
+        public void GetPaymentAsync_correct()
+        {
+            var reply = ModelBuilder.BuildReplyPaymentBuilder();
+            AssertingModelRequest("GET", $"payments/{TestId}", reply,
+                async ic => await ic.GetPaymentAsync(TestId));
+        }
+        
+        [Test]
+        public void CancelPaymentAsync_correct()
+        {
+            var reply = ModelBuilder.BuildReplyPaymentBuilder();
+            AssertingModelRequest("PUT", $"payments/{TestId}/cancel", reply,
+                async ic => await ic.CancelPaymentAsync(TestId));
+        }
+        
+        [Test]
+        public void DeletePaymentAsync_correct()
+        {
+            var reply = ModelBuilder.BuildReplyPaymentBuilder();
+            AssertingModelRequest("DELETE", $"payments/{TestId}", reply,
+                async ic => await ic.DeletePaymentAsync(TestId));
+        }
     }
 }
