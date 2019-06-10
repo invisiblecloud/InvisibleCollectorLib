@@ -105,9 +105,9 @@ namespace InvisibleCollectorLib.Model
 
         public IList<Item> Items
         {
-            get => GetField<IList<Item>>(ItemsName)?.Select(element => (Item) element.Clone()).ToList(); // deep copy
+            get => InternalItems?.Clone(); // deep copy
 
-            set => this[ItemsName] = value?.Select(element => (Item) element.Clone()).ToList();
+            set => InternalItems = value?.Clone();
         }
 
         public double? NetTotal
@@ -227,7 +227,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Debt left, Debt right)
         {
-            var refDebt = IcUtils.ReferenceNullableEquals(left, right);
+            var refDebt = IcUtils.ReferenceQuality(left, right);
             if (refDebt != null)
                 return (bool) refDebt;
 
@@ -237,8 +237,8 @@ namespace InvisibleCollectorLib.Model
             if (leftCopy != (Model) rightCopy) // compare non collection attributes
                 return false;
 
-            var itemRef = KeyRefEquality(ItemsName);
-            var attributesRef = KeyRefEquality(AttributesName);
+            var itemRef = left.KeyRefEquality(right, ItemsName);
+            var attributesRef = left.KeyRefEquality(right, AttributesName);
 
             if (itemRef == false || attributesRef == false)
                 return false;
@@ -249,18 +249,8 @@ namespace InvisibleCollectorLib.Model
                        left.InternalAttributes.EqualsCollection(right.InternalAttributes);
             if (itemRef == null)
                 return left.InternalItems.EqualsCollection(right.InternalItems);
+            
             return left.InternalAttributes.EqualsCollection(right.InternalAttributes);
-
-            bool? KeyRefEquality(string key)
-            {
-                var leftHas = left._fields.ContainsKey(key);
-                var rightHas = right._fields.ContainsKey(key);
-                if (leftHas == rightHas && rightHas) // both true, both have key => inconclusive equality
-                    return null;
-                if (leftHas == rightHas) // both false, neither have key => equals
-                    return true;
-                return false; // one has and the other doesn't have keu => unequal
-            }
         }
 
         public static bool operator !=(Debt left, Debt right)
@@ -357,7 +347,7 @@ namespace InvisibleCollectorLib.Model
 
         public override string ToString()
         {
-            var fields = Fields;
+            var fields = FieldsShallow;
             fields[ItemsName] = InternalItems?.StringifyList();
             fields[AttributesName] = InternalAttributes?.StringifyDictionary();
             return fields.StringifyDictionary();

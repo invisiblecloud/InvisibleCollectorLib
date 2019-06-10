@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Connection;
 using InvisibleCollectorLib.Exception;
@@ -25,6 +26,7 @@ namespace InvisibleCollectorLib
         private const string CustomersAttributesPath = "attributes";
         private const string CustomersEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
+        private const string PaymentsEndpoint = "payments";
         private const string ProdutionUri = "https://api.invisiblecollector.com/";
         private readonly ApiConnectionFacade _apiFacade;
         private readonly JsonConvertFacade _jsonFacade;
@@ -415,6 +417,37 @@ namespace InvisibleCollectorLib
             }
 
             _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
+            return ret;
+        }
+
+        /// <summary>
+        /// Create a new payment.
+        /// </summary>
+        /// <param name="payment">
+        ///     The payment to be created. The <see cref="Payment.Number" />, <see cref="Payment.Status" />,
+        ///     <see cref="Payment.Type" />, <see cref="Payment.Date" />, <see cref="Debt.DueDate" /> and <see cref="Payment.Lines" /> fields are mandatory. 
+        ///     Lines must have the <see cref="PaymentLine.Number" /> and <see cref="PaymentLine.Amount" /> fields.
+        /// </param>
+        /// <returns>
+        ///    The up-to-date created payment
+        /// </returns>
+        /// <exception cref="IcException">
+        ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
+        ///     request, invalid parameters, etc)
+        /// </exception>
+        /// <exception cref="WebException">
+        ///     On connection or protocol related errors (except for the protocol errors sent by the
+        ///     Invisible Collector)
+        /// </exception>
+        /// <exception cref="IcModelConflictException">When a payment with the same number already exists.</exception>
+        public async Task<Payment> SetNewPayment(Payment payment)
+        {
+            payment.AssertHasMandatoryFields(Payment.NumberName, Payment.TypeName, Payment.DateName, Payment.CurrencyName);
+            payment.AssertLinesHaveMandatoryFields();
+            _logger.LogDebug("Making a request to create a new payment with information: {Model}", payment);
+
+            var ret = await MakeRequestAsync<Payment, object>("POST", payment.SendableDictionary, PaymentsEndpoint);
+            _logger.LogDebug("Created a new payment with the information: {Model}", ret);
             return ret;
         }
 

@@ -85,7 +85,7 @@ namespace test.Json
         {
             var json = @"{""description"": null}";
             var retDict = new JsonConvertFacade().JsonToObject<Item>(json);
-            Assert.AreEqual(0, retDict.Fields.Count);
+            Assert.AreEqual(0, retDict.FieldsShallow.Count);
         }
 
         [Test]

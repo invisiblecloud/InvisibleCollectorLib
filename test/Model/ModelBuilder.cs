@@ -25,6 +25,24 @@ namespace test.Model
             return copy.BuildJson();
         }
     }
+    
+    internal class PaymentBuilder : ModelBuilder
+    {
+        public PaymentBuilder(Dictionary<string, object> fields) : base(fields)
+        {
+        }
+
+        public override string BuildJson()
+        {
+            var copy = new ModelBuilder(this);
+            var key = Payment.LinesName;
+            if (_fields.ContainsKey(key) && _fields[key] != null)
+                copy._fields[key] = ((IList<PaymentLine>) copy._fields[key]).Select(item => item.SendableDictionary)
+                    .ToList();
+
+            return copy.BuildJson();
+        }
+    }
 
     internal class ModelBuilder
     {
@@ -94,7 +112,7 @@ namespace test.Model
             if (bStripNull)
                 fields.StripNulls();
 
-            return new T {Fields = fields};
+            return new T {FieldsShallow = fields};
         }
 
         // should only add the id
@@ -178,7 +196,41 @@ namespace test.Model
 
             return new DebtBuilder(fields);
         }
+        
+        public static PaymentLine BuildPaymentLine(string number = "123")
+        {
+            return new PaymentLine
+            {
+                Number = number,
+                Amount = 12.0
+            };
+        }
+        
+        public static ModelBuilder BuildReplyPaymentBuilder(string number = "1")
+        {
+            var date = new DateTime(2018, 10, 5);
 
+            var fields = new Dictionary<string, object>
+            {
+                {Payment.NumberName, number},
+                {Payment.ExternalIdName, "f733cece-7b69-4ae5-93cd-33bfa5f0d333"},
+                {Payment.TypeName, "RG"},
+                {Payment.CurrencyName, "EUR"},
+                {Payment.DateName, date},
+                {
+                    Payment.LinesName, new List<PaymentLine>
+                    {
+                        BuildPaymentLine("1"),
+                        BuildPaymentLine("2")
+                    }
+                }
+            };
+
+            return new PaymentBuilder(fields);
+        }
+
+        
+        
         public static string DictToJson(IDictionary<string, string> dict)
         {
             return JsonConvert.SerializeObject(dict, SerializerSettings);
