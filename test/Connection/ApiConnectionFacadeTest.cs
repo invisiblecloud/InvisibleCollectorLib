@@ -66,7 +66,7 @@ namespace test.Connection
         {
             _mockServer.AddRequest("GET", TestPath)
                 .AddJsonResponse("", 400); // supposed to fail here
-            var exception = Assert.ThrowsAsync<IcException>(() =>
+            var exception = Assert.ThrowsAsync<IcHttpException>(() =>
                 BuildApiFacade(ErrorDictionary)
                     .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
 
