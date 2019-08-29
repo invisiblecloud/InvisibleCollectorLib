@@ -392,7 +392,6 @@ namespace InvisibleCollectorLib
         public async Task<IList<Debt>> GetFindDebts(FindDebts findDebts)
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
-            string requestJson = null;
 
             IList<Debt> ret;
             try
@@ -401,7 +400,7 @@ namespace InvisibleCollectorLib
                     .WithPath(DebtsEndpoint, "find")
                     .WithQuery(findDebts.SendableStringDictionary)
                     .BuildUri();
-                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET", requestJson);
+                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
                 ret = _jsonFacade.JsonToObject<List<Debt>>(json);
             }
             catch (System.Exception e)
@@ -411,6 +410,31 @@ namespace InvisibleCollectorLib
             }
 
             _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
+            return ret;
+        }
+        
+        
+        public async Task<IList<Customer>> GetFindCustomers(FindCustomers findCustomers)
+        {
+            _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
+
+            IList<Customer> ret;
+            try
+            {
+                var requestUri = _uriBuilder.Clone()
+                    .WithPath(CustomersEndpoint, "find")
+                    .WithQuery(findCustomers.SendableStringDictionary)
+                    .BuildUri();
+                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
+                ret = _jsonFacade.JsonToObject<List<Customer>>(json);
+            }
+            catch (System.Exception e)
+            {
+                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
+                throw;
+            }
+
+            _logger.LogDebug("Received find result customers: {Models}", ret.StringifyList());
             return ret;
         }
 
