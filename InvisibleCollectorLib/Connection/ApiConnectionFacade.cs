@@ -125,7 +125,17 @@ namespace InvisibleCollectorLib.Connection
             if (containsId)
                 return new IcModelConflictException(jsonObject[messageName], conflictingId);
 
-            return new IcException($"{jsonObject[messageName]} (HTTP Code: {jsonObject[codeName]})");
+            int code;
+            try
+            {
+                code = int.Parse(jsonObject[codeName]);
+            }
+            catch (System.Exception ex) // shouldn't happen
+            {
+                throw new IcException("Unexpected server error response return: " + jsonObject[codeName], ex);
+            }
+
+            return new IcHttpException(code, jsonObject[messageName]);
         }
 
         private WebClient BuildWebClient(string requestUriHost)
@@ -135,6 +145,7 @@ namespace InvisibleCollectorLib.Connection
             client.Headers.Set("Authorization", $"Bearer {_apiKey}");
             client.Headers.Set("Host", requestUriHost);
             client.Encoding = Encoding.UTF8;
+            
             return client;
         }
     }
