@@ -412,8 +412,21 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
             return ret;
         }
-        
-        
+
+        public async Task<IList<Group>> GetGroups()
+        {
+            _logger.LogDebug("Making request to get list of groups");
+
+            var requestUri = _uriBuilder.Clone()
+                .WithPath("groups")
+                .BuildUri();
+            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
+            var ret = _jsonFacade.JsonToObject<List<Group>>(json);
+
+            _logger.LogDebug("Received groups list: {Models}", ret.StringifyList());
+            return ret;
+        }
+
         public async Task<IList<Customer>> GetFindCustomers(FindCustomers findCustomers)
         {
             _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
@@ -490,7 +503,7 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
-        
+
         /// <summary>
         /// Cancel the payment.
         /// </summary>
@@ -538,7 +551,7 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
-        
+
         private async Task<TReturn> MakeBodylessRequestAsync<TReturn>(string method, params string[] pathFragments)
             where TReturn : new()
         {
