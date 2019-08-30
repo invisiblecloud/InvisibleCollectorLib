@@ -427,6 +427,20 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        public async Task<Group> SetCustomerToGroup(string customerId, string groupId)
+        {
+            _logger.LogDebug($"Making request to get set customer ({customerId}) to group ({groupId})");
+
+            var requestUri = _uriBuilder.Clone()
+                .WithPath("groups", groupId, "customers", customerId)
+                .BuildUri();
+            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "POST");
+            var ret = _jsonFacade.JsonToObject<Group>(json);
+
+            _logger.LogDebug("Added customer {Customer} to group: {Models}",  customerId, ret);
+            return ret;
+        }
+        
         public async Task<IList<Customer>> GetFindCustomers(FindCustomers findCustomers)
         {
             _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
