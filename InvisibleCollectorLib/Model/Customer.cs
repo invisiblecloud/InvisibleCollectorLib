@@ -15,6 +15,7 @@ namespace InvisibleCollectorLib.Model
         internal const string IdName = "gid";
         internal const string NameName = "name";
         internal const string PhoneName = "phone";
+        internal const string MobileName = "mobile";
         internal const string VatNumberName = "vatNumber";
         internal const string ZipCodeName = "zipCode";
 
@@ -86,6 +87,13 @@ namespace InvisibleCollectorLib.Model
 
             set => this[PhoneName] = value;
         }
+        
+        public string Mobile
+        {
+            get => GetField<string>(MobileName);
+
+            set => this[MobileName] = value;
+        }
 
         /// <summary>
         ///     Must be a valid vat number as specified by the <see cref="Country" />.
@@ -115,7 +123,8 @@ namespace InvisibleCollectorLib.Model
                 CityName,
                 CountryName,
                 EmailName,
-                PhoneName
+                PhoneName,
+                MobileName
             };
 
         public string RoutableId
