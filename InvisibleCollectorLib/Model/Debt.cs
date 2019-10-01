@@ -19,6 +19,7 @@ namespace InvisibleCollectorLib.Model
         internal const string IdName = "id";
         internal const string ItemsName = "items";
         internal const string NetTotalName = "netTotal";
+        internal const string PaidTotalName = "paidTotal";
         internal const string NumberName = "number";
         internal const string StatusName = "status";
         internal const string TaxName = "tax";
@@ -117,6 +118,13 @@ namespace InvisibleCollectorLib.Model
             set => this[NetTotalName] = value;
         }
 
+        public double? PaidTotal
+        {
+            get => GetField<double?>(PaidTotalName);
+
+            set => this[PaidTotalName] = value;
+        }
+
         public string Number
         {
             get => GetField<string>(NumberName);
@@ -164,6 +172,7 @@ namespace InvisibleCollectorLib.Model
                 DateName,
                 DueDateName,
                 NetTotalName,
+                PaidTotalName,
                 TaxName,
                 GrossTotalName,
                 CurrencyName,
@@ -318,6 +327,11 @@ namespace InvisibleCollectorLib.Model
         public void UnsetNetTotal()
         {
             UnsetField(NetTotalName);
+        }
+
+        public void UnsetPaidTotal()
+        {
+            UnsetField(PaidTotalName);
         }
 
         public void UnsetNumber()
