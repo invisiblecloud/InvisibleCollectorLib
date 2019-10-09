@@ -63,5 +63,17 @@ namespace InvisibleCollectorLib.Json
                 throw new IcException($"Failed to create json: {e.Message}", e);
             }
         }
+        
+        internal string DictionaryToJson<TValue>(IEnumerable<IDictionary<string, TValue>> dict)
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(dict, SerializerSettings);
+            }
+            catch (JsonException e)
+            {
+                throw new IcException($"Failed to create json: {e.Message}", e);
+            }
+        }
     }
 }
