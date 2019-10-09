@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -574,12 +575,59 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Sets new or updates customer contacts. Contacts are identified by their <see cref="CustomerContact.Name"/>
+        /// </summary>
+        /// <param name="customerGid">custoemr gid</param>
+        /// <param name="contacts">customer contacts</param>
+        /// <returns>the up-to-date customer</returns>
+        public async Task<Customer> SetNewCustomerContactsAsync(string customerGid,
+            IList<CustomerContact> contacts)
+        {
+            var id = HttpUriBuilder.UriEscape(customerGid);
+            _logger.LogDebug("Making request to create customer's {Id} contacts with the following info: {Model}", customerGid, contacts);
+
+            var objects = contacts.Select(c => c.SendableDictionary);
+            var json = _jsonFacade.DictionaryToJson(objects);
+            var ret = await MakeRequestAsync<Customer>("POST", json, "v1", "customers", id, "contacts");
+
+            _logger.LogDebug("Received customer: {Models}", ret);
+            return ret;
+        }
+        
+        public async Task<IList<CustomerContact>> GetCustomerContactsAsync(string customerGid)
+        {
+            var id = HttpUriBuilder.UriEscape(customerGid);
+            _logger.LogDebug("Making request to get customer's {} contacts'", customerGid);
+            
+            var ret = await MakeBodylessRequestAsync<List<CustomerContact>>("GET", "v1", "customers", id, "contacts");
+            
+            _logger.LogDebug("Received contacts: {Model} for customer {Id}", ret, customerGid);
+            return ret;
+        }
+
         private async Task<TReturn> MakeBodylessRequestAsync<TReturn>(string method, params string[] pathFragments)
             where TReturn : new()
         {
             return await MakeRequestAsync<TReturn, object>(method, null, pathFragments);
         }
 
+        private async Task<TReturn> MakeRequestAsync<TReturn>(string method,
+            string requestJson = null, params string[] pathFragments) where TReturn : new()
+        {
+            try
+            {
+                var requestUri = _uriBuilder.Clone().WithPath(pathFragments).BuildUri();
+                var json = await _apiFacade.CallJsonToJsonApi(requestUri, method, requestJson);
+                return _jsonFacade.JsonToObject<TReturn>(json);
+            }
+            catch (System.Exception e)
+            {
+                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
+                throw;
+            }
+        }
+        
         /// <summary>
         ///     Makes an api request
         /// </summary>
@@ -592,18 +640,18 @@ namespace InvisibleCollectorLib
         private async Task<TReturn> MakeRequestAsync<TReturn, TDictValue>(string method,
             IDictionary<string, TDictValue> requestBody = null, params string[] pathFragments) where TReturn : new()
         {
+            string requestJson;
             try
             {
-                var requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
-                var requestUri = _uriBuilder.Clone().WithPath(pathFragments).BuildUri();
-                var json = await _apiFacade.CallJsonToJsonApi(requestUri, method, requestJson);
-                return _jsonFacade.JsonToObject<TReturn>(json);
+                requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
             }
             catch (System.Exception e)
             {
                 _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
                 throw;
             }
+            
+            return await MakeRequestAsync<TReturn>(method, requestJson, pathFragments);
         }
     }
 }
