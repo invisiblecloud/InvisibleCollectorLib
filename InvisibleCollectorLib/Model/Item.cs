@@ -11,7 +11,9 @@ namespace InvisibleCollectorLib.Model
         internal const string NameName = "name";
         internal const string DescriptionName = "description";
         internal const string QuantityName = "quantity";
+        internal const string NetPriceName = "netPrice";
         internal const string VatName = "vat";
+        internal const string TaxesName = "taxes";
         internal const string PriceName = "price";
 
         public Item()
@@ -50,6 +52,13 @@ namespace InvisibleCollectorLib.Model
             set => this[QuantityName] = value;
         }
 
+        public double? NetPrice
+        {
+            get => GetField<double?>(NetPriceName);
+
+            set => this[NetPriceName] = value;
+        }
+
         /// <summary>
         ///     The VAT percentage (0.0 to 100.0).
         /// </summary>
@@ -60,8 +69,23 @@ namespace InvisibleCollectorLib.Model
             set => this[VatName] = value;
         }
 
+        public double? Taxes
+        {
+            get => GetField<double?>(TaxesName);
+
+            set => this[TaxesName] = value;
+        }
+
         protected override ISet<string> SendableFields => new SortedSet<string>
-            {NameName, PriceName, QuantityName, VatName, DescriptionName};
+            {
+            NameName,
+            PriceName,
+            QuantityName,
+            NetPriceName,
+            VatName,
+            TaxesName,
+            DescriptionName
+        };
 
         public object Clone()
         {
@@ -111,6 +135,16 @@ namespace InvisibleCollectorLib.Model
         public void UnsetVat()
         {
             UnsetField(VatName);
+        }
+
+        public void UnsetNetPrice()
+        {
+            UnsetField(NetPriceName);
+        }
+
+        public void UnsetTaxes()
+        {
+            UnsetField(TaxesName);
         }
     }
 }
