@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
@@ -11,6 +12,7 @@ using test.Model;
 
 namespace test
 {
+
     [TestFixture]
     internal class InvisibleCollectorIt : MockServerTesterBase
     {
@@ -316,6 +318,39 @@ namespace test
             var reply = ModelBuilder.BuildReplyPaymentBuilder();
             AssertingModelRequest("DELETE", $"payments/{TestId}", reply,
                 async ic => await ic.DeletePaymentAsync(TestId));
+        }
+        
+        [Test]
+        public void GetCustomerContactsAsync_correct()
+        {
+            var model1 = ModelBuilder.BuildRequestCustomerContactBuilder("john");
+            var model2 = ModelBuilder.BuildRequestCustomerContactBuilder("mary");
+            var listBuilder = new ModelListBuilder().Add(model1).Add(model2);
+            var replyJson = listBuilder.BuildJson();
+            
+            var ic = ConfigureIc("GET", "v1/customers/3/contacts", replyJson);
+
+            var actual = ic.GetCustomerContactsAsync("3").Result;
+
+            var expectedReply = listBuilder.BuildModelList<CustomerContact>();
+            Assert.AreEqual(expectedReply, actual);
+        }
+        
+        [Test]
+        public void SetNewCustomerContactsAsync_correct()
+        {
+            var model1 = ModelBuilder.BuildRequestCustomerContactBuilder("john");
+            var model2 = ModelBuilder.BuildRequestCustomerContactBuilder("mary");
+            var listBuilder = new ModelListBuilder().Add(model1).Add(model2);
+            var expectedJson = listBuilder.BuildJson();
+            
+            var customerBuilder = ModelBuilder.BuildReplyCustomerBuilder();
+            var ic = ConfigureIc("POST", "v1/customers/3/contacts", customerBuilder.BuildJson(), expectedJson);
+
+            var actual = ic.SetNewCustomerContactsAsync("3", listBuilder.BuildModelList<CustomerContact>()).Result;
+            
+            var expectedReply = customerBuilder.BuildModel<Customer>(true);
+            Assert.AreEqual(expectedReply, actual);
         }
     }
 }

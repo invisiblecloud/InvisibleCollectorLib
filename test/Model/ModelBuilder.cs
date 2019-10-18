@@ -105,6 +105,14 @@ namespace test.Model
             return JsonConvert.SerializeObject(_fields, SerializerSettings);
         }
 
+        // should be overriden by nested objects
+        public ModelBuilder WithStrippedNulls()
+        {
+            _fields.StripNulls();
+
+            return this;
+        }
+
         public virtual T BuildModel<T>(bool bStripNull = false)
             where T : InvisibleCollectorLib.Model.Model, new()
         {
@@ -162,6 +170,17 @@ namespace test.Model
                 {Customer.NameName, "a name"},
                 {Customer.ZipCodeName, null},
                 {Customer.CountryName, "PT"}
+            };
+
+            return new ModelBuilder(fields);
+        }
+
+        public static ModelBuilder BuildRequestCustomerContactBuilder(string name)
+        {
+            var fields = new Dictionary<string, object>
+            {
+                {CustomerContact.EmailName, name + "@b.com"},
+                {CustomerContact.NameName, name}
             };
 
             return new ModelBuilder(fields);
@@ -239,6 +258,29 @@ namespace test.Model
         public static string ToJson(object obj)
         {
             return JsonConvert.SerializeObject(obj, SerializerSettings);
+        }
+    }
+
+    internal class ModelListBuilder
+    {
+        private List<ModelBuilder> _list = new List<ModelBuilder>();
+        
+        public ModelListBuilder Add(ModelBuilder builder)
+        {
+            _list.Add(builder);
+            return this;
+        }
+
+        public IList<T> BuildModelList<T>() 
+            where T : InvisibleCollectorLib.Model.Model, new()
+        {
+            return _list.Select(e => e.BuildModel<T>()).ToList();
+        }
+        
+        public string BuildJson()
+        {
+            var body = String.Join(",", _list.Select(e => e.BuildJson()));
+            return $"[ {body} ]";
         }
     }
 }
