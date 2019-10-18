@@ -402,21 +402,12 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
 
-            IList<Debt> ret;
-            try
-            {
-                var requestUri = _uriBuilder.Clone()
-                    .WithPath(DebtsEndpoint, "find")
-                    .WithQuery(findDebts.SendableStringDictionary)
-                    .BuildUri();
-                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-                ret = _jsonFacade.JsonToObject<List<Debt>>(json);
-            }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
+            var requestUri = _uriBuilder.Clone()
+                .WithPath(DebtsEndpoint, "find")
+                .WithQuery(findDebts.SendableStringDictionary)
+                .BuildUri();
+            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
+            var ret = _jsonFacade.JsonToObject<List<Debt>>(json);
 
             _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
             return ret;
@@ -453,22 +444,13 @@ namespace InvisibleCollectorLib
         public async Task<IList<Customer>> GetFindCustomers(FindCustomers findCustomers)
         {
             _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
-
-            IList<Customer> ret;
-            try
-            {
-                var requestUri = _uriBuilder.Clone()
-                    .WithPath(CustomersEndpoint, "find")
-                    .WithQuery(findCustomers.SendableStringDictionary)
-                    .BuildUri();
-                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-                ret = _jsonFacade.JsonToObject<List<Customer>>(json);
-            }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
+            
+            var requestUri = _uriBuilder.Clone()
+                .WithPath(CustomersEndpoint, "find")
+                .WithQuery(findCustomers.SendableStringDictionary)
+                .BuildUri();
+            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
+            var ret = _jsonFacade.JsonToObject<List<Customer>>(json);
 
             _logger.LogDebug("Received find result customers: {Models}", ret.StringifyList());
             return ret;
@@ -615,17 +597,9 @@ namespace InvisibleCollectorLib
         private async Task<TReturn> MakeRequestAsync<TReturn>(string method,
             string requestJson = null, params string[] pathFragments) where TReturn : new()
         {
-            try
-            {
                 var requestUri = _uriBuilder.Clone().WithPath(pathFragments).BuildUri();
                 var json = await _apiFacade.CallJsonToJsonApi(requestUri, method, requestJson);
                 return _jsonFacade.JsonToObject<TReturn>(json);
-            }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
         }
         
         /// <summary>
@@ -640,17 +614,7 @@ namespace InvisibleCollectorLib
         private async Task<TReturn> MakeRequestAsync<TReturn, TDictValue>(string method,
             IDictionary<string, TDictValue> requestBody = null, params string[] pathFragments) where TReturn : new()
         {
-            string requestJson;
-            try
-            {
-                requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
-            }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
-            
+            string requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
             return await MakeRequestAsync<TReturn>(method, requestJson, pathFragments);
         }
     }
