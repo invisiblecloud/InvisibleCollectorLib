@@ -86,9 +86,9 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="SetCompanyInfoAsync" />
+        /// <seealso cref="SetCompanyAsync" />
         /// <seealso cref="SetCompanyNotificationsAsync" />
-        public async Task<Company> GetCompanyInfoAsync()
+        public async Task<Company> GetCompanyAsync()
         {
             _logger.LogDebug("Making a request to get company information");
             
@@ -172,11 +172,11 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        public async Task<Customer> GetCustomerInfoAsync(string customerId)
+        public async Task<Customer> GetCustomerAsync(string customerId)
         {
-            _logger.LogDebug("Making request to get customer information for customer ID: {Id}", customerId);
+            _logger.LogDebug("Making request to get customer for customer ID: {Id}", customerId);
             
-            var ret = await MakeRequestAsync<Customer>("GET", new[] {CustomersEndpoint, customerId});
+            var ret = await MakeRequestAsync<Customer>("GET", new[] {"v1", CustomersEndpoint, customerId});
             
             _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerId, ret);
             
@@ -210,7 +210,7 @@ namespace InvisibleCollectorLib
         ///     Updates the company's information in the database
         /// </summary>
         /// <remarks>
-        ///     You can use <see cref="GetCompanyInfoAsync" /> to get the <paramref name="company" /> fields used for validation.
+        ///     You can use <see cref="GetCompanyAsync" /> to get the <paramref name="company" /> fields used for validation.
         /// </remarks>
         /// <param name="company">
         ///     The company information to be updated. It the following mandatory fields used for validation:
@@ -225,9 +225,9 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="GetCompanyInfoAsync" />
+        /// <seealso cref="GetCompanyAsync" />
         /// <seealso cref="SetCompanyNotificationsAsync" />
-        public async Task<Company> SetCompanyInfoAsync(Company company)
+        public async Task<Company> SetCompanyAsync(Company company)
         {
             _logger.LogDebug("Making request to update company information with the following info: {Model}", company);
             var ret = await MakeRequestAsync<Company, object>("PUT", company.SendableDictionary, CompaniesEndpoint);
@@ -248,8 +248,8 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="GetCompanyInfoAsync" />
-        /// <seealso cref="SetCompanyInfoAsync" />
+        /// <seealso cref="GetCompanyAsync" />
+        /// <seealso cref="SetCompanyAsync" />
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
         {
             const string enableNotifications = "enableNotifications";
@@ -317,7 +317,7 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="GetCustomerInfoAsync" />
+        /// <seealso cref="GetCustomerAsync" />
         /// <seealso cref="SetNewCustomerAsync" />
         /// <seealso cref="Customer.RoutableId" />
         public async Task<Customer> SetCustomerInfoAsync(Customer customer)

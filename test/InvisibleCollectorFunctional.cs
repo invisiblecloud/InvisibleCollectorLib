@@ -61,7 +61,7 @@ namespace test
         {
             var builder = ModelBuilder.BuildReplyCompanyBuilder();
             AssertingModelRequest("GET", "companies", builder,
-                async ic => await ic.GetCompanyInfoAsync());
+                async ic => await ic.GetCompanyAsync());
         }
 
 
@@ -69,14 +69,14 @@ namespace test
         public void GetCompanyInfoAsync_fail404()
         {
             var ic = ConfigureIc("GET", "someunreachablepath", "{}");
-            Assert.ThrowsAsync<WebException>(() => ic.GetCompanyInfoAsync());
+            Assert.ThrowsAsync<WebException>(() => ic.GetCompanyAsync());
         }
 
         [Test]
         public void GetCompanyInfoAsync_failRefuseConnection()
         {
             var uri = new Uri("http://localhost:56087"); //shouldn't be in use
-            Assert.ThrowsAsync<WebException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyInfoAsync());
+            Assert.ThrowsAsync<WebException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyAsync());
         }
 
         [Test]
@@ -106,11 +106,11 @@ namespace test
         }
 
         [Test]
-        public void GetCustomerInfoAsync_correct()
+        public void GetCustomerAsync_correct()
         {
             var builder = ModelBuilder.BuildReplyCustomerBuilder();
-            AssertingModelRequest("GET", $"customers/{TestId}", builder,
-                async ic => await ic.GetCustomerInfoAsync(TestId));
+            AssertingModelRequest("GET", $"v1/customers/{TestId}", builder,
+                async ic => await ic.GetCustomerAsync(TestId));
         }
 
 
@@ -155,7 +155,7 @@ namespace test
             var replyBuilder = ModelBuilder.BuildReplyCompanyBuilder();
             var requestBuilder = ModelBuilder.BuildRequestCompanyBuilder();
             AssertingModelRequest("PUT", "companies", replyBuilder,
-                async ic => await ic.SetCompanyInfoAsync(requestBuilder.BuildModel<Company>()),
+                async ic => await ic.SetCompanyAsync(requestBuilder.BuildModel<Company>()),
                 requestBuilder.BuildJson());
         }
 
