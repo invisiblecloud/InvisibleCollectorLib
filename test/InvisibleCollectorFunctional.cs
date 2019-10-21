@@ -352,5 +352,35 @@ namespace test
             var expectedReply = customerBuilder.BuildModel<Customer>(true);
             Assert.AreEqual(expectedReply, actual);
         }
+        
+        [Test]
+        public async Task GetFindCorrect_correct()
+        {
+            var builder1 = ModelBuilder.BuildReplyCustomerBuilder("john");
+            var builder2 = ModelBuilder.BuildReplyCustomerBuilder("manny");
+            var listBuilder = new ModelListBuilder()
+                .Add(builder1)
+                .Add(builder2);
+            
+            var replyJson = listBuilder.BuildJson();
+
+            var findCustomers = new FindCustomers()
+            {
+                Email = "a@b.com",
+                Phone = "920920920",
+            };
+            var expectedQueryParams = new List<string> {"email", WebUtility.UrlEncode("a@b.com"), "phone", "920920920"};
+
+            var ic = ConfigureIc("GET", "customers/find", replyJson, null, expectedQueryParams);
+
+            var result = await ic.GetFindCustomers(findCustomers);
+
+            Assert.AreEqual(result.Count, 2);
+            
+            var model1 = builder1.BuildModel<Customer>(true);
+            var model2 = builder2.BuildModel<Customer>(true);
+            Assert.AreEqual(model1, result[0]);
+            Assert.AreEqual(model2, result[1]);
+        }
     }
 }

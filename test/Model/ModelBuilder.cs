@@ -133,9 +133,9 @@ namespace test.Model
         }
 
         // should only add the id
-        public static ModelBuilder BuildReplyCustomerBuilder()
+        public static ModelBuilder BuildReplyCustomerBuilder(string name = "johny")
         {
-            var builder = BuildRequestCustomerBuilder();
+            var builder = BuildRequestCustomerBuilder(name);
             builder[Customer.IdName] = Id;
 
             return builder;
@@ -162,12 +162,12 @@ namespace test.Model
             return new ModelBuilder(fields);
         }
 
-        public static ModelBuilder BuildRequestCustomerBuilder()
+        public static ModelBuilder BuildRequestCustomerBuilder(string name = "johny")
         {
             var fields = new Dictionary<string, object>
             {
                 {Customer.VatNumberName, VatNumber},
-                {Customer.NameName, "a name"},
+                {Customer.NameName, name},
                 {Customer.ZipCodeName, null},
                 {Customer.CountryName, "PT"}
             };
