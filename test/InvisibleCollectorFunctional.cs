@@ -189,7 +189,7 @@ namespace test
             var reply = ModelBuilder.BuildReplyCustomerBuilder();
             var requestModel = reply.BuildModel<Customer>();
             AssertingModelRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
-                async ic => await ic.SetCustomerInfoAsync(requestModel),
+                async ic => await ic.SetCustomerAsync(requestModel),
                 request.BuildJson());
         }
 

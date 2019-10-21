@@ -159,9 +159,8 @@ namespace InvisibleCollectorLib
         /// <summary>
         ///     Get customer info
         /// </summary>
-        /// <param name="customerId">
-        ///     The ID of the customer whose information is to be retrieved. It can be the 'gid' or
-        ///     'externalId' of the customer (or just use <see cref="Customer.RoutableId" />)
+        /// <param name="customerGid">
+        ///     The ID of the customer whose information is to be retrieved. The 'gid' of the customer (or just use <see cref="Customer.Gid" />)
         /// </param>
         /// <returns>The up-to-date customer information</returns>
         /// <exception cref="IcException">
@@ -172,13 +171,13 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        public async Task<Customer> GetCustomerAsync(string customerId)
+        public async Task<Customer> GetCustomerAsync(string customerGid)
         {
-            _logger.LogDebug("Making request to get customer for customer ID: {Id}", customerId);
+            _logger.LogDebug("Making request to get customer for customer ID: {Id}", customerGid);
             
-            var ret = await MakeRequestAsync<Customer>("GET", new[] {"v1", CustomersEndpoint, customerId});
+            var ret = await MakeRequestAsync<Customer>("GET", new[] {"v1", CustomersEndpoint, customerGid});
             
-            _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerId, ret);
+            _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerGid, ret);
             
             return ret;
         }
@@ -320,7 +319,7 @@ namespace InvisibleCollectorLib
         /// <seealso cref="GetCustomerAsync" />
         /// <seealso cref="SetNewCustomerAsync" />
         /// <seealso cref="Customer.RoutableId" />
-        public async Task<Customer> SetCustomerInfoAsync(Customer customer)
+        public async Task<Customer> SetCustomerAsync(Customer customer)
         {
             var id = HttpUriBuilder.UriEscape(customer.RoutableId);
             _logger.LogDebug("Making a request to update the customer's with ID: {Id} information: {Model}",
