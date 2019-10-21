@@ -91,8 +91,11 @@ namespace InvisibleCollectorLib
         public async Task<Company> GetCompanyInfoAsync()
         {
             _logger.LogDebug("Making a request to get company information");
-            var ret = await MakeBodylessRequestAsync<Company>("GET", CompaniesEndpoint);
+            
+            var ret = await MakeRequestAsync<Company>("GET", new[] {CompaniesEndpoint});
+            
             _logger.LogDebug("Received company info: {Model}", ret);
+            
             return ret;
         }
 
@@ -115,12 +118,13 @@ namespace InvisibleCollectorLib
         /// <seealso cref="SetCustomerAttributesAsync" />
         public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
         {
-            var id = HttpUriBuilder.UriEscape(customerId);
             _logger.LogDebug("Making a request to get customer attributes for customer ID: {Id}", customerId);
-            var ret = await MakeBodylessRequestAsync<Dictionary<string, string>>("GET", CustomersEndpoint, id,
-                CustomersAttributesPath);
+            
+            var ret = await MakeRequestAsync<Dictionary<string, string>>("GET", new[] {CustomersEndpoint, customerId, CustomersAttributesPath});
+            
             _logger.LogDebug("Received for customer with id: {Id} attributes: {Attributes}", customerId,
                 ret.StringifyDictionary());
+            
             return ret;
         }
 
@@ -144,9 +148,11 @@ namespace InvisibleCollectorLib
         public async Task<IList<Debt>> GetCustomerDebtsAsync(string customerId)
         {
             _logger.LogDebug("Making a request to get customer debts for customer ID: {Id}", customerId);
-            var id = HttpUriBuilder.UriEscape(customerId);
-            var ret = await MakeBodylessRequestAsync<List<Debt>>("GET", CustomersEndpoint, id, "debts");
+            
+            var ret = await MakeRequestAsync<List<Debt>>("GET", new[] {CustomersEndpoint, customerId, "debts"});
+            
             _logger.LogDebug("Received for customer with id: {Id} debts: {Models}", customerId, ret.StringifyList());
+            
             return ret;
         }
 
@@ -168,10 +174,12 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Customer> GetCustomerInfoAsync(string customerId)
         {
-            var id = HttpUriBuilder.UriEscape(customerId);
             _logger.LogDebug("Making request to get customer information for customer ID: {Id}", customerId);
-            var ret = await MakeBodylessRequestAsync<Customer>("GET", CustomersEndpoint, id);
+            
+            var ret = await MakeRequestAsync<Customer>("GET", new[] {CustomersEndpoint, customerId});
+            
             _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerId, ret);
+            
             return ret;
         }
 
@@ -193,7 +201,7 @@ namespace InvisibleCollectorLib
         {
             var id = HttpUriBuilder.UriEscape(debtId);
             _logger.LogDebug("Making request to get debt information for debt ID: {Id}", debtId);
-            var ret = await MakeBodylessRequestAsync<Debt>("GET", DebtsEndpoint, id);
+            var ret = await MakeRequestAsync<Debt>("GET", new[] {DebtsEndpoint, id});
             _logger.LogDebug("Received for debt with id: {Id} information: {Model}", debtId, ret);
             return ret;
         }
@@ -249,7 +257,7 @@ namespace InvisibleCollectorLib
 
             _logger.LogDebug("Making request to {Model} notifications", bEnableNotifications ? "enable" : "disable");
             var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
-            var ret = await MakeBodylessRequestAsync<Company>("PUT", CompaniesEndpoint, endpoint);
+            var ret = await MakeRequestAsync<Company>("PUT", new[] {CompaniesEndpoint, endpoint});
             _logger.LogDebug("Updated company notifications to: {Model}", ret);
             return ret;
         }
@@ -372,7 +380,9 @@ namespace InvisibleCollectorLib
         public async Task<Debt> SetNewDebtAsync(Debt debt)
         {
             _logger.LogDebug("Making a request to create a new debt with information: {Model}", debt);
+            
             var ret = await MakeRequestAsync<Debt, object>("POST", debt.SendableDictionary, DebtsEndpoint);
+            
             _logger.LogDebug("Created a new debt with the information: {Model}", ret);
             return ret;
         }
@@ -408,12 +418,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
 
-            var requestUri = _uriBuilder.Clone()
-                .WithPath(DebtsEndpoint, "find")
-                .WithQuery(findDebts.SendableStringDictionary)
-                .BuildUri();
-            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-            var ret = _jsonFacade.JsonToObject<List<Debt>>(json);
+            var ret = await MakeRequestAsync<List<Debt>>("GET", new[] {DebtsEndpoint, "find"}, findDebts.SendableStringDictionary);
 
             _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
             return ret;
@@ -423,11 +428,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making request to get list of groups");
 
-            var requestUri = _uriBuilder.Clone()
-                .WithPath("groups")
-                .BuildUri();
-            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-            var ret = _jsonFacade.JsonToObject<List<Group>>(json);
+            var ret = await MakeRequestAsync<List<Group>>("GET", new[] {"groups"});
 
             _logger.LogDebug("Received groups list: {Models}", ret.StringifyList());
             return ret;
@@ -437,11 +438,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug($"Making request to get set customer ({customerId}) to group ({groupId})");
 
-            var requestUri = _uriBuilder.Clone()
-                .WithPath("groups", groupId, "customers", customerId)
-                .BuildUri();
-            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "POST");
-            var ret = _jsonFacade.JsonToObject<Group>(json);
+            var ret = await MakeRequestAsync<Group>("POST", new[] {"groups", groupId, "customers", customerId});
 
             _logger.LogDebug("Added customer {Customer} to group: {Models}",  customerId, ret);
             return ret;
@@ -451,12 +448,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
             
-            var requestUri = _uriBuilder.Clone()
-                .WithPath(CustomersEndpoint, "find")
-                .WithQuery(findCustomers.SendableStringDictionary)
-                .BuildUri();
-            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-            var ret = _jsonFacade.JsonToObject<List<Customer>>(json);
+            var ret = await MakeRequestAsync<List<Customer>>("GET", new[] {CustomersEndpoint, "find"}, findCustomers.SendableStringDictionary);
 
             _logger.LogDebug("Received find result customers: {Models}", ret.StringifyList());
             return ret;
@@ -487,7 +479,9 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Making a request to create a new payment with information: {Model}", payment);
 
             var ret = await MakeRequestAsync<Payment, object>("POST", payment.SendableDictionary, PaymentsEndpoint);
+            
             _logger.LogDebug("Created a new payment with the information: {Model}", ret);
+            
             return ret;
         }
 
@@ -508,9 +502,10 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Payment> GetPaymentAsync(string paymentId)
         {
-            var id = HttpUriBuilder.UriEscape(paymentId);
             _logger.LogDebug("Making request to get payment information for payment ID: {Id}", paymentId);
-            var ret = await MakeBodylessRequestAsync<Payment>("GET", PaymentsEndpoint, id);
+            
+            var ret = await MakeRequestAsync<Payment>("GET", new[] {PaymentsEndpoint, paymentId});
+            
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
@@ -532,9 +527,10 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Payment> CancelPaymentAsync(string paymentId)
         {
-            var id = HttpUriBuilder.UriEscape(paymentId);
             _logger.LogDebug("Making request to cancel payment information for payment ID: {Id}", paymentId);
-            var ret = await MakeBodylessRequestAsync<Payment>("PUT", PaymentsEndpoint, id, "cancel");
+            
+            var ret = await MakeRequestAsync<Payment>("PUT", new[] {PaymentsEndpoint, paymentId, "cancel"});
+            
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
@@ -556,9 +552,10 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Payment> DeletePaymentAsync(string paymentId)
         {
-            var id = HttpUriBuilder.UriEscape(paymentId);
             _logger.LogDebug("Making request to delete payment information for payment ID: {Id}", paymentId);
-            var ret = await MakeBodylessRequestAsync<Payment>("DELETE", PaymentsEndpoint, id);
+            
+            var ret = await MakeRequestAsync<Payment>("DELETE", new [] {PaymentsEndpoint, paymentId});
+            
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
@@ -572,12 +569,11 @@ namespace InvisibleCollectorLib
         public async Task<Customer> SetNewCustomerContactsAsync(string customerGid,
             IList<CustomerContact> contacts)
         {
-            var id = HttpUriBuilder.UriEscape(customerGid);
             _logger.LogDebug("Making request to create customer's {Id} contacts with the following info: {Model}", customerGid, contacts);
 
             var objects = contacts.Select(c => c.SendableDictionary);
             var json = _jsonFacade.DictionaryToJson(objects);
-            var ret = await MakeRequestAsync<Customer>("POST", json, "v1", "customers", id, "contacts");
+            var ret = await MakeRequestAsync<Customer>("POST", new[] {"v1", "customers", customerGid, "contacts"}, null, json);
 
             _logger.LogDebug("Received customer: {Models}", ret);
             return ret;
@@ -585,29 +581,26 @@ namespace InvisibleCollectorLib
         
         public async Task<IList<CustomerContact>> GetCustomerContactsAsync(string customerGid)
         {
-            var id = HttpUriBuilder.UriEscape(customerGid);
             _logger.LogDebug("Making request to get customer's {} contacts'", customerGid);
             
-            var ret = await MakeBodylessRequestAsync<List<CustomerContact>>("GET", "v1", "customers", id, "contacts");
+            var ret = await MakeRequestAsync<List<CustomerContact>>("GET", new[]
+                {"v1", "customers", customerGid, "contacts"});
             
             _logger.LogDebug("Received contacts: {Model} for customer {Id}", ret, customerGid);
             return ret;
         }
 
-        private async Task<TReturn> MakeBodylessRequestAsync<TReturn>(string method, params string[] pathFragments)
-            where TReturn : new()
+        private async Task<TReturn> MakeRequestAsync<TReturn>(string method, string[] pathFragments, IDictionary<string, string> query = null, string requestJson = null) where TReturn : new()
         {
-            return await MakeRequestAsync<TReturn, object>(method, null, pathFragments);
+            var requestUri = _uriBuilder.Clone().WithPath(pathFragments);
+            if (query != null)
+            {
+                requestUri.WithQuery(query);
+            }
+            var json = await _apiFacade.CallJsonToJsonApi(requestUri.BuildUri(), method, requestJson);
+            return _jsonFacade.JsonToObject<TReturn>(json);
         }
 
-        private async Task<TReturn> MakeRequestAsync<TReturn>(string method,
-            string requestJson = null, params string[] pathFragments) where TReturn : new()
-        {
-                var requestUri = _uriBuilder.Clone().WithPath(pathFragments).BuildUri();
-                var json = await _apiFacade.CallJsonToJsonApi(requestUri, method, requestJson);
-                return _jsonFacade.JsonToObject<TReturn>(json);
-        }
-        
         /// <summary>
         ///     Makes an api request
         /// </summary>
@@ -621,7 +614,7 @@ namespace InvisibleCollectorLib
             IDictionary<string, TDictValue> requestBody = null, params string[] pathFragments) where TReturn : new()
         {
             string requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
-            return await MakeRequestAsync<TReturn>(method, requestJson, pathFragments);
+            return await MakeRequestAsync<TReturn>(method, pathFragments, null, requestJson);
         }
     }
 }
