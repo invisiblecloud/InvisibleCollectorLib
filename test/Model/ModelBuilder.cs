@@ -174,6 +174,17 @@ namespace test.Model
 
             return new ModelBuilder(fields);
         }
+        
+        public static ModelBuilder BuildDebitBuilder(string number = "12")
+        {
+            var fields = new Dictionary<string, object>
+            {
+                {Debit.NumberName, number},
+                {Debit.DateName, new DateTime()},
+            };
+
+            return new ModelBuilder(fields);
+        }
 
         public static ModelBuilder BuildRequestCustomerContactBuilder(string name)
         {

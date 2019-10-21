@@ -377,10 +377,10 @@ namespace InvisibleCollectorLib
             return ret;
         }
         
-        public async Task<Debt> SetNewDebtDebitAsync(string debtId, Debit debit)
+        public async Task<Debit> SetNewDebtDebitAsync(string debtId, Debit debit)
         {
             _logger.LogDebug("Making a request to create a new debt debit note with information: {Model}", debit);
-            var ret = await MakeRequestAsync<Debt, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtId, "debits");
+            var ret = await MakeRequestAsync<Debit, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtId, "debits");
             _logger.LogDebug("Created a new debt debit note with the information: {Model}", ret);
             return ret;
         }

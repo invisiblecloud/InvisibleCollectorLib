@@ -382,5 +382,22 @@ namespace test
             Assert.AreEqual(model1, result[0]);
             Assert.AreEqual(model2, result[1]);
         }
+        
+        [Test]
+        public async Task SetNewDebitAsync_correct()
+        {
+            var builder = ModelBuilder.BuildDebitBuilder();
+            var requestModel = builder.BuildModel<Debit>();
+            var expectedReply = builder.BuildModel<Debit>(true);
+            var id = "12345";
+            
+            var ic = ConfigureIc("POST", $"debts/{id}/debits", builder.BuildJson(), builder.BuildJson());
+
+            var result = await ic.SetNewDebtDebitAsync(id, requestModel);
+            Assert.AreEqual(expectedReply, result);
+            
+        }
+        
+        
     }
 }
