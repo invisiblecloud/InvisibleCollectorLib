@@ -185,6 +185,17 @@ namespace test.Model
 
             return new ModelBuilder(fields);
         }
+        
+        public static ModelBuilder BuildGroupBuilder(string id = "12", string name = "boris")
+        {
+            var fields = new Dictionary<string, object>
+            {
+                {Group.IdName, id},
+                {Group.NameName, name},
+            };
+
+            return new ModelBuilder(fields);
+        }
 
         public static ModelBuilder BuildRequestCustomerContactBuilder(string name)
         {

@@ -399,19 +399,38 @@ namespace test
         }
         
         [Test]
-        public void GetGroups_correct()
+        public async Task GetGroups_correct()
         {
-            var model1 = ModelBuilder.BuildRequestCustomerContactBuilder("john");
-            var model2 = ModelBuilder.BuildRequestCustomerContactBuilder("mary");
-            var listBuilder = new ModelListBuilder().Add(model1).Add(model2);
+            var builder1 = ModelBuilder.BuildGroupBuilder("1", "john");
+            var builder2 = ModelBuilder.BuildGroupBuilder("2", "Smith");
+            var listBuilder = new ModelListBuilder().Add(builder1).Add(builder2);
             var replyJson = listBuilder.BuildJson();
             
-            var ic = ConfigureIc("GET", "v1/customers/3/contacts", replyJson);
+            var ic = ConfigureIc("GET", "groups", replyJson);
 
-            var actual = ic.GetCustomerContactsAsync("3").Result;
+            var result = await ic.GetGroupsAsync();
 
-            var expectedReply = listBuilder.BuildModelList<CustomerContact>();
-            Assert.AreEqual(expectedReply, actual);
+            Assert.AreEqual(result.Count, 2);
+            
+            var model1 = builder1.BuildModel<Group>(true);
+            var model2 = builder2.BuildModel<Group>(true);
+            Assert.AreEqual(model1, result[0]);
+            Assert.AreEqual(model2, result[1]);
+        }
+        
+        [Test]
+        public async Task SetCustomerToGroupAsync_correct()
+        {
+            var builder = ModelBuilder.BuildGroupBuilder("1", "john");
+            var replyJson = builder.BuildJson();
+            var expectedModel = builder.BuildModel<Group>(true);
+            const string groupId = "12";
+            const string customerId = "ab";
+
+            var ic = ConfigureIc("POST", $"groups/{groupId}/customers/{customerId}", replyJson);
+
+            var result = await ic.SetCustomerToGroupAsync(customerId, groupId);
+            Assert.AreEqual(expectedModel, result);
         }
     }
 }
