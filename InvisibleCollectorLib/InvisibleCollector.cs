@@ -252,11 +252,11 @@ namespace InvisibleCollectorLib
         /// <seealso cref="SetCompanyInfoAsync" />
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
         {
-            const string EnableNotifications = "enableNotifications";
-            const string DisableNotifications = "disableNotifications";
+            const string enableNotifications = "enableNotifications";
+            const string disableNotifications = "disableNotifications";
 
             _logger.LogDebug("Making request to {Model} notifications", bEnableNotifications ? "enable" : "disable");
-            var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
+            var endpoint = bEnableNotifications ? enableNotifications : disableNotifications;
             var ret = await MakeRequestAsync<Company>("PUT", new[] {CompaniesEndpoint, endpoint});
             _logger.LogDebug("Updated company notifications to: {Model}", ret);
             return ret;
@@ -424,6 +424,10 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Returns the full list of groups for the company
+        /// </summary>
+        /// <returns>the list of groups</returns>
         public async Task<IList<Group>> GetGroupsAsync()
         {
             _logger.LogDebug("Making request to get list of groups");
@@ -434,6 +438,12 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Assigns a group to a customer
+        /// </summary>
+        /// <param name="customerId">the customer gid</param>
+        /// <param name="groupId">the group id</param>
+        /// <returns>the assigned group</returns>
         public async Task<Group> SetCustomerToGroupAsync(string customerId, string groupId)
         {
             _logger.LogDebug($"Making request to get set customer ({customerId}) to group ({groupId})");
@@ -444,6 +454,11 @@ namespace InvisibleCollectorLib
             return ret;
         }
         
+        /// <summary>
+        /// Returns a list of custoemr that math the criteria
+        /// </summary>
+        /// <param name="findCustomers">the search criteria, fields are matched with AND</param>
+        /// <returns>the list of found customers or empty list if no customer found</returns>
         public async Task<IList<Customer>> GetFindCustomersAsync(FindCustomers findCustomers)
         {
             _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
@@ -579,6 +594,11 @@ namespace InvisibleCollectorLib
             return ret;
         }
         
+        /// <summary>
+        ///     Returns the customer's contacts
+        /// </summary>
+        /// <param name="customerGid">the customer gid</param>
+        /// <returns> the customer contacts</returns>
         public async Task<IList<CustomerContact>> GetCustomerContactsAsync(string customerGid)
         {
             _logger.LogDebug("Making request to get customer's {} contacts'", customerGid);
