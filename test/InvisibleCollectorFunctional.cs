@@ -143,7 +143,7 @@ namespace test
 
             var ic = ConfigureIc("GET", "debts/find", replyJson, null, expectedQueryParams);
 
-            var result = await ic.GetFindDebts(findDebts);
+            var result = await ic.GetFindDebtsAsync(findDebts);
 
             for (var i = 0; i < replyDebts.Count; i++)
                 Assert.AreEqual(replyDebts[i], result[i]);
@@ -373,7 +373,7 @@ namespace test
 
             var ic = ConfigureIc("GET", "customers/find", replyJson, null, expectedQueryParams);
 
-            var result = await ic.GetFindCustomers(findCustomers);
+            var result = await ic.GetFindCustomersAsync(findCustomers);
 
             Assert.AreEqual(result.Count, 2);
             
@@ -389,7 +389,7 @@ namespace test
             var builder = ModelBuilder.BuildDebitBuilder();
             var requestModel = builder.BuildModel<Debit>();
             var expectedReply = builder.BuildModel<Debit>(true);
-            var id = "12345";
+            const string id = "12345";
             
             var ic = ConfigureIc("POST", $"debts/{id}/debits", builder.BuildJson(), builder.BuildJson());
 
@@ -398,6 +398,20 @@ namespace test
             
         }
         
-        
+        [Test]
+        public void GetGroups_correct()
+        {
+            var model1 = ModelBuilder.BuildRequestCustomerContactBuilder("john");
+            var model2 = ModelBuilder.BuildRequestCustomerContactBuilder("mary");
+            var listBuilder = new ModelListBuilder().Add(model1).Add(model2);
+            var replyJson = listBuilder.BuildJson();
+            
+            var ic = ConfigureIc("GET", "v1/customers/3/contacts", replyJson);
+
+            var actual = ic.GetCustomerContactsAsync("3").Result;
+
+            var expectedReply = listBuilder.BuildModelList<CustomerContact>();
+            Assert.AreEqual(expectedReply, actual);
+        }
     }
 }

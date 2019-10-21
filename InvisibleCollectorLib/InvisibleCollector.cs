@@ -377,10 +377,16 @@ namespace InvisibleCollectorLib
             return ret;
         }
         
-        public async Task<Debit> SetNewDebtDebitAsync(string debtId, Debit debit)
+        /// <summary>
+        ///     Create a new debit associated with a debt
+        /// </summary>
+        /// <param name="debtGid">the debt global id <see cref="Debt.Id" /></param>
+        /// <param name="debit">the debit to create</param>
+        /// <returns></returns>
+        public async Task<Debit> SetNewDebtDebitAsync(string debtGid, Debit debit)
         {
             _logger.LogDebug("Making a request to create a new debt debit note with information: {Model}", debit);
-            var ret = await MakeRequestAsync<Debit, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtId, "debits");
+            var ret = await MakeRequestAsync<Debit, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtGid, "debits");
             _logger.LogDebug("Created a new debt debit note with the information: {Model}", ret);
             return ret;
         }
@@ -398,7 +404,7 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        public async Task<IList<Debt>> GetFindDebts(FindDebts findDebts)
+        public async Task<IList<Debt>> GetFindDebtsAsync(FindDebts findDebts)
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
 
@@ -413,7 +419,7 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
-        public async Task<IList<Group>> GetGroups()
+        public async Task<IList<Group>> GetGroupsAsync()
         {
             _logger.LogDebug("Making request to get list of groups");
 
@@ -427,7 +433,7 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
-        public async Task<Group> SetCustomerToGroup(string customerId, string groupId)
+        public async Task<Group> SetCustomerToGroupAsync(string customerId, string groupId)
         {
             _logger.LogDebug($"Making request to get set customer ({customerId}) to group ({groupId})");
 
@@ -441,7 +447,7 @@ namespace InvisibleCollectorLib
             return ret;
         }
         
-        public async Task<IList<Customer>> GetFindCustomers(FindCustomers findCustomers)
+        public async Task<IList<Customer>> GetFindCustomersAsync(FindCustomers findCustomers)
         {
             _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
             
