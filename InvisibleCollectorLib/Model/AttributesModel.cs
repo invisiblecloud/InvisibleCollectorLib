@@ -35,9 +35,8 @@ namespace InvisibleCollectorLib.Model
             return InternalAttributes?[key];
         }
         
-        public static bool AreEqual<CollectionT, ItemT>(CollectionT left, CollectionT right, string itemsName, string attributesName)
+        public static bool AreEqual<CollectionT>(CollectionT left, CollectionT right, string itemsName, string attributesName)
             where CollectionT: AttributesModel<ItemT>, new()
-            where ItemT: Model, ICloneable
         {
             var refDebt = IcUtils.ReferenceQuality(left, right);
             if (refDebt != null)
@@ -54,7 +53,7 @@ namespace InvisibleCollectorLib.Model
                 InternalAttributes = null
             };
 
-            if (! ItemsModel<ItemT>.AreEqual<CollectionT, ItemT>(leftCopy, rightCopy, itemsName))
+            if (! ItemsModel<ItemT>.AreEqual(leftCopy, rightCopy, itemsName))
                 return false;
 
             var attributesRef = left.KeyRefEquality(right, attributesName);

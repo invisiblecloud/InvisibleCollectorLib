@@ -179,7 +179,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Customer left, Customer right)
         {
-            return AreEqual<Customer, CustomerContact>(left, right, ContactsName, AttributesName);
+            return AreEqual(left, right, ContactsName, AttributesName);
         }
 
         public static bool operator !=(Customer left, Customer right)

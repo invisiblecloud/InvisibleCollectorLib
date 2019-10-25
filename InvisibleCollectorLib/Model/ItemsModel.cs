@@ -4,7 +4,7 @@ using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
-    public class ItemsModel<ItemT>: Model
+    public abstract class ItemsModel<ItemT>: Model
         where ItemT: ICloneable
     {
         protected virtual IList<ItemT> InternalItems
@@ -24,9 +24,8 @@ namespace InvisibleCollectorLib.Model
             InternalItems.Add((ItemT) item.Clone());
         }
 
-        public static bool AreEqual<CollectionT, ItemT>(CollectionT left, CollectionT right, string itemsName)
+        public static bool AreEqual<CollectionT>(CollectionT left, CollectionT right, string itemsName)
             where CollectionT: ItemsModel<ItemT>, new()
-            where ItemT: Model, ICloneable
         {
             var refDebt = IcUtils.ReferenceQuality(left, right);
             if (refDebt != null)

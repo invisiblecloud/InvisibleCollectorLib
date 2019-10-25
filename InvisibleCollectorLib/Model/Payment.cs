@@ -184,7 +184,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Payment left, Payment right)
         {
-            return AreEqual<Payment, PaymentLine>(left, right, LinesName);
+            return AreEqual(left, right, LinesName);
         }
 
         public static bool operator !=(Payment left, Payment right)

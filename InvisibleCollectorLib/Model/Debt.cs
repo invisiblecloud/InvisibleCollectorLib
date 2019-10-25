@@ -213,7 +213,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Debt left, Debt right)
         {
-            return AreEqual<Debt, Item>(left, right, ItemsName, AttributesName);
+            return AreEqual(left, right, ItemsName, AttributesName);
         }
 
         public static bool operator !=(Debt left, Debt right)
