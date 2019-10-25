@@ -8,7 +8,7 @@ namespace InvisibleCollectorLib.Model
     /// <summary>
     ///     The debt model
     /// </summary>
-    public class Debt : Model, IRoutableModel
+    public class Debt : AttributesModel<Item>, IRoutableModel
     {
         internal const string AttributesName = "attributes";
         internal const string CurrencyName = "currency";
@@ -20,32 +20,13 @@ namespace InvisibleCollectorLib.Model
         internal const string ItemsName = "items";
         internal const string NetTotalName = "netTotal";
         internal const string PaidTotalName = "paidTotal";
-        internal const string DebitTotalName = "debitTotal";
+        internal const string DebitTotalName = "dgereebitTotal";
         internal const string NumberName = "number";
         internal const string StatusName = "status";
         internal const string TaxName = "tax";
         internal const string TypeName = "type";
-
-        public Debt()
-        {
-        }
-
-        internal Debt(Debt other) : base(other)
-        {
-            if (other.InternalItems != null)
-                InternalItems = other.Items;
-
-            if (other.InternalAttributes != null)
-                InternalAttributes = other.Attributes;
-        }
-
-        public IDictionary<string, string> Attributes
-        {
-            get => GetField<IDictionary<string, string>>(AttributesName)
-                ?.ToDictionary(entry => entry.Key, entry => entry.Value);
-
-            set => this[AttributesName] = value?.ToDictionary(entry => entry.Key, entry => entry.Value);
-        }
+        
+        
 
         /// <summary>
         ///     The currency. Must be an ISO 4217 currency code.
@@ -201,14 +182,14 @@ namespace InvisibleCollectorLib.Model
             }
         }
 
-        private IDictionary<string, string> InternalAttributes
+        protected override IDictionary<string, string> InternalAttributes
         {
             get => GetField<IDictionary<string, string>>(AttributesName);
 
             set => this[AttributesName] = value;
         }
 
-        private IList<Item> InternalItems
+        protected override IList<Item> InternalItems
         {
             get => GetField<IList<Item>>(ItemsName);
 
@@ -232,12 +213,7 @@ namespace InvisibleCollectorLib.Model
         {
             return other is Debt debt && this == debt;
         }
-
-        public string GetAttribute(string key)
-        {
-            return InternalAttributes?[key];
-        }
-
+        
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -245,30 +221,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Debt left, Debt right)
         {
-            var refDebt = IcUtils.ReferenceQuality(left, right);
-            if (refDebt != null)
-                return (bool) refDebt;
-
-            var leftCopy = new Debt(left) {InternalItems = null, InternalAttributes = null};
-            var rightCopy = new Debt(right) {InternalItems = null, InternalAttributes = null};
-
-            if (leftCopy != (Model) rightCopy) // compare non collection attributes
-                return false;
-
-            var itemRef = left.KeyRefEquality(right, ItemsName);
-            var attributesRef = left.KeyRefEquality(right, AttributesName);
-
-            if (itemRef == false || attributesRef == false)
-                return false;
-            if (itemRef == true && attributesRef == true)
-                return true;
-            if (itemRef == null && attributesRef == null)
-                return left.InternalItems.EqualsCollection(right.InternalItems) &&
-                       left.InternalAttributes.EqualsCollection(right.InternalAttributes);
-            if (itemRef == null)
-                return left.InternalItems.EqualsCollection(right.InternalItems);
-            
-            return left.InternalAttributes.EqualsCollection(right.InternalAttributes);
+            return AttributesModel<Item>.AreEqual<Debt, Item>(left, right, ItemsName, AttributesName);
         }
 
         public static bool operator !=(Debt left, Debt right)
@@ -276,14 +229,7 @@ namespace InvisibleCollectorLib.Model
             return !(left == right);
         }
 
-        public void SetAttribute(string key, string value)
-        {
-            if (InternalAttributes is null)
-                InternalAttributes = new Dictionary<string, string>();
-
-            InternalAttributes[key] = value;
-        }
-
+        
         /// <summary>
         ///     A convenience method to set the customer id.
         /// </summary>
