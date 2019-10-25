@@ -1,13 +1,24 @@
+using System;
 using System.Collections.Generic;
 
 namespace InvisibleCollectorLib.Model
 {
-    public class CustomerContact : Model
+    public class CustomerContact : Model, ICloneable
     {
         internal const string NameName = "name";
         internal const string EmailName = "email";
         internal const string PhoneName = "phone";
         internal const string MobileName = "mobile";
+
+        public CustomerContact()
+        {
+            
+        }
+
+        private CustomerContact(CustomerContact other) : base(other)
+        {
+            
+        }
         
         public string Name
         {
@@ -35,6 +46,11 @@ namespace InvisibleCollectorLib.Model
             get => GetField<string>(MobileName);
 
             set => this[MobileName] = value;
+        }
+        
+        public object Clone()
+        {
+            return new CustomerContact(this);
         }
         
         protected override ISet<string> SendableFields =>
