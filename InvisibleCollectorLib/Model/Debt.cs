@@ -25,8 +25,6 @@ namespace InvisibleCollectorLib.Model
         internal const string StatusName = "status";
         internal const string TaxName = "tax";
         internal const string TypeName = "type";
-        
-        
 
         /// <summary>
         ///     The currency. Must be an ISO 4217 currency code.
@@ -200,13 +198,7 @@ namespace InvisibleCollectorLib.Model
 
         public void AddItem(Item item)
         {
-            if (item is null)
-                throw new ArgumentException("Invalid argument");
-
-            if (InternalItems is null)
-                InternalItems = new List<Item>();
-
-            InternalItems.Add((Item) item.Clone());
+            base.AddItem(item);
         }
 
         public override bool Equals(object other)
@@ -221,7 +213,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Debt left, Debt right)
         {
-            return AttributesModel<Item>.AreEqual<Debt, Item>(left, right, ItemsName, AttributesName);
+            return AreEqual<Debt, Item>(left, right, ItemsName, AttributesName);
         }
 
         public static bool operator !=(Debt left, Debt right)

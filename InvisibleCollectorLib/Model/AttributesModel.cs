@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using InvisibleCollectorLib.Utils;
@@ -5,7 +6,7 @@ using InvisibleCollectorLib.Utils;
 namespace InvisibleCollectorLib.Model
 {
     public abstract class AttributesModel<ItemT> : ItemsModel<ItemT>
-        where ItemT: Model
+        where ItemT: Model, ICloneable
     {
         protected virtual IDictionary<string, string> InternalAttributes
         {
@@ -36,7 +37,7 @@ namespace InvisibleCollectorLib.Model
         
         public static bool AreEqual<CollectionT, ItemT>(CollectionT left, CollectionT right, string itemsName, string attributesName)
             where CollectionT: AttributesModel<ItemT>, new()
-            where ItemT: Model
+            where ItemT: Model, ICloneable
         {
             var refDebt = IcUtils.ReferenceQuality(left, right);
             if (refDebt != null)

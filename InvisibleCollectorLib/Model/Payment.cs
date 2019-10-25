@@ -5,7 +5,7 @@ using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
-    public class Payment : Model
+    public class Payment : ItemsModel<PaymentLine>
     {
         internal const string NumberName = "number";
         internal const string CurrencyName = "currency";
@@ -17,16 +17,7 @@ namespace InvisibleCollectorLib.Model
         internal const string StatusName = "status";
         internal const string LinesName = "lines";
         internal const string ExternalIdName = "externalId";
-
-        public Payment()
-        {
-        }
-
-        public Payment(Payment other) : base(other)
-        {
-            if (other.InternalLines != null)
-                InternalLines = other.Lines;
-        }
+        
 
         /// <summary>
         ///     The currency. Must be an ISO 4217 currency code.
@@ -47,7 +38,6 @@ namespace InvisibleCollectorLib.Model
 
             set => this[DateName] = value;
         }
-
 
         public double? GrossTotal
         {
@@ -110,7 +100,7 @@ namespace InvisibleCollectorLib.Model
             set => this[TaxName] = value;
         }
 
-        private IList<PaymentLine> InternalLines
+        protected override IList<PaymentLine> InternalItems
         {
             get => GetField<IList<PaymentLine>>(LinesName);
 
@@ -122,20 +112,14 @@ namespace InvisibleCollectorLib.Model
         /// </summary>
         public IList<PaymentLine> Lines
         {
-            get => InternalLines?.Clone();
+            get => InternalItems?.Clone();
 
-            set => InternalLines = value?.Clone();
+            set => InternalItems = value?.Clone();
         }
 
         public void AddLine(PaymentLine line)
         {
-            if (line is null)
-                throw new ArgumentException("Invalid argument");
-
-            if (InternalLines is null)
-                InternalLines = new List<PaymentLine>();
-
-            InternalLines.Add((PaymentLine) line.Clone());
+            AddItem(line);
         }
 
         public void UnsetExternalId()
@@ -200,22 +184,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Payment left, Payment right)
         {
-            var refDebt = IcUtils.ReferenceQuality(left, right);
-            if (refDebt != null)
-                return (bool) refDebt;
-
-            var leftCopy = new Payment(left) {InternalLines = null};
-            var rightCopy = new Payment(right) {InternalLines = null};
-
-            if (leftCopy != (Model) rightCopy) // compare non collection attributes
-                return false;
-
-            var lineReg = left.KeyRefEquality(right, LinesName);
-            if (lineReg != null)
-                return (bool) lineReg;
-
-            // compare lines
-            return left.InternalLines.EqualsCollection(right.InternalLines);
+            return AreEqual<Payment, PaymentLine>(left, right, LinesName);
         }
 
         public static bool operator !=(Payment left, Payment right)
@@ -226,7 +195,7 @@ namespace InvisibleCollectorLib.Model
         public override string ToString()
         {
             var fields = FieldsShallow;
-            fields[LinesName] = InternalLines?.StringifyList();
+            fields[LinesName] = InternalItems?.StringifyList();
             return fields.StringifyDictionary();
         }
 
@@ -242,8 +211,8 @@ namespace InvisibleCollectorLib.Model
             get
             {
                 var fields = base.SendableDictionary;
-                if (InternalLines != null)
-                    fields[LinesName] = InternalLines.Select(item => item.SendableDictionary).ToList();
+                if (InternalItems != null)
+                    fields[LinesName] = InternalItems.Select(item => item.SendableDictionary).ToList();
 
                 return fields;
             }

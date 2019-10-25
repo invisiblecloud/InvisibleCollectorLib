@@ -1,19 +1,32 @@
+using System;
 using System.Collections.Generic;
 using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
     public class ItemsModel<ItemT>: Model
+        where ItemT: ICloneable
     {
         protected virtual IList<ItemT> InternalItems
         {
             get;
             set;
         }
+        
+        protected void AddItem(ItemT item)
+        {
+            if (item == null)
+                throw new ArgumentException("Invalid argument");
+
+            if (InternalItems is null)
+                InternalItems = new List<ItemT>();
+
+            InternalItems.Add((ItemT) item.Clone());
+        }
 
         public static bool AreEqual<CollectionT, ItemT>(CollectionT left, CollectionT right, string itemsName)
             where CollectionT: ItemsModel<ItemT>, new()
-            where ItemT: Model
+            where ItemT: Model, ICloneable
         {
             var refDebt = IcUtils.ReferenceQuality(left, right);
             if (refDebt != null)
