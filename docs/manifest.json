@@ -9,10 +9,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Exception.IcException.html",
-          "hash": "j6IOW8XFb86dWbFlpbkSlQ=="
+          "hash": "/1augUEgqKKf7ZKQRLQsFg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -21,10 +21,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Exception.IcModelConflictException.html",
-          "hash": "NnCzp4uZBZ/J4jbiSeqzSw=="
+          "hash": "beCy+Mxu2PB2MRlKoy8hEA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -36,7 +36,7 @@
           "hash": "8dGOZyxIsCt3wCwoBiItug=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -45,10 +45,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.InvisibleCollector.html",
-          "hash": "H9Vga9fVF31WYpItbS95KA=="
+          "hash": "y9D20zk+OQiKtqbR4E7w5Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -57,10 +57,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.AttributesModel-1.html",
-          "hash": "P0M902dANH4h9TLDQiSn9g=="
+          "hash": "q2IaYdIakIuZkxc05a9g+w=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -69,10 +69,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Company.html",
-          "hash": "oe3R/bPmlsOeViPrqUIz2w=="
+          "hash": "0VmvL/474LM3g+A1rOxq3A=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -81,10 +81,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Customer.html",
-          "hash": "cVnc9gkQuSR4qhPUGJRwqQ=="
+          "hash": "Tqfy8KHcRhe6x0Vwm0wiIQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -93,10 +93,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.CustomerContact.html",
-          "hash": "56GKpSTcw95FGnaVAsgDGg=="
+          "hash": "pPiLJcUonD/57jdT7qmtuA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -105,10 +105,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Debit.html",
-          "hash": "rEVDCiVet33puTwMVTzV+g=="
+          "hash": "CYoK9uBzv8kGXpvLXPRJ0Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -117,10 +117,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Debt.html",
-          "hash": "MBxfis/IF69M4er9OWt7TA=="
+          "hash": "Vn3neA0lwxmPyVnIRTUJog=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -129,10 +129,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.FindCustomers.html",
-          "hash": "pQrHTizT8jodViihH/kXkQ=="
+          "hash": "pFDMhlBxnq/hHeDkjOe+Yw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -141,10 +141,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.FindDebts.html",
-          "hash": "jTMcfBBf/qykJ3DBe5sPXA=="
+          "hash": "bx1a6VmeX0Z8me/G03DdnA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -153,10 +153,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Group.html",
-          "hash": "7R3d0Nc/2Zh5gRR3yB35AA=="
+          "hash": "zl3LWqsqL4b2CgTrdjv4jg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -165,10 +165,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Item.html",
-          "hash": "eJPhFlPqLgdB7cfpz/XR8Q=="
+          "hash": "rrTiZOV+X3x9P5ipbLehQQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -177,10 +177,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.ItemsModel-1.html",
-          "hash": "Z9eMGs4CU4TOa1qR1AkLoQ=="
+          "hash": "qt/Dh02lHiGfJe0e3fzmXw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -189,10 +189,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Model.html",
-          "hash": "JD0SfzbScgYOxUHzc7xhdg=="
+          "hash": "C4i+HpYt12PFgZavjFiFeA=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -201,10 +201,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.Payment.html",
-          "hash": "AZSusW0vIJGk7mxdVJcWXA=="
+          "hash": "1yD7kp6YsP6RFPZBbYQ6NQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -213,10 +213,10 @@
       "output": {
         ".html": {
           "relative_path": "api/InvisibleCollectorLib.Model.PaymentLine.html",
-          "hash": "q6R+m1xDs+2KVXfyE3tGZQ=="
+          "hash": "7ET99rCdvsmieaKiYPvRPw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -228,7 +228,7 @@
           "hash": "UGFdD2lp+7DwvJlIWQnAXw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -240,7 +240,7 @@
           "hash": "OpGe6P4Kg1rSm/XuZZFxzg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -279,7 +279,7 @@
           "hash": "mhL8J+NW0dvTqCD7YjwaDQ=="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -307,24 +307,24 @@
         "skipped_file_count": 0
       },
       "processors": {
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 20,
-          "skipped_file_count": 20
-        },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 2,
-          "skipped_file_count": 1
-        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 20,
+          "skipped_file_count": 3
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 2,
+          "skipped_file_count": 2
         }
       }
     },
