@@ -86,13 +86,16 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="SetCompanyInfoAsync" />
+        /// <seealso cref="SetCompanyAsync" />
         /// <seealso cref="SetCompanyNotificationsAsync" />
-        public async Task<Company> GetCompanyInfoAsync()
+        public async Task<Company> GetCompanyAsync()
         {
             _logger.LogDebug("Making a request to get company information");
-            var ret = await MakeBodylessRequestAsync<Company>("GET", CompaniesEndpoint);
+            
+            var ret = await MakeRequestAsync<Company>("GET", new[] {CompaniesEndpoint});
+            
             _logger.LogDebug("Received company info: {Model}", ret);
+            
             return ret;
         }
 
@@ -115,12 +118,13 @@ namespace InvisibleCollectorLib
         /// <seealso cref="SetCustomerAttributesAsync" />
         public async Task<IDictionary<string, string>> GetCustomerAttributesAsync(string customerId)
         {
-            var id = HttpUriBuilder.UriEscape(customerId);
             _logger.LogDebug("Making a request to get customer attributes for customer ID: {Id}", customerId);
-            var ret = await MakeBodylessRequestAsync<Dictionary<string, string>>("GET", CustomersEndpoint, id,
-                CustomersAttributesPath);
+            
+            var ret = await MakeRequestAsync<Dictionary<string, string>>("GET", new[] {CustomersEndpoint, customerId, CustomersAttributesPath});
+            
             _logger.LogDebug("Received for customer with id: {Id} attributes: {Attributes}", customerId,
                 ret.StringifyDictionary());
+            
             return ret;
         }
 
@@ -144,18 +148,19 @@ namespace InvisibleCollectorLib
         public async Task<IList<Debt>> GetCustomerDebtsAsync(string customerId)
         {
             _logger.LogDebug("Making a request to get customer debts for customer ID: {Id}", customerId);
-            var id = HttpUriBuilder.UriEscape(customerId);
-            var ret = await MakeBodylessRequestAsync<List<Debt>>("GET", CustomersEndpoint, id, "debts");
+            
+            var ret = await MakeRequestAsync<List<Debt>>("GET", new[] {CustomersEndpoint, customerId, "debts"});
+            
             _logger.LogDebug("Received for customer with id: {Id} debts: {Models}", customerId, ret.StringifyList());
+            
             return ret;
         }
 
         /// <summary>
         ///     Get customer info
         /// </summary>
-        /// <param name="customerId">
-        ///     The ID of the customer whose information is to be retrieved. It can be the 'gid' or
-        ///     'externalId' of the customer (or just use <see cref="Customer.RoutableId" />)
+        /// <param name="customerGid">
+        ///     The ID of the customer whose information is to be retrieved. The 'gid' of the customer (or just use <see cref="Customer.Gid" />)
         /// </param>
         /// <returns>The up-to-date customer information</returns>
         /// <exception cref="IcException">
@@ -166,12 +171,14 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        public async Task<Customer> GetCustomerInfoAsync(string customerId)
+        public async Task<Customer> GetCustomerAsync(string customerGid)
         {
-            var id = HttpUriBuilder.UriEscape(customerId);
-            _logger.LogDebug("Making request to get customer information for customer ID: {Id}", customerId);
-            var ret = await MakeBodylessRequestAsync<Customer>("GET", CustomersEndpoint, id);
-            _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerId, ret);
+            _logger.LogDebug("Making request to get customer for customer ID: {Id}", customerGid);
+            
+            var ret = await MakeRequestAsync<Customer>("GET", new[] {"v1", CustomersEndpoint, customerGid});
+            
+            _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerGid, ret);
+            
             return ret;
         }
 
@@ -193,7 +200,7 @@ namespace InvisibleCollectorLib
         {
             var id = HttpUriBuilder.UriEscape(debtId);
             _logger.LogDebug("Making request to get debt information for debt ID: {Id}", debtId);
-            var ret = await MakeBodylessRequestAsync<Debt>("GET", DebtsEndpoint, id);
+            var ret = await MakeRequestAsync<Debt>("GET", new[] {DebtsEndpoint, id});
             _logger.LogDebug("Received for debt with id: {Id} information: {Model}", debtId, ret);
             return ret;
         }
@@ -202,7 +209,7 @@ namespace InvisibleCollectorLib
         ///     Updates the company's information in the database
         /// </summary>
         /// <remarks>
-        ///     You can use <see cref="GetCompanyInfoAsync" /> to get the <paramref name="company" /> fields used for validation.
+        ///     You can use <see cref="GetCompanyAsync" /> to get the <paramref name="company" /> fields used for validation.
         /// </remarks>
         /// <param name="company">
         ///     The company information to be updated. It the following mandatory fields used for validation:
@@ -217,9 +224,9 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="GetCompanyInfoAsync" />
+        /// <seealso cref="GetCompanyAsync" />
         /// <seealso cref="SetCompanyNotificationsAsync" />
-        public async Task<Company> SetCompanyInfoAsync(Company company)
+        public async Task<Company> SetCompanyAsync(Company company)
         {
             _logger.LogDebug("Making request to update company information with the following info: {Model}", company);
             var ret = await MakeRequestAsync<Company, object>("PUT", company.SendableDictionary, CompaniesEndpoint);
@@ -240,16 +247,16 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="GetCompanyInfoAsync" />
-        /// <seealso cref="SetCompanyInfoAsync" />
+        /// <seealso cref="GetCompanyAsync" />
+        /// <seealso cref="SetCompanyAsync" />
         public async Task<Company> SetCompanyNotificationsAsync(bool bEnableNotifications)
         {
-            const string EnableNotifications = "enableNotifications";
-            const string DisableNotifications = "disableNotifications";
+            const string enableNotifications = "enableNotifications";
+            const string disableNotifications = "disableNotifications";
 
             _logger.LogDebug("Making request to {Model} notifications", bEnableNotifications ? "enable" : "disable");
-            var endpoint = bEnableNotifications ? EnableNotifications : DisableNotifications;
-            var ret = await MakeBodylessRequestAsync<Company>("PUT", CompaniesEndpoint, endpoint);
+            var endpoint = bEnableNotifications ? enableNotifications : disableNotifications;
+            var ret = await MakeRequestAsync<Company>("PUT", new[] {CompaniesEndpoint, endpoint});
             _logger.LogDebug("Updated company notifications to: {Model}", ret);
             return ret;
         }
@@ -296,8 +303,7 @@ namespace InvisibleCollectorLib
         ///     Updates the customer's information.
         /// </summary>
         /// <param name="customer">
-        ///     The customer information to be updated. The <see cref="Customer.Gid" /> or
-        ///     <see cref="Customer.ExternalId" /> field must be set, since they contain the id of the customer. The
+        ///     The customer information to be updated. The <see cref="Customer.Gid" /> field must be set, since they contain the id of the customer. The
         ///     <see cref="Customer.Country" /> field is mandatory.
         /// </param>
         /// <returns>The up-to-date updated customer information</returns>
@@ -309,18 +315,18 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        /// <seealso cref="GetCustomerInfoAsync" />
+        /// <seealso cref="GetCustomerAsync" />
         /// <seealso cref="SetNewCustomerAsync" />
         /// <seealso cref="Customer.RoutableId" />
-        public async Task<Customer> SetCustomerInfoAsync(Customer customer)
+        public async Task<Customer> SetCustomerAsync(Customer customer)
         {
-            var id = HttpUriBuilder.UriEscape(customer.RoutableId);
             _logger.LogDebug("Making a request to update the customer's with ID: {Id} information: {Model}",
-                customer.RoutableId, customer);
+                customer.Gid, customer);
             var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint,
-                id);
+                customer.Gid);
             _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.RoutableId, ret);
-            return ret;
+            
+            return await TrySetCustomerContacts(customer.Contacts, ret);
         }
 
         /// <summary>
@@ -348,7 +354,8 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Making a request to create a new customer with information: {Model}", customer);
             var ret = await MakeRequestAsync<Customer, object>("POST", customer.SendableDictionary, CustomersEndpoint);
             _logger.LogDebug("Created a new customer with the information: {Model}", ret);
-            return ret;
+            
+            return await TrySetCustomerContacts(customer.Contacts, ret);
         }
 
         /// <summary>
@@ -372,15 +379,23 @@ namespace InvisibleCollectorLib
         public async Task<Debt> SetNewDebtAsync(Debt debt)
         {
             _logger.LogDebug("Making a request to create a new debt with information: {Model}", debt);
+            
             var ret = await MakeRequestAsync<Debt, object>("POST", debt.SendableDictionary, DebtsEndpoint);
+            
             _logger.LogDebug("Created a new debt with the information: {Model}", ret);
             return ret;
         }
-        
-        public async Task<Debt> SetNewDebtDebitAsync(string debtId, Debit debit)
+
+        /// <summary>
+        ///     Create a new debit associated with a debt
+        /// </summary>
+        /// <param name="debtGid">the debt global id <see cref="Debt.Id" /></param>
+        /// <param name="debit">the debit to create</param>
+        /// <returns></returns>
+        public async Task<Debit> SetNewDebtDebitAsync(string debtGid, Debit debit)
         {
             _logger.LogDebug("Making a request to create a new debt debit note with information: {Model}", debit);
-            var ret = await MakeRequestAsync<Debt, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtId, "debits");
+            var ret = await MakeRequestAsync<Debit, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtGid, "debits");
             _logger.LogDebug("Created a new debt debit note with the information: {Model}", ret);
             return ret;
         }
@@ -398,77 +413,56 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        public async Task<IList<Debt>> GetFindDebts(FindDebts findDebts)
+        public async Task<IList<Debt>> GetFindDebtsAsync(FindDebts findDebts)
         {
             _logger.LogDebug("Making request to find debts with the following info: {Model}", findDebts);
 
-            IList<Debt> ret;
-            try
-            {
-                var requestUri = _uriBuilder.Clone()
-                    .WithPath(DebtsEndpoint, "find")
-                    .WithQuery(findDebts.SendableStringDictionary)
-                    .BuildUri();
-                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-                ret = _jsonFacade.JsonToObject<List<Debt>>(json);
-            }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
+            var ret = await MakeRequestAsync<List<Debt>>("GET", new[] {DebtsEndpoint, "find"}, findDebts.SendableStringDictionary);
 
             _logger.LogDebug("Received find result debts: {Models}", ret.StringifyList());
             return ret;
         }
 
-        public async Task<IList<Group>> GetGroups()
+        /// <summary>
+        /// Returns the full list of groups for the company
+        /// </summary>
+        /// <returns>the list of groups</returns>
+        public async Task<IList<Group>> GetGroupsAsync()
         {
             _logger.LogDebug("Making request to get list of groups");
 
-            var requestUri = _uriBuilder.Clone()
-                .WithPath("groups")
-                .BuildUri();
-            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-            var ret = _jsonFacade.JsonToObject<List<Group>>(json);
+            var ret = await MakeRequestAsync<List<Group>>("GET", new[] {"groups"});
 
             _logger.LogDebug("Received groups list: {Models}", ret.StringifyList());
             return ret;
         }
 
-        public async Task<Group> SetCustomerToGroup(string customerId, string groupId)
+        /// <summary>
+        /// Assigns a group to a customer
+        /// </summary>
+        /// <param name="customerId">the customer gid</param>
+        /// <param name="groupId">the group id</param>
+        /// <returns>the assigned group</returns>
+        public async Task<Group> SetCustomerToGroupAsync(string customerId, string groupId)
         {
             _logger.LogDebug($"Making request to get set customer ({customerId}) to group ({groupId})");
 
-            var requestUri = _uriBuilder.Clone()
-                .WithPath("groups", groupId, "customers", customerId)
-                .BuildUri();
-            var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "POST");
-            var ret = _jsonFacade.JsonToObject<Group>(json);
+            var ret = await MakeRequestAsync<Group>("POST", new[] {"groups", groupId, "customers", customerId});
 
             _logger.LogDebug("Added customer {Customer} to group: {Models}",  customerId, ret);
             return ret;
         }
-        
-        public async Task<IList<Customer>> GetFindCustomers(FindCustomers findCustomers)
+
+        /// <summary>
+        /// Returns a list of custoemr that math the criteria
+        /// </summary>
+        /// <param name="findCustomers">the search criteria, fields are matched with AND</param>
+        /// <returns>the list of found customers or empty list if no customer found</returns>
+        public async Task<IList<Customer>> GetFindCustomersAsync(FindCustomers findCustomers)
         {
             _logger.LogDebug("Making request to find customers with the following info: {Model}", findCustomers);
-
-            IList<Customer> ret;
-            try
-            {
-                var requestUri = _uriBuilder.Clone()
-                    .WithPath(CustomersEndpoint, "find")
-                    .WithQuery(findCustomers.SendableStringDictionary)
-                    .BuildUri();
-                var json = await _apiFacade.CallUrlEncodedToJsonApi(requestUri, "GET");
-                ret = _jsonFacade.JsonToObject<List<Customer>>(json);
-            }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
+            
+            var ret = await MakeRequestAsync<List<Customer>>("GET", new[] {CustomersEndpoint, "find"}, findCustomers.SendableStringDictionary);
 
             _logger.LogDebug("Received find result customers: {Models}", ret.StringifyList());
             return ret;
@@ -499,7 +493,9 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Making a request to create a new payment with information: {Model}", payment);
 
             var ret = await MakeRequestAsync<Payment, object>("POST", payment.SendableDictionary, PaymentsEndpoint);
+            
             _logger.LogDebug("Created a new payment with the information: {Model}", ret);
+            
             return ret;
         }
 
@@ -520,9 +516,10 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Payment> GetPaymentAsync(string paymentId)
         {
-            var id = HttpUriBuilder.UriEscape(paymentId);
             _logger.LogDebug("Making request to get payment information for payment ID: {Id}", paymentId);
-            var ret = await MakeBodylessRequestAsync<Payment>("GET", PaymentsEndpoint, id);
+            
+            var ret = await MakeRequestAsync<Payment>("GET", new[] {PaymentsEndpoint, paymentId});
+            
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
@@ -544,9 +541,10 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Payment> CancelPaymentAsync(string paymentId)
         {
-            var id = HttpUriBuilder.UriEscape(paymentId);
             _logger.LogDebug("Making request to cancel payment information for payment ID: {Id}", paymentId);
-            var ret = await MakeBodylessRequestAsync<Payment>("PUT", PaymentsEndpoint, id, "cancel");
+            
+            var ret = await MakeRequestAsync<Payment>("PUT", new[] {PaymentsEndpoint, paymentId, "cancel"});
+            
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
@@ -568,9 +566,10 @@ namespace InvisibleCollectorLib
         /// </exception>
         public async Task<Payment> DeletePaymentAsync(string paymentId)
         {
-            var id = HttpUriBuilder.UriEscape(paymentId);
             _logger.LogDebug("Making request to delete payment information for payment ID: {Id}", paymentId);
-            var ret = await MakeBodylessRequestAsync<Payment>("DELETE", PaymentsEndpoint, id);
+            
+            var ret = await MakeRequestAsync<Payment>("DELETE", new [] {PaymentsEndpoint, paymentId});
+            
             _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
@@ -584,50 +583,53 @@ namespace InvisibleCollectorLib
         public async Task<Customer> SetNewCustomerContactsAsync(string customerGid,
             IList<CustomerContact> contacts)
         {
-            var id = HttpUriBuilder.UriEscape(customerGid);
             _logger.LogDebug("Making request to create customer's {Id} contacts with the following info: {Model}", customerGid, contacts);
 
             var objects = contacts.Select(c => c.SendableDictionary);
             var json = _jsonFacade.DictionaryToJson(objects);
-            var ret = await MakeRequestAsync<Customer>("POST", json, "v1", "customers", id, "contacts");
+            var ret = await MakeRequestAsync<Customer>("POST", new[] {"v1", "customers", customerGid, "contacts"}, null, json);
 
             _logger.LogDebug("Received customer: {Models}", ret);
             return ret;
         }
-        
+
+        /// <summary>
+        ///     Returns the customer's contacts
+        /// </summary>
+        /// <param name="customerGid">the customer gid</param>
+        /// <returns> the customer contacts</returns>
         public async Task<IList<CustomerContact>> GetCustomerContactsAsync(string customerGid)
         {
-            var id = HttpUriBuilder.UriEscape(customerGid);
             _logger.LogDebug("Making request to get customer's {} contacts'", customerGid);
             
-            var ret = await MakeBodylessRequestAsync<List<CustomerContact>>("GET", "v1", "customers", id, "contacts");
+            var ret = await MakeRequestAsync<List<CustomerContact>>("GET", new[]
+                {"v1", "customers", customerGid, "contacts"});
             
             _logger.LogDebug("Received contacts: {Model} for customer {Id}", ret, customerGid);
             return ret;
         }
 
-        private async Task<TReturn> MakeBodylessRequestAsync<TReturn>(string method, params string[] pathFragments)
-            where TReturn : new()
+        private async Task<Customer> TrySetCustomerContacts(IList<CustomerContact> contacts, Customer cust)
         {
-            return await MakeRequestAsync<TReturn, object>(method, null, pathFragments);
+            if (contacts == null || !contacts.Any())
+            {
+                return cust;
+            }
+
+            return await SetNewCustomerContactsAsync(cust.Gid, contacts);
         }
 
-        private async Task<TReturn> MakeRequestAsync<TReturn>(string method,
-            string requestJson = null, params string[] pathFragments) where TReturn : new()
+        private async Task<TReturn> MakeRequestAsync<TReturn>(string method, string[] pathFragments, IDictionary<string, string> query = null, string requestJson = null) where TReturn : new()
         {
-            try
+            var requestUri = _uriBuilder.Clone().WithPath(pathFragments);
+            if (query != null)
             {
-                var requestUri = _uriBuilder.Clone().WithPath(pathFragments).BuildUri();
-                var json = await _apiFacade.CallJsonToJsonApi(requestUri, method, requestJson);
-                return _jsonFacade.JsonToObject<TReturn>(json);
+                requestUri.WithQuery(query);
             }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
+            var json = await _apiFacade.CallJsonToJsonApi(requestUri.BuildUri(), method, requestJson);
+            return _jsonFacade.JsonToObject<TReturn>(json);
         }
-        
+
         /// <summary>
         ///     Makes an api request
         /// </summary>
@@ -640,18 +642,8 @@ namespace InvisibleCollectorLib
         private async Task<TReturn> MakeRequestAsync<TReturn, TDictValue>(string method,
             IDictionary<string, TDictValue> requestBody = null, params string[] pathFragments) where TReturn : new()
         {
-            string requestJson;
-            try
-            {
-                requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
-            }
-            catch (System.Exception e)
-            {
-                _logger.LogError(e, "An InvisibleCollector error occured: {ErrorMessage}", e.Message);
-                throw;
-            }
-            
-            return await MakeRequestAsync<TReturn>(method, requestJson, pathFragments);
+            string requestJson = requestBody is null ? null : _jsonFacade.DictionaryToJson(requestBody);
+            return await MakeRequestAsync<TReturn>(method, pathFragments, null, requestJson);
         }
     }
 }

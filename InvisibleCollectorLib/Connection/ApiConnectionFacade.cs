@@ -135,7 +135,7 @@ namespace InvisibleCollectorLib.Connection
                 throw new IcException("Unexpected server error response return: " + jsonObject[codeName], ex);
             }
 
-            return new IcHttpException(code, jsonObject[messageName]);
+            return new IcException($"{jsonObject[messageName]} (HTTP Code: {code})");
         }
 
         private WebClient BuildWebClient(string requestUriHost)

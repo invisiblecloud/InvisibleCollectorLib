@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
     /// <summary>
     ///     The customer model.
     /// </summary>
-    public class Customer : Model, IRoutableModel
+    public class Customer : AttributesModel<CustomerContact>, IRoutableModel
     {
         internal const string AddressName = "address";
         internal const string CityName = "city";
@@ -18,7 +19,23 @@ namespace InvisibleCollectorLib.Model
         internal const string MobileName = "mobile";
         internal const string VatNumberName = "vatNumber";
         internal const string ZipCodeName = "zipCode";
+        internal const string ContactsName = "contacts";
+        internal const string AttributesName = "attributes";
 
+        protected override IDictionary<string, string> InternalAttributes
+        {
+            get => GetField<IDictionary<string, string>>(AttributesName);
+
+            set => this[AttributesName] = value;
+        }
+        
+        protected override IList<CustomerContact> InternalItems
+        {
+            get => GetField<IList<CustomerContact>>(ContactsName);
+
+            set => this[ContactsName] = value;
+        }
+        
         public string Address
         {
             get => GetField<string>(AddressName);
@@ -112,6 +129,18 @@ namespace InvisibleCollectorLib.Model
             set => this[ZipCodeName] = value;
         }
 
+        public IList<CustomerContact> Contacts
+        {
+            get => InternalItems?.Clone(); // deep copy
+
+            set => InternalItems = value?.Clone();
+        }
+
+        public void AddContact(CustomerContact contact)
+        {
+            AddItem(contact);
+        }
+
         protected override ISet<string> SendableFields =>
             new SortedSet<string>
             {
@@ -124,7 +153,8 @@ namespace InvisibleCollectorLib.Model
                 CountryName,
                 EmailName,
                 PhoneName,
-                MobileName
+                MobileName,
+                AttributesName
             };
 
         public string RoutableId
@@ -149,7 +179,7 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(Customer left, Customer right)
         {
-            return left == (Model) right;
+            return AreEqual(left, right, ContactsName, AttributesName);
         }
 
         public static bool operator !=(Customer left, Customer right)
