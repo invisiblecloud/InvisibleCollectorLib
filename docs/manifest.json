@@ -1,18 +1,270 @@
 {
   "homepages": [],
-  "source_base_path": "/Users/joaomadureira/Projects/github/InvisibleCollectorLib",
+  "source_base_path": "/home/ros/Code/Work/InvisibleCloud/Csharp-client/docfx",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
-      "type": "Conceptual",
-      "source_relative_path": "README.md",
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Exception.IcException.yml",
       "output": {
         ".html": {
-          "relative_path": "README.html",
-          "hash": "d6yHSTjgoV0abk+XmBq2jA=="
+          "relative_path": "api/InvisibleCollectorLib.Exception.IcException.html",
+          "hash": "j6IOW8XFb86dWbFlpbkSlQ=="
         }
       },
       "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Exception.IcModelConflictException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Exception.IcModelConflictException.html",
+          "hash": "NnCzp4uZBZ/J4jbiSeqzSw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Exception.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Exception.html",
+          "hash": "8dGOZyxIsCt3wCwoBiItug=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.InvisibleCollector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.InvisibleCollector.html",
+          "hash": "H9Vga9fVF31WYpItbS95KA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.AttributesModel-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.AttributesModel-1.html",
+          "hash": "P0M902dANH4h9TLDQiSn9g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Company.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Company.html",
+          "hash": "oe3R/bPmlsOeViPrqUIz2w=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Customer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Customer.html",
+          "hash": "cVnc9gkQuSR4qhPUGJRwqQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.CustomerContact.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.CustomerContact.html",
+          "hash": "56GKpSTcw95FGnaVAsgDGg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Debit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Debit.html",
+          "hash": "rEVDCiVet33puTwMVTzV+g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Debt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Debt.html",
+          "hash": "MBxfis/IF69M4er9OWt7TA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.FindCustomers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.FindCustomers.html",
+          "hash": "pQrHTizT8jodViihH/kXkQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.FindDebts.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.FindDebts.html",
+          "hash": "jTMcfBBf/qykJ3DBe5sPXA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Group.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Group.html",
+          "hash": "7R3d0Nc/2Zh5gRR3yB35AA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Item.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Item.html",
+          "hash": "eJPhFlPqLgdB7cfpz/XR8Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.ItemsModel-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.ItemsModel-1.html",
+          "hash": "Z9eMGs4CU4TOa1qR1AkLoQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Model.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Model.html",
+          "hash": "JD0SfzbScgYOxUHzc7xhdg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.Payment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.Payment.html",
+          "hash": "AZSusW0vIJGk7mxdVJcWXA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.PaymentLine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.PaymentLine.html",
+          "hash": "q6R+m1xDs+2KVXfyE3tGZQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.Model.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.Model.html",
+          "hash": "UGFdD2lp+7DwvJlIWQnAXw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/InvisibleCollectorLib.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/InvisibleCollectorLib.html",
+          "hash": "OpGe6P4Kg1rSm/XuZZFxzg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "8hVHouK0M9etzMx80UhBtA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "hslQUezGWCuqLT8vA+T1/Q=="
+        }
+      },
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -24,10 +276,10 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "PMoAp3DmVztOpNl1tFvBjQ=="
+          "hash": "mhL8J+NW0dvTqCD7YjwaDQ=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -39,7 +291,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "XpvRVlc9vcrSk0VTtUxK/w=="
+          "hash": "1Xdjw8Ib7j95/TiJDj+CFw=="
         }
       },
       "is_incremental": false,
@@ -50,17 +302,29 @@
     {
       "status": {
         "can_incremental": true,
-        "incrementalPhase": "build"
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0
       },
       "processors": {
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
-          "incrementalPhase": "build"
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 20,
+          "skipped_file_count": 20
         },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
-          "incrementalPhase": "build"
+          "incrementalPhase": "build",
+          "total_file_count": 2,
+          "skipped_file_count": 1
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
         }
       }
     },
@@ -68,7 +332,9 @@
       "status": {
         "can_incremental": true,
         "details": "Can support incremental post processing.",
-        "incrementalPhase": "postProcessing"
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
       },
       "processors": {}
     }
