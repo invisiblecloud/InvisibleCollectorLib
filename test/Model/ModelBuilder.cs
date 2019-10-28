@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using InvisibleCollectorLib.Model;
@@ -24,6 +25,25 @@ namespace test.Model
     {
         public CustomerBuilder(IDictionary<string, object> fields) : base(fields)
         {
+        }
+
+        public CustomerBuilder WithoutContacts()
+        {
+            var copy = new CustomerBuilder(_fields);
+            var contacts = copy[Customer.ContactsName];
+            if (contacts != null)
+            {
+                copy._fields.Remove(Customer.ContactsName);
+            }
+
+            return copy;
+        }
+
+        public string BuildContactsJson()
+        {
+            var customerContacts = (IList<CustomerContact>) _fields[Customer.ContactsName];
+            var contacts = customerContacts.Select(c => c.SendableDictionary).ToList();
+            return JsonConvert.SerializeObject(contacts, SerializerSettings);
         }
 
         public override string BuildJson()
@@ -81,7 +101,7 @@ namespace test.Model
 
             return copy.BuildJson();
         }
-        
+
         public object this[string key]
         {
             set => _fields[key] = value;
@@ -193,9 +213,9 @@ namespace test.Model
             return new ModelBuilder(fields);
         }
 
-        public static ModelBuilder BuildRequestCustomerWithContactsBuilder(string name = "johny")
+        public static CustomerBuilder BuildRequestCustomerWithContactsBuilder(string name = "johny")
         {
-            var fields = BuildReplyCustomerBuilder(name)._fields;
+            var fields = BuildRequestCustomerBuilder(name)._fields;
 
             fields[Customer.ContactsName] = new List<CustomerContact>()
                 {

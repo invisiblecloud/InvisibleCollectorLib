@@ -85,8 +85,15 @@ namespace test.Utils
 
         public static void StripNulls<T>(this IDictionary<string, T> dictionary)
         {
+            dictionary.WithStrippedNulls();
+        }
+        
+        public static IDictionary<string, T> WithStrippedNulls<T>(this IDictionary<string, T> dictionary)
+        {
             foreach (var nullEntry in dictionary.Where(entry => entry.Value == null).ToList())
                 dictionary.Remove(nullEntry.Key);
+
+            return dictionary;
         }
     }
 }

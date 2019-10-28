@@ -184,7 +184,7 @@ namespace test
         }
 
         [Test]
-        public void SetCustomerInfoAsync_correct()
+        public void SetCustomerAsync_correct()
         {
             var request = ModelBuilder.BuildRequestCustomerBuilder();
             var reply = ModelBuilder.BuildReplyCustomerBuilder();
@@ -192,6 +192,38 @@ namespace test
             AssertingModelRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
                 async ic => await ic.SetCustomerAsync(requestModel),
                 request.BuildJson());
+        }
+        
+        [Test]
+        public async Task SetCustomerWithContactsAsync_correct()
+        {
+            const string id = "12345";
+            
+            var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
+            var firstExpectedJson = builder.WithoutContacts()
+                .BuildJson();
+            builder[Customer.IdName] = id;
+            var firstReplyJson = builder.WithoutContacts()
+                .BuildJson();
+            var finalExpectedJson = builder.BuildContactsJson();
+            var finalReplyJson = builder.BuildJson();
+            var requestModel = builder.BuildModel<Customer>();
+            var expectedModel = builder.BuildModel<Customer>(true);
+            
+            _mockServer.AddRequest("PUT", $"customers/{id}", firstExpectedJson,
+                    BodiedHeaders)
+                .AddJsonResponse(firstReplyJson);
+            
+            _mockServer.AddRequest("POST", $"v1/customers/{id}/contacts", finalExpectedJson,
+                    BodiedHeaders)
+                .AddJsonResponse(finalReplyJson);
+            
+
+            var uri = _mockServer.GetUrl();
+            var ic = new InvisibleCollector(TestApiKey, uri);
+            
+            var result = await ic.SetCustomerAsync(requestModel);
+            Assert.AreEqual(expectedModel, result);
         }
 
         [Test]
@@ -202,6 +234,38 @@ namespace test
             AssertingModelRequest("POST", "customers", reply,
                 async ic => await ic.SetNewCustomerAsync(request.BuildModel<Customer>()),
                 request.BuildJson());
+        }
+
+        [Test]
+        public async Task SetNewCustomerWithContactsAsync_correct()
+        {
+            const string id = "12345";
+            
+            var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
+            var firstExpectedJson = builder.WithoutContacts()
+                .BuildJson();
+            builder[Customer.IdName] = id;
+            var firstReplyJson = builder.WithoutContacts()
+                .BuildJson();
+            var finalExpectedJson = builder.BuildContactsJson();
+            var finalReplyJson = builder.BuildJson();
+            var requestModel = builder.BuildModel<Customer>();
+            var expectedModel = builder.BuildModel<Customer>(true);
+            
+            _mockServer.AddRequest("POST", "customers", firstExpectedJson,
+                    BodiedHeaders)
+                .AddJsonResponse(firstReplyJson);
+            
+            _mockServer.AddRequest("POST", $"v1/customers/{id}/contacts", finalExpectedJson,
+                    BodiedHeaders)
+                .AddJsonResponse(finalReplyJson);
+            
+
+            var uri = _mockServer.GetUrl();
+            var ic = new InvisibleCollector(TestApiKey, uri);
+            
+            var result = await ic.SetNewCustomerAsync(requestModel);
+            Assert.AreEqual(expectedModel, result);
         }
 
         [Test]
@@ -253,7 +317,7 @@ namespace test
                 async ic => await ic.SetNewDebtAsync(sentModel),
                 expectedJson);
         }
-        
+
         [Test]
         public void SetNewPaymentAsync_correct()
         {

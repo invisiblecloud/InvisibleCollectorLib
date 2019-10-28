@@ -327,7 +327,8 @@ namespace InvisibleCollectorLib
             var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint,
                 id);
             _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.RoutableId, ret);
-            return ret;
+            
+            return await TrySetCustomerContacts(customer.Contacts, ret);
         }
 
         /// <summary>
@@ -355,7 +356,8 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Making a request to create a new customer with information: {Model}", customer);
             var ret = await MakeRequestAsync<Customer, object>("POST", customer.SendableDictionary, CustomersEndpoint);
             _logger.LogDebug("Created a new customer with the information: {Model}", ret);
-            return ret;
+            
+            return await TrySetCustomerContacts(customer.Contacts, ret);
         }
 
         /// <summary>
@@ -385,7 +387,7 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Created a new debt with the information: {Model}", ret);
             return ret;
         }
-        
+
         /// <summary>
         ///     Create a new debit associated with a debt
         /// </summary>
@@ -452,7 +454,7 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Added customer {Customer} to group: {Models}",  customerId, ret);
             return ret;
         }
-        
+
         /// <summary>
         /// Returns a list of custoemr that math the criteria
         /// </summary>
@@ -592,7 +594,7 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Received customer: {Models}", ret);
             return ret;
         }
-        
+
         /// <summary>
         ///     Returns the customer's contacts
         /// </summary>
@@ -607,6 +609,16 @@ namespace InvisibleCollectorLib
             
             _logger.LogDebug("Received contacts: {Model} for customer {Id}", ret, customerGid);
             return ret;
+        }
+
+        private async Task<Customer> TrySetCustomerContacts(IList<CustomerContact> contacts, Customer cust)
+        {
+            if (contacts == null || !contacts.Any())
+            {
+                return cust;
+            }
+
+            return await SetNewCustomerContactsAsync(cust.Gid, contacts);
         }
 
         private async Task<TReturn> MakeRequestAsync<TReturn>(string method, string[] pathFragments, IDictionary<string, string> query = null, string requestJson = null) where TReturn : new()
