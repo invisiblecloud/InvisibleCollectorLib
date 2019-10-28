@@ -108,7 +108,8 @@ namespace test
         [Test]
         public void GetCustomerAsync_correct()
         {
-            var builder = ModelBuilder.BuildReplyCustomerBuilder();
+            var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
+            builder._fields[Customer.IdName] = TestId;
             AssertingModelRequest("GET", $"v1/customers/{TestId}", builder,
                 async ic => await ic.GetCustomerAsync(TestId));
         }

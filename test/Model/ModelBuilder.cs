@@ -25,7 +25,25 @@ namespace test.Model
             return copy.BuildJson();
         }
     }
-    
+
+    internal class CustomerBuilder : ModelBuilder
+    {
+        public CustomerBuilder(IDictionary<string, object> fields) : base(fields)
+        {
+        }
+
+        public override string BuildJson()
+        {
+            var copy = new ModelBuilder(this);
+            var key = Customer.ContactsName;
+            if (_fields.ContainsKey(key) && _fields[key] != null)
+                copy._fields[key] = ((IList<CustomerContact>) copy._fields[key]).Select(item => item.SendableDictionary)
+                    .ToList();
+
+            return copy.BuildJson();
+        }
+    }
+
     internal class PaymentBuilder : ModelBuilder
     {
         public PaymentBuilder(Dictionary<string, object> fields) : base(fields)
@@ -169,12 +187,32 @@ namespace test.Model
                 {Customer.VatNumberName, VatNumber},
                 {Customer.NameName, name},
                 {Customer.ZipCodeName, null},
-                {Customer.CountryName, "PT"}
+                {Customer.CountryName, "PT"},
+                {
+                    Customer.AttributesName, new Dictionary<string, string>()
+                    {
+                        {"a2", "b2"},
+                        {"1", "2"},
+                    }
+                },
             };
 
             return new ModelBuilder(fields);
         }
-        
+
+        public static ModelBuilder BuildRequestCustomerWithContactsBuilder(string name = "johny")
+        {
+            var fields = BuildReplyCustomerBuilder(name)._fields;
+
+            fields[Customer.ContactsName] = new List<CustomerContact>()
+                {
+                    new CustomerContact() {Name = "janis", Email = "janis@email.com"},
+                    new CustomerContact() {Name = "dennis", Mobile = "920920920"},
+                };
+
+            return new CustomerBuilder(fields);
+        }
+
         public static ModelBuilder BuildDebitBuilder(string number = "12")
         {
             var fields = new Dictionary<string, object>
@@ -185,7 +223,7 @@ namespace test.Model
 
             return new ModelBuilder(fields);
         }
-        
+
         public static ModelBuilder BuildGroupBuilder(string id = "12", string name = "boris")
         {
             var fields = new Dictionary<string, object>
@@ -237,7 +275,7 @@ namespace test.Model
 
             return new DebtBuilder(fields);
         }
-        
+
         public static PaymentLine BuildPaymentLine(string number = "123")
         {
             return new PaymentLine
@@ -246,7 +284,7 @@ namespace test.Model
                 Amount = 12.0
             };
         }
-        
+
         public static ModelBuilder BuildReplyPaymentBuilder(string number = "1")
         {
             var date = new DateTime(2018, 10, 5);
@@ -270,8 +308,7 @@ namespace test.Model
             return new PaymentBuilder(fields);
         }
 
-        
-        
+
         public static string DictToJson(IDictionary<string, string> dict)
         {
             return JsonConvert.SerializeObject(dict, SerializerSettings);
@@ -286,19 +323,19 @@ namespace test.Model
     internal class ModelListBuilder
     {
         private List<ModelBuilder> _list = new List<ModelBuilder>();
-        
+
         public ModelListBuilder Add(ModelBuilder builder)
         {
             _list.Add(builder);
             return this;
         }
 
-        public IList<T> BuildModelList<T>() 
+        public IList<T> BuildModelList<T>()
             where T : InvisibleCollectorLib.Model.Model, new()
         {
             return _list.Select(e => e.BuildModel<T>()).ToList();
         }
-        
+
         public string BuildJson()
         {
             var body = String.Join(",", _list.Select(e => e.BuildJson()));
