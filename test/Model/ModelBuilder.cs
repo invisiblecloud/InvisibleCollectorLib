@@ -16,13 +16,7 @@ namespace test.Model
 
         public override string BuildJson()
         {
-            var copy = new ModelBuilder(this);
-            var key = Debt.ItemsName;
-            if (_fields.ContainsKey(key) && _fields[key] != null)
-                copy._fields[key] = ((IList<Item>) copy._fields[key]).Select(item => item.SendableDictionary)
-                    .ToList();
-
-            return copy.BuildJson();
+            return BuildJson<Item>(Debt.ItemsName);
         }
     }
 
@@ -34,13 +28,7 @@ namespace test.Model
 
         public override string BuildJson()
         {
-            var copy = new ModelBuilder(this);
-            var key = Customer.ContactsName;
-            if (_fields.ContainsKey(key) && _fields[key] != null)
-                copy._fields[key] = ((IList<CustomerContact>) copy._fields[key]).Select(item => item.SendableDictionary)
-                    .ToList();
-
-            return copy.BuildJson();
+            return BuildJson<CustomerContact>(Customer.ContactsName);
         }
     }
 
@@ -52,13 +40,7 @@ namespace test.Model
 
         public override string BuildJson()
         {
-            var copy = new ModelBuilder(this);
-            var key = Payment.LinesName;
-            if (_fields.ContainsKey(key) && _fields[key] != null)
-                copy._fields[key] = ((IList<PaymentLine>) copy._fields[key]).Select(item => item.SendableDictionary)
-                    .ToList();
-
-            return copy.BuildJson();
+            return BuildJson<PaymentLine>(Payment.LinesName);
         }
     }
 
@@ -89,6 +71,17 @@ namespace test.Model
         {
         }
 
+        protected string BuildJson<T>(string key)
+        where T: InvisibleCollectorLib.Model.Model
+        {
+            var copy = new ModelBuilder(this);
+            if (_fields.ContainsKey(key) && _fields[key] != null)
+                copy._fields[key] = ((IList<T>) copy._fields[key]).Select(item => item.SendableDictionary)
+                    .ToList();
+
+            return copy.BuildJson();
+        }
+        
         public object this[string key]
         {
             set => _fields[key] = value;
