@@ -303,8 +303,7 @@ namespace InvisibleCollectorLib
         ///     Updates the customer's information.
         /// </summary>
         /// <param name="customer">
-        ///     The customer information to be updated. The <see cref="Customer.Gid" /> or
-        ///     <see cref="Customer.ExternalId" /> field must be set, since they contain the id of the customer. The
+        ///     The customer information to be updated. The <see cref="Customer.Gid" /> field must be set, since they contain the id of the customer. The
         ///     <see cref="Customer.Country" /> field is mandatory.
         /// </param>
         /// <returns>The up-to-date updated customer information</returns>
@@ -321,11 +320,10 @@ namespace InvisibleCollectorLib
         /// <seealso cref="Customer.RoutableId" />
         public async Task<Customer> SetCustomerAsync(Customer customer)
         {
-            var id = HttpUriBuilder.UriEscape(customer.RoutableId);
             _logger.LogDebug("Making a request to update the customer's with ID: {Id} information: {Model}",
-                customer.RoutableId, customer);
+                customer.Gid, customer);
             var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint,
-                id);
+                customer.Gid);
             _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.RoutableId, ret);
             
             return await TrySetCustomerContacts(customer.Contacts, ret);
