@@ -4,10 +4,11 @@
 [![NuGet](https://img.shields.io/nuget/v/InvisibleCollectorLib.svg?label=NuGet&style=flat-square)](https://www.nuget.org/packages/InvisibleCollectorLib/)
 [![Issues](https://img.shields.io/github/issues/invisiblecloud/InvisibleCollectorLib.svg?style=flat-square)](https://github.com/invisiblecloud/InvisibleCollectorLib/issues)
 
+Check the [API documentation](https://invisiblecloud.github.io/InvisibleCollectorLib/)
+
 #### Download
 
 Download the [latest release] or via [NuGet].
-
 
 ## Docs Build Instructions
 
@@ -15,10 +16,15 @@ TO build the docs you need to have mono installed
 
 ### For Linux and Mac (bash)
 
+First make sure you have a clean repository (run `git clean -dfx`)
+
 ```bash
 cd docfx # from project root
 ./docs.sh install # downloads docfx binary
-./docs.sh build # builds the statis api docs pages, needs mono, this will build into /docs
+./docs.sh build # builds the static api docs pages, needs mono, this will build into /docs
+
+# OR
+./docs.sh serve # servers the pages with the correct sidebar, for testing
 ```
 
 ### For Windows (cmd)
