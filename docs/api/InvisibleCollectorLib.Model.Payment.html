@@ -1,0 +1,935 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Payment
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Payment
+   ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="InvisibleCollectorLib.Model.Payment">
+  
+  
+  <h1 id="InvisibleCollectorLib_Model_Payment" data-uid="InvisibleCollectorLib.Model.Payment" class="text-break">Class Payment
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="InvisibleCollectorLib.Model.Model.html">Model</a></div>
+    <div class="level2"><a class="xref" href="InvisibleCollectorLib.Model.ItemsModel-1.html">ItemsModel</a>&lt;<a class="xref" href="InvisibleCollectorLib.Model.PaymentLine.html">PaymentLine</a>&gt;</div>
+    <div class="level3"><span class="xref">Payment</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.ItemsModel-1.html#InvisibleCollectorLib_Model_ItemsModel_1_AddItem__0_">ItemsModel&lt;PaymentLine&gt;.AddItem(PaymentLine)</a>
+    </div>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.ItemsModel-1.html#InvisibleCollectorLib_Model_ItemsModel_1_AreEqual__1___0___0_System_String_">ItemsModel&lt;PaymentLine&gt;.AreEqual&lt;CollectionT&gt;(CollectionT, CollectionT, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model__fields">Model._fields</a>
+    </div>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_Item_System_String_">Model.Item[String]</a>
+    </div>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_UnsetAll">Model.UnsetAll()</a>
+    </div>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_GetField__1_System_String_">Model.GetField&lt;T&gt;(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_UnsetField_System_String_">Model.UnsetField(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_KeyRefEquality_InvisibleCollectorLib_Model_Model_System_String_">Model.KeyRefEquality(Model, String)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="InvisibleCollectorLib.Model.html">InvisibleCollectorLib.Model</a></h6>
+  <h6><strong>Assembly</strong>: InvisibleCollectorLib.dll</h6>
+  <h5 id="InvisibleCollectorLib_Model_Payment_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Payment : ItemsModel&lt;PaymentLine&gt;</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Currency.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Currency%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L25">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Currency_" data-uid="InvisibleCollectorLib.Model.Payment.Currency*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Currency" data-uid="InvisibleCollectorLib.Model.Payment.Currency">Currency</h4>
+  <div class="markdown level1 summary"><p>The currency. Must be an ISO 4217 currency code.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Currency { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Date.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Date%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L35">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Date_" data-uid="InvisibleCollectorLib.Model.Payment.Date*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Date" data-uid="InvisibleCollectorLib.Model.Payment.Date">Date</h4>
+  <div class="markdown level1 summary"><p>The payment date. Only the years, month and days are considered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime? Date { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">DateTime</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_ExternalId.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.ExternalId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L86">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_ExternalId_" data-uid="InvisibleCollectorLib.Model.Payment.ExternalId*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_ExternalId" data-uid="InvisibleCollectorLib.Model.Payment.ExternalId">ExternalId</h4>
+  <div class="markdown level1 summary"><p>The 'id' of the payment, which will be used to identify this payment on future requests.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ExternalId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_GrossTotal.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.GrossTotal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L42">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_GrossTotal_" data-uid="InvisibleCollectorLib.Model.Payment.GrossTotal*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_GrossTotal" data-uid="InvisibleCollectorLib.Model.Payment.GrossTotal">GrossTotal</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double? GrossTotal { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_InternalItems.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.InternalItems%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L103">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_InternalItems_" data-uid="InvisibleCollectorLib.Model.Payment.InternalItems*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_InternalItems" data-uid="InvisibleCollectorLib.Model.Payment.InternalItems">InternalItems</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override IList&lt;PaymentLine&gt; InternalItems { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="InvisibleCollectorLib.Model.PaymentLine.html">PaymentLine</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">InvisibleCollectorLib.Model.ItemsModel&lt;InvisibleCollectorLib.Model.PaymentLine&gt;.InternalItems</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Lines.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Lines%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L113">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Lines_" data-uid="InvisibleCollectorLib.Model.Payment.Lines*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Lines" data-uid="InvisibleCollectorLib.Model.Payment.Lines">Lines</h4>
+  <div class="markdown level1 summary"><p>A list of debts being paid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IList&lt;PaymentLine&gt; Lines { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="InvisibleCollectorLib.Model.PaymentLine.html">PaymentLine</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_NetTotal.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.NetTotal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L49">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_NetTotal_" data-uid="InvisibleCollectorLib.Model.Payment.NetTotal*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_NetTotal" data-uid="InvisibleCollectorLib.Model.Payment.NetTotal">NetTotal</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double? NetTotal { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Number.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Number%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L76">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Number_" data-uid="InvisibleCollectorLib.Model.Payment.Number*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Number" data-uid="InvisibleCollectorLib.Model.Payment.Number">Number</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Number { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_SendableFields.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.SendableFields%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L202">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_SendableFields_" data-uid="InvisibleCollectorLib.Model.Payment.SendableFields*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_SendableFields" data-uid="InvisibleCollectorLib.Model.Payment.SendableFields">SendableFields</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override ISet&lt;string&gt; SendableFields { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ISet</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_SendableFields">Model.SendableFields</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Status.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Status%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L59">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Status_" data-uid="InvisibleCollectorLib.Model.Payment.Status*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Status" data-uid="InvisibleCollectorLib.Model.Payment.Status">Status</h4>
+  <div class="markdown level1 summary"><p>The payment status. Can be one of: &quot;FINAL&quot; - default; &quot;CANCELLED&quot;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Status { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Tax.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Tax%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L96">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Tax_" data-uid="InvisibleCollectorLib.Model.Payment.Tax*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Tax" data-uid="InvisibleCollectorLib.Model.Payment.Tax">Tax</h4>
+  <div class="markdown level1 summary"><p>The total amount being paid in tax.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double? Tax { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Type.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L69">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Type_" data-uid="InvisibleCollectorLib.Model.Payment.Type*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Type" data-uid="InvisibleCollectorLib.Model.Payment.Type">Type</h4>
+  <div class="markdown level1 summary"><p>The payment type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Type { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_AddLine_InvisibleCollectorLib_Model_PaymentLine_.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.AddLine(InvisibleCollectorLib.Model.PaymentLine)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L120">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_AddLine_" data-uid="InvisibleCollectorLib.Model.Payment.AddLine*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_AddLine_InvisibleCollectorLib_Model_PaymentLine_" data-uid="InvisibleCollectorLib.Model.Payment.AddLine(InvisibleCollectorLib.Model.PaymentLine)">AddLine(PaymentLine)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddLine(PaymentLine line)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="InvisibleCollectorLib.Model.PaymentLine.html">PaymentLine</a></td>
+        <td><span class="parametername">line</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_Equals_System_Object_.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L180">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_Equals_" data-uid="InvisibleCollectorLib.Model.Payment.Equals*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_Equals_System_Object_" data-uid="InvisibleCollectorLib.Model.Payment.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_Equals_System_Object_">Model.Equals(Object)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_GetHashCode.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L175">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_GetHashCode_" data-uid="InvisibleCollectorLib.Model.Payment.GetHashCode*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_GetHashCode" data-uid="InvisibleCollectorLib.Model.Payment.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_GetHashCode">Model.GetHashCode()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_ToString.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L195">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_ToString_" data-uid="InvisibleCollectorLib.Model.Payment.ToString*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_ToString" data-uid="InvisibleCollectorLib.Model.Payment.ToString">ToString()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="InvisibleCollectorLib.Model.Model.html#InvisibleCollectorLib_Model_Model_ToString">Model.ToString()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetCurrency.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetCurrency%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L130">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetCurrency_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetCurrency*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetCurrency" data-uid="InvisibleCollectorLib.Model.Payment.UnsetCurrency">UnsetCurrency()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetCurrency()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetDate.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetDate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L135">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetDate_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetDate*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetDate" data-uid="InvisibleCollectorLib.Model.Payment.UnsetDate">UnsetDate()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetDate()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetExternalId.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetExternalId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L125">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetExternalId_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetExternalId*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetExternalId" data-uid="InvisibleCollectorLib.Model.Payment.UnsetExternalId">UnsetExternalId()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetExternalId()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetGrossTotal.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetGrossTotal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L140">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetGrossTotal_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetGrossTotal*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetGrossTotal" data-uid="InvisibleCollectorLib.Model.Payment.UnsetGrossTotal">UnsetGrossTotal()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetGrossTotal()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetLines.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetLines%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L170">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetLines_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetLines*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetLines" data-uid="InvisibleCollectorLib.Model.Payment.UnsetLines">UnsetLines()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetLines()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetNetTotal.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetNetTotal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L145">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetNetTotal_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetNetTotal*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetNetTotal" data-uid="InvisibleCollectorLib.Model.Payment.UnsetNetTotal">UnsetNetTotal()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetNetTotal()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetNumber.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L150">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetNumber_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetNumber*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetNumber" data-uid="InvisibleCollectorLib.Model.Payment.UnsetNumber">UnsetNumber()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetNumber()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetStatus.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetStatus%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L155">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetStatus_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetStatus*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetStatus" data-uid="InvisibleCollectorLib.Model.Payment.UnsetStatus">UnsetStatus()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetStatus()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetTax.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetTax%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L160">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetTax_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetTax*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetTax" data-uid="InvisibleCollectorLib.Model.Payment.UnsetTax">UnsetTax()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetTax()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_UnsetType.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.UnsetType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L165">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_UnsetType_" data-uid="InvisibleCollectorLib.Model.Payment.UnsetType*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_UnsetType" data-uid="InvisibleCollectorLib.Model.Payment.UnsetType">UnsetType()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UnsetType()</code></pre>
+  </div>
+  <h3 id="operators">Operators
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_op_Equality_InvisibleCollectorLib_Model_Payment_InvisibleCollectorLib_Model_Payment_.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.op_Equality(InvisibleCollectorLib.Model.Payment%2CInvisibleCollectorLib.Model.Payment)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L185">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_op_Equality_" data-uid="InvisibleCollectorLib.Model.Payment.op_Equality*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_op_Equality_InvisibleCollectorLib_Model_Payment_InvisibleCollectorLib_Model_Payment_" data-uid="InvisibleCollectorLib.Model.Payment.op_Equality(InvisibleCollectorLib.Model.Payment,InvisibleCollectorLib.Model.Payment)">Equality(Payment, Payment)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(Payment left, Payment right)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="InvisibleCollectorLib.Model.Payment.html">Payment</a></td>
+        <td><span class="parametername">left</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="InvisibleCollectorLib.Model.Payment.html">Payment</a></td>
+        <td><span class="parametername">right</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment_op_Inequality_InvisibleCollectorLib_Model_Payment_InvisibleCollectorLib_Model_Payment_.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment.op_Inequality(InvisibleCollectorLib.Model.Payment%2CInvisibleCollectorLib.Model.Payment)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L190">View Source</a>
+  </span>
+  <a id="InvisibleCollectorLib_Model_Payment_op_Inequality_" data-uid="InvisibleCollectorLib.Model.Payment.op_Inequality*"></a>
+  <h4 id="InvisibleCollectorLib_Model_Payment_op_Inequality_InvisibleCollectorLib_Model_Payment_InvisibleCollectorLib_Model_Payment_" data-uid="InvisibleCollectorLib.Model.Payment.op_Inequality(InvisibleCollectorLib.Model.Payment,InvisibleCollectorLib.Model.Payment)">Inequality(Payment, Payment)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(Payment left, Payment right)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="InvisibleCollectorLib.Model.Payment.html">Payment</a></td>
+        <td><span class="parametername">left</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="InvisibleCollectorLib.Model.Payment.html">Payment</a></td>
+        <td><span class="parametername">right</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/new/docs/apiSpec/new?filename=InvisibleCollectorLib_Model_Payment.md&amp;value=---%0Auid%3A%20InvisibleCollectorLib.Model.Payment%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/invisiblecloud/InvisibleCollectorLib/blob/docs/InvisibleCollectorLib/Model/Payment.cs/#L8" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
