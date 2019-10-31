@@ -6,7 +6,7 @@
           "files": [
             "**.csproj"
           ],
-          "src": "../InvoiceCaptureLib"
+          "src": "../InvisibleCollectorLib"
         }
       ],
       "dest": "api",

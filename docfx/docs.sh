@@ -9,7 +9,7 @@ if [ "$#" = "0" ]; then
     exit 1
 fi
 
-DOCFX_VERSION="v2.36.2"
+DOCFX_VERSION="v2.46"
 
 option=$1
 if [ "$option" = "install" ]; then
@@ -17,6 +17,8 @@ if [ "$option" = "install" ]; then
     unzip ./docfx.zip -d docfx
 elif [ "$option" = "build" ]; then
     mono docfx/docfx.exe docfx.json
+elif [ "$option" = "serve" ]; then
+    mono docfx/docfx.exe docfx.json --serve
 elif [ "$option" = "clean" ]; then
     rm -rf ./obj ../docs
 fi
