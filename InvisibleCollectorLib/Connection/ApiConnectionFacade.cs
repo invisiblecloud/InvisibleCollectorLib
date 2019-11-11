@@ -15,7 +15,7 @@ namespace InvisibleCollectorLib.Connection
 
     internal class ApiConnectionFacade
     {
-        private const int MaxConcurrentConnections = 10;
+        private const int MaxConcurrentConnections = 90;
 
         private readonly string _apiKey;
         private readonly Func<Stream, IDictionary<string, string>> _jsonParser;
