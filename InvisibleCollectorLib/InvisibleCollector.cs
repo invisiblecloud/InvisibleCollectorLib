@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading;
+using System.Net.Http;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Connection;
 using InvisibleCollectorLib.Exception;
@@ -82,7 +81,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -111,7 +110,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -140,7 +139,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -167,7 +166,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -191,7 +190,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -220,7 +219,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -243,7 +242,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -280,7 +279,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -311,7 +310,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -341,7 +340,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -371,7 +370,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -409,7 +408,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -483,7 +482,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -510,7 +509,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -535,7 +534,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -560,7 +559,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
