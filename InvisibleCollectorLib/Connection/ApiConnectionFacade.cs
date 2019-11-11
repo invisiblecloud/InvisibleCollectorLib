@@ -19,7 +19,7 @@ namespace InvisibleCollectorLib.Connection
 
         private readonly string _apiKey;
         private readonly Func<Stream, IDictionary<string, string>> _jsonParser;
-        private HttpClient _client;
+        private readonly HttpClient _client;
 
         internal ApiConnectionFacade(string apiKey, Func<Stream, IDictionary<string, string>> jsonParser)
         {
@@ -28,7 +28,6 @@ namespace InvisibleCollectorLib.Connection
 
             var handler = new HttpClientHandler
             {
-                UseDefaultCredentials = true,
                 MaxConnectionsPerServer = MaxConcurrentConnections
             };
             _client = new HttpClient(handler);
@@ -52,7 +51,6 @@ namespace InvisibleCollectorLib.Connection
             string jsonString = null)
         {
             var request = BuildHttpRequest(requestUri, method, jsonString, contentType);
-
             var response = await _client.SendAsync(request);
 
             if (!response.Content.Headers.ContentType.MediaType.Contains(IcConstants.JsonMimeType))
@@ -60,15 +58,14 @@ namespace InvisibleCollectorLib.Connection
                 var msg = await response.Content.ReadAsStringAsync();
                 throw new IcException($"No JSON response HTTP header received. {response.StatusCode} {response.ReasonPhrase}: {msg}");
             }
-
             if (!response.IsSuccessStatusCode)
             {
                 var stream = await response.Content.ReadAsStreamAsync();
-                var ex = BuildException(stream);
+                var ex = BuildException(stream); // big-muzzy error msg
                 if (!(ex is null))
                     throw ex;
 
-                // fallback
+                // fallback exception
                 response.EnsureSuccessStatusCode();
             }
 
@@ -142,9 +139,7 @@ namespace InvisibleCollectorLib.Connection
             };
 
             if (!string.IsNullOrEmpty(jsonString))
-            {
                 req.Content = new StringContent(jsonString, Encoding.UTF8, contentType);
-            }
 
             return req;
         }
