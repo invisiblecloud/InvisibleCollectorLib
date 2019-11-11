@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Exception;
@@ -14,13 +15,23 @@ namespace InvisibleCollectorLib.Connection
 
     internal class ApiConnectionFacade
     {
+        private const int MaxConcurrentConnections = 10;
+        
         private readonly string _apiKey;
         private readonly Func<Stream, IDictionary<string, string>> _jsonParser;
+        private HttpClient _client;
 
         internal ApiConnectionFacade(string apiKey, Func<Stream, IDictionary<string, string>> jsonParser)
         {
             _apiKey = apiKey;
             _jsonParser = jsonParser;
+
+            var handler = new HttpClientHandler
+            {
+                UseDefaultCredentials = true, 
+                MaxConnectionsPerServer = MaxConcurrentConnections
+            };
+            _client = new HttpClient(handler);
         }
 
         /// <summary>
@@ -52,29 +63,14 @@ namespace InvisibleCollectorLib.Connection
         private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType,
             string jsonString = null)
         {
-            var client = BuildWebClient(requestUri.Host);
-            if (jsonString == null)
-                jsonString = "";
-            if (!string.IsNullOrEmpty(jsonString))
-                client.Headers.Set("Content-Type", $"{contentType}; charset=UTF-8");
+            var request = BuildHttpRequest(requestUri, method, jsonString, contentType);
 
             string response;
             try
             {
-                switch (method)
-                {
-                    case "POST":
-                    case "PUT":
-                    // does DELETE have a return json?
-                    case "DELETE":
-                        response = await client.UploadStringTaskAsync(requestUri, method, jsonString);
-                        break;
-                    case "GET":
-                        response = await client.DownloadStringTaskAsync(requestUri);
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid HTTP method");
-                }
+                var resp = await _client.SendAsync(request);
+                resp.EnsureSuccessStatusCode();
+                response = await resp.Content.ReadAsStringAsync();
             }
             catch (WebException webException)
             {
@@ -91,11 +87,12 @@ namespace InvisibleCollectorLib.Connection
             }
 
             // check that the response has 'Content-Type' header set to json
-            if (!IsContentTypeJson(client.ResponseHeaders))
-                throw new IcException("Request valid but no JSON response HTTP header received");
+//            if (!IsContentTypeJson(request.ResponseHeaders))
+//                throw new IcException("Request valid but no JSON response HTTP header received");
 
             return response;
         }
+
 
         private static bool IsContentTypeJson(NameValueCollection headers)
         {
@@ -138,15 +135,49 @@ namespace InvisibleCollectorLib.Connection
             return new IcException($"{jsonObject[messageName]} (HTTP Code: {code})");
         }
 
-        private WebClient BuildWebClient(string requestUriHost)
+        private HttpRequestMessage BuildHttpRequest(Uri requestUri, string method, string jsonString,
+            string contentType)
         {
-            var client = new WebClient();
-            client.Headers.Set("Accept", IcConstants.JsonMimeType);
-            client.Headers.Set("Authorization", $"Bearer {_apiKey}");
-            client.Headers.Set("Host", requestUriHost);
-            client.Encoding = Encoding.UTF8;
+            HttpMethod httpMethod;
+            switch (method)
+            {
+                case "POST":
+                    httpMethod = HttpMethod.Post;
+                    break;
+                case "PUT":
+                    httpMethod = HttpMethod.Put;
+                    break;
+                case "DELETE":
+                    httpMethod = HttpMethod.Delete;
+                    break;
+                case "GET":
+                    httpMethod = HttpMethod.Get;
+                    break;
+                default:
+                    throw new ArgumentException("Invalid HTTP method");
+            }
             
-            return client;
+            if (jsonString == null)
+                jsonString = "";
+            
+            var req = new HttpRequestMessage()
+            {
+                Method = httpMethod,
+                RequestUri = requestUri,
+                Headers =
+                {
+                    { HttpRequestHeader.Authorization.ToString(),  $"Bearer {_apiKey}"},
+                    { HttpRequestHeader.Accept.ToString(), IcConstants.JsonMimeType },
+                },
+                Content = new StringContent(jsonString),
+            };
+            
+            if (!string.IsNullOrEmpty(jsonString))
+                req.Headers.Add(HttpRequestHeader.ContentType.ToString(), $"{contentType}; charset=UTF-8");
+
+//            Client.Headers.Set("Host", requestUriHost);
+            
+            return req;
         }
     }
 }
