@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using InvisibleCollectorLib;
 using InvisibleCollectorLib.Model;
@@ -69,14 +69,14 @@ namespace test
         public void GetCompanyInfoAsync_fail404()
         {
             var ic = ConfigureIc("GET", "someunreachablepath", "{}");
-            Assert.ThrowsAsync<WebException>(() => ic.GetCompanyAsync());
+            Assert.ThrowsAsync<HttpRequestException>(() => ic.GetCompanyAsync());
         }
 
         [Test]
         public void GetCompanyInfoAsync_failRefuseConnection()
         {
             var uri = new Uri("http://localhost:56087"); //shouldn't be in use
-            Assert.ThrowsAsync<WebException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyAsync());
+            Assert.ThrowsAsync<HttpRequestException>(() => new InvisibleCollector(TestApiKey, uri).GetCompanyAsync());
         }
 
         [Test]

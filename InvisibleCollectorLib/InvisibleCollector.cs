@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading;
+using System.Net.Http;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Connection;
 using InvisibleCollectorLib.Exception;
@@ -28,7 +27,7 @@ namespace InvisibleCollectorLib
         private const string CustomersEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string PaymentsEndpoint = "payments";
-        private const string ProdutionUri = "https://api.invisiblecollector.com/";
+        public const string ProductionUri = "https://api.invisiblecollector.com/";
         private readonly ApiConnectionFacade _apiFacade;
         private readonly JsonConvertFacade _jsonFacade;
         private readonly ILogger _logger;
@@ -43,27 +42,26 @@ namespace InvisibleCollectorLib
         /// <param name="apiKey">The company API Key</param>
         /// <param name="remoteUri">The InvisibleCollector service address.</param>
         /// <param name="logger">The logger to be used by the lib</param>
-        public InvisibleCollector(string apiKey, string remoteUri = ProdutionUri,
-            ILogger<InvisibleCollector> logger = null)
+        /// <param name="maxConcurrentRequests">The maximum number of concurrent HTTP requests to InvivisibleCollector</param>
+        public InvisibleCollector(string apiKey, string remoteUri = ProductionUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null) : this(apiKey, new Uri(remoteUri), maxConcurrentRequests, logger)
         {
-            _uriBuilder = new HttpUriBuilder(remoteUri);
-            _jsonFacade = new JsonConvertFacade();
-            _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary);
-            _logger = logger ?? NullLogger<InvisibleCollector>.Instance;
-
-            _logger.LogInformation("Started Instance");
         }
 
         /// <summary>
         ///     Same as
         ///     <see
-        ///         cref="InvisibleCollector(string,string,Microsoft.Extensions.Logging.ILogger{InvisibleCollectorLib.InvisibleCollector})" />
+        ///         cref="InvisibleCollector(string,string,int,Microsoft.Extensions.Logging.ILogger{InvisibleCollectorLib.InvisibleCollector})" />
         ///     but the <paramref name="remoteUri" /> in Uri format.
         /// </summary>
         /// <param name="remoteUri">The Invisible Collector service address</param>
-        public InvisibleCollector(string apiKey, Uri remoteUri, ILogger<InvisibleCollector> logger = null) : this(
-            apiKey, remoteUri.AbsoluteUri, logger)
+        public InvisibleCollector(string apiKey, Uri remoteUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null)
         {
+            _uriBuilder = new HttpUriBuilder(remoteUri);
+            _jsonFacade = new JsonConvertFacade();
+            _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary, maxConcurrentRequests);
+            _logger = logger ?? NullLogger<InvisibleCollector>.Instance;
+
+            _logger.LogInformation("Started Instance");
         }
 
         /// <summary>
@@ -82,7 +80,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -111,7 +109,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -140,7 +138,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -167,7 +165,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -191,7 +189,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -220,7 +218,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -243,7 +241,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -280,7 +278,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -311,7 +309,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -341,7 +339,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -371,7 +369,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -409,7 +407,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -483,7 +481,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -510,7 +508,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -535,7 +533,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
@@ -560,7 +558,7 @@ namespace InvisibleCollectorLib
         ///     On bad json (sent or received) and when the server rejects the request (conflict, bad
         ///     request, invalid parameters, etc)
         /// </exception>
-        /// <exception cref="WebException">
+        /// <exception cref="HttpRequestException">
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
