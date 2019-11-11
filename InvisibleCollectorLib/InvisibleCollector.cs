@@ -27,7 +27,7 @@ namespace InvisibleCollectorLib
         private const string CustomersEndpoint = "customers";
         private const string DebtsEndpoint = "debts";
         private const string PaymentsEndpoint = "payments";
-        private const string ProdutionUri = "https://api.invisiblecollector.com/";
+        public const string ProductionUri = "https://api.invisiblecollector.com/";
         private readonly ApiConnectionFacade _apiFacade;
         private readonly JsonConvertFacade _jsonFacade;
         private readonly ILogger _logger;
@@ -43,7 +43,7 @@ namespace InvisibleCollectorLib
         /// <param name="remoteUri">The InvisibleCollector service address.</param>
         /// <param name="logger">The logger to be used by the lib</param>
         /// <param name="maxConcurrentRequests">The maximum number of concurrent HTTP requests to InvivisibleCollector</param>
-        public InvisibleCollector(string apiKey, string remoteUri = ProdutionUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null) : this(apiKey, new Uri(remoteUri), maxConcurrentRequests, logger)
+        public InvisibleCollector(string apiKey, string remoteUri = ProductionUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null) : this(apiKey, new Uri(remoteUri), maxConcurrentRequests, logger)
         {
         }
 
