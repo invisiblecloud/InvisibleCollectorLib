@@ -21,14 +21,15 @@ namespace InvisibleCollectorLib.Connection
         private readonly Func<Stream, IDictionary<string, string>> _jsonParser;
         private readonly HttpClient _client;
 
-        internal ApiConnectionFacade(string apiKey, Func<Stream, IDictionary<string, string>> jsonParser)
+        internal ApiConnectionFacade(string apiKey, Func<Stream, IDictionary<string, string>> jsonParser,
+            int maxConcurrentRequests = IcConstants.MaxConcurrentRequests)
         {
             _apiKey = apiKey;
             _jsonParser = jsonParser;
 
             var handler = new HttpClientHandler
             {
-                MaxConnectionsPerServer = MaxConcurrentConnections
+                MaxConnectionsPerServer = maxConcurrentRequests
             };
             _client = new HttpClient(handler);
         }

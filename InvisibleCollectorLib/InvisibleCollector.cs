@@ -42,27 +42,26 @@ namespace InvisibleCollectorLib
         /// <param name="apiKey">The company API Key</param>
         /// <param name="remoteUri">The InvisibleCollector service address.</param>
         /// <param name="logger">The logger to be used by the lib</param>
-        public InvisibleCollector(string apiKey, string remoteUri = ProdutionUri,
-            ILogger<InvisibleCollector> logger = null)
+        /// <param name="maxConcurrentRequests">The maximum number of concurrent HTTP requests to InvivisibleCollector</param>
+        public InvisibleCollector(string apiKey, string remoteUri = ProdutionUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null) : this(apiKey, new Uri(remoteUri), maxConcurrentRequests, logger)
         {
-            _uriBuilder = new HttpUriBuilder(remoteUri);
-            _jsonFacade = new JsonConvertFacade();
-            _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary);
-            _logger = logger ?? NullLogger<InvisibleCollector>.Instance;
-
-            _logger.LogInformation("Started Instance");
         }
 
         /// <summary>
         ///     Same as
         ///     <see
-        ///         cref="InvisibleCollector(string,string,Microsoft.Extensions.Logging.ILogger{InvisibleCollectorLib.InvisibleCollector})" />
+        ///         cref="InvisibleCollector(string,string,int,Microsoft.Extensions.Logging.ILogger{InvisibleCollectorLib.InvisibleCollector})" />
         ///     but the <paramref name="remoteUri" /> in Uri format.
         /// </summary>
         /// <param name="remoteUri">The Invisible Collector service address</param>
-        public InvisibleCollector(string apiKey, Uri remoteUri, ILogger<InvisibleCollector> logger = null) : this(
-            apiKey, remoteUri.AbsoluteUri, logger)
+        public InvisibleCollector(string apiKey, Uri remoteUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null)
         {
+            _uriBuilder = new HttpUriBuilder(remoteUri);
+            _jsonFacade = new JsonConvertFacade();
+            _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary, maxConcurrentRequests);
+            _logger = logger ?? NullLogger<InvisibleCollector>.Instance;
+
+            _logger.LogInformation("Started Instance");
         }
 
         /// <summary>
