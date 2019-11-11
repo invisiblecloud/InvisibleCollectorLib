@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using InvisibleCollectorLib.Connection;
 using InvisibleCollectorLib.Exception;
@@ -56,7 +56,7 @@ namespace test.Connection
         {
             _mockServer.AddRequest("GET", "unreachablPath")
                 .AddJsonResponse("", 200);
-            Assert.ThrowsAsync<WebException>(() =>
+            Assert.ThrowsAsync<HttpRequestException>(() =>
                 BuildApiFacade(EmptyDictionary)
                     .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
         }
@@ -90,7 +90,7 @@ namespace test.Connection
         {
             _mockServer.AddRequest("GET", TestPath)
                 .AddJsonResponse("", 400);
-            Assert.ThrowsAsync<WebException>(() =>
+            Assert.ThrowsAsync<HttpRequestException>(() =>
                 BuildApiFacade(EmptyDictionary)
                     .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
         }
@@ -100,7 +100,7 @@ namespace test.Connection
         {
             _mockServer.AddRequest("GET", TestPath)
                 .AddHtmlResponse("", 400); // supposed to fail here
-            Assert.ThrowsAsync<WebException>(() =>
+            Assert.ThrowsAsync<IcException>(() =>
                 BuildApiFacade(ErrorDictionary)
                     .CallJsonToJsonApi(_mockServer.GetUrl(TestPath), "GET"));
         }

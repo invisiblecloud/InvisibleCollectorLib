@@ -16,7 +16,7 @@ namespace InvisibleCollectorLib.Connection
     internal class ApiConnectionFacade
     {
         private const int MaxConcurrentConnections = 10;
-        
+
         private readonly string _apiKey;
         private readonly Func<Stream, IDictionary<string, string>> _jsonParser;
         private HttpClient _client;
@@ -28,7 +28,7 @@ namespace InvisibleCollectorLib.Connection
 
             var handler = new HttpClientHandler
             {
-                UseDefaultCredentials = true, 
+                UseDefaultCredentials = true,
                 MaxConnectionsPerServer = MaxConcurrentConnections
             };
             _client = new HttpClient(handler);
@@ -47,60 +47,32 @@ namespace InvisibleCollectorLib.Connection
             return await CallApiAsync(requestUri, method, IcConstants.JsonMimeType, jsonString);
         }
 
-        /// <summary>
-        ///     Make an Api Request. x-www-form-url-encoded content type and JSON accept-type
-        /// </summary>
-        /// <param name="requestUri">The absolute request Url</param>
-        /// the absolute uri of the request
-        /// <param name="method">An http method: "GET", "POST", "PUT", "DELETE"</param>
-        /// <param name="jsonString">The request body string. Can be null or empty if no request body is to be sent</param>
-        /// <returns>the response string task. Null or empty string is returned if no response is received.</returns>
-        internal async Task<string> CallUrlEncodedToJsonApi(Uri requestUri, string method, string jsonString = null)
-        {
-            return await CallApiAsync(requestUri, method, null, jsonString);
-        }
 
         private async Task<string> CallApiAsync(Uri requestUri, string method, string contentType,
             string jsonString = null)
         {
             var request = BuildHttpRequest(requestUri, method, jsonString, contentType);
 
-            string response;
-            try
-            {
-                var resp = await _client.SendAsync(request);
-                resp.EnsureSuccessStatusCode();
-                response = await resp.Content.ReadAsStringAsync();
-            }
-            catch (WebException webException)
-            {
-                var errorResponse = webException.Response;
-                if (webException.Status != WebExceptionStatus.ProtocolError ||
-                    errorResponse?.GetResponseStream() is null || !IsContentTypeJson(errorResponse.Headers))
-                    throw;
+            var response = await _client.SendAsync(request);
 
-                var ex = BuildException(errorResponse.GetResponseStream());
+            if (!response.Content.Headers.ContentType.MediaType.Contains(IcConstants.JsonMimeType))
+            {
+                var msg = await response.Content.ReadAsStringAsync();
+                throw new IcException($"No JSON response HTTP header received. {response.StatusCode} {response.ReasonPhrase}: {msg}");
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var stream = await response.Content.ReadAsStreamAsync();
+                var ex = BuildException(stream);
                 if (!(ex is null))
                     throw ex;
 
-                throw;
+                // fallback
+                response.EnsureSuccessStatusCode();
             }
 
-            // check that the response has 'Content-Type' header set to json
-//            if (!IsContentTypeJson(request.ResponseHeaders))
-//                throw new IcException("Request valid but no JSON response HTTP header received");
-
-            return response;
-        }
-
-
-        private static bool IsContentTypeJson(NameValueCollection headers)
-        {
-            if (headers is null)
-                return false;
-
-            var headerValue = headers.Get("Content-Type");
-            return !(headerValue is null) && headerValue.Contains(IcConstants.JsonMimeType);
+            return await response.Content.ReadAsStringAsync();
         }
 
         private IcException BuildException(Stream jsonStream)
@@ -156,27 +128,24 @@ namespace InvisibleCollectorLib.Connection
                 default:
                     throw new ArgumentException("Invalid HTTP method");
             }
-            
-            if (jsonString == null)
-                jsonString = "";
-            
+
             var req = new HttpRequestMessage()
             {
                 Method = httpMethod,
                 RequestUri = requestUri,
                 Headers =
                 {
-                    { HttpRequestHeader.Authorization.ToString(),  $"Bearer {_apiKey}"},
-                    { HttpRequestHeader.Accept.ToString(), IcConstants.JsonMimeType },
+                    {HttpRequestHeader.Authorization.ToString(), $"Bearer {_apiKey}"},
+                    {HttpRequestHeader.Accept.ToString(), IcConstants.JsonMimeType},
+                    {HttpRequestHeader.Host.ToString(), requestUri.Host}
                 },
-                Content = new StringContent(jsonString),
             };
-            
-            if (!string.IsNullOrEmpty(jsonString))
-                req.Headers.Add(HttpRequestHeader.ContentType.ToString(), $"{contentType}; charset=UTF-8");
 
-//            Client.Headers.Set("Host", requestUriHost);
-            
+            if (!string.IsNullOrEmpty(jsonString))
+            {
+                req.Content = new StringContent(jsonString, Encoding.UTF8, contentType);
+            }
+
             return req;
         }
     }

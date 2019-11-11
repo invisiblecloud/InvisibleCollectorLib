@@ -12,7 +12,7 @@ namespace test
         protected const string TestApiKey = "12345";
 
         protected static readonly (string, string) ContentHeader = ("Content-Type", IcConstants.JsonMimeType);
-        protected static readonly (string, string) ContentHeaderEncoding = ("Content-Type", "charset=UTF-8");
+        protected static readonly (string, string) ContentHeaderEncoding = ("Content-Type", "charset=utf-8");
         protected static readonly (string, string) AcceptHeader = ("Accept", IcConstants.JsonMimeType);
         protected static readonly (string, string) AuthorizationHeader = ("Authorization", $"Bearer {TestApiKey}");
         protected static readonly (string, string) HostHeader = ("Host", "localhost");
