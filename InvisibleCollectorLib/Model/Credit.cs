@@ -1,6 +1,6 @@
 namespace InvisibleCollectorLib.Model
 {
-    public class Credit : DebtNote
+    public class Credit : Memo
     {
         
     }

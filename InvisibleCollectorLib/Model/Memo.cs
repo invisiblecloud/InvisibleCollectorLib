@@ -2,14 +2,14 @@ using System;
 
 namespace InvisibleCollectorLib.Model
 {
-    public class DebtNote : Model
+    public class Memo : Model
     {
         internal const string NumberName = "number";
         internal const string DescriptionName = "description";
         internal const string DateName = "date";
         internal const string GrossTotalName = "grossTotal";
 
-        protected DebtNote()
+        protected Memo()
         {
         }
 
