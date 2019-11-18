@@ -397,6 +397,14 @@ namespace InvisibleCollectorLib
             _logger.LogDebug("Created a new debt debit note with the information: {Model}", ret);
             return ret;
         }
+        
+        public async Task<Credit> SetNewDebtCreditAsync(string debtGid, Credit credit)
+        {
+            _logger.LogDebug("Making a request to create a new debt credit note with information: {Model}", credit);
+            var ret = await MakeRequestAsync<Credit, object>("POST", credit.FieldsShallow, DebtsEndpoint, debtGid, "credits");
+            _logger.LogDebug("Created a new debt credit note with the information: {Model}", ret);
+            return ret;
+        }
 
         /// <summary>
         ///     Get the debts that math the search query

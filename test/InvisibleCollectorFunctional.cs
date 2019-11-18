@@ -451,7 +451,7 @@ namespace test
         [Test]
         public async Task SetNewDebitAsync_correct()
         {
-            var builder = ModelBuilder.BuildDebitBuilder();
+            var builder = ModelBuilder.BuildDebtNoteBuilder();
             var requestModel = builder.BuildModel<Debit>();
             var expectedReply = builder.BuildModel<Debit>(true);
             const string id = "12345";
@@ -461,6 +461,20 @@ namespace test
             var result = await ic.SetNewDebtDebitAsync(id, requestModel);
             Assert.AreEqual(expectedReply, result);
             
+        }
+        
+        [Test]
+        public async Task SetNewCreditAsync_correct()
+        {
+            var builder = ModelBuilder.BuildDebtNoteBuilder();
+            var requestModel = builder.BuildModel<Credit>();
+            var expectedReply = builder.BuildModel<Credit>(true);
+            const string id = "12345";
+            
+            var ic = ConfigureIc("POST", $"debts/{id}/credits", builder.BuildJson(), builder.BuildJson());
+
+            var result = await ic.SetNewDebtCreditAsync(id, requestModel);
+            Assert.AreEqual(expectedReply, result);
         }
         
         [Test]

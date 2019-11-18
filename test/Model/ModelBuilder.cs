@@ -226,7 +226,7 @@ namespace test.Model
             return new CustomerBuilder(fields);
         }
 
-        public static ModelBuilder BuildDebitBuilder(string number = "12")
+        public static ModelBuilder BuildDebtNoteBuilder(string number = "12")
         {
             var fields = new Dictionary<string, object>
             {
