@@ -20,8 +20,8 @@ namespace InvisibleCollectorLib.Model
         internal const string ItemsName = "items";
         internal const string NetTotalName = "netTotal";
         internal const string PaidTotalName = "paidTotal";
-        internal const string DebitTotalName = "dgereebitTotal";
-        internal const string CreditTotalName = "credit_total";
+        internal const string DebitTotalName = "debitTotal";
+        internal const string CreditTotalName = "creditTotal";
         internal const string NumberName = "number";
         internal const string StatusName = "status";
         internal const string TaxName = "tax";
