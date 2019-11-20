@@ -20,7 +20,8 @@ namespace InvisibleCollectorLib.Model
         internal const string ItemsName = "items";
         internal const string NetTotalName = "netTotal";
         internal const string PaidTotalName = "paidTotal";
-        internal const string DebitTotalName = "dgereebitTotal";
+        internal const string DebitTotalName = "debitTotal";
+        internal const string CreditTotalName = "creditTotal";
         internal const string NumberName = "number";
         internal const string StatusName = "status";
         internal const string TaxName = "tax";
@@ -112,6 +113,13 @@ namespace InvisibleCollectorLib.Model
             set => this[DebitTotalName] = value;
         }
 
+        public double? CreditTotal
+        {
+            get => GetField<double?>(CreditTotalName);
+
+            set => this[CreditTotalName] = value;
+        }
+
         public string Number
         {
             get => GetField<string>(NumberName);
@@ -161,6 +169,7 @@ namespace InvisibleCollectorLib.Model
                 NetTotalName,
                 PaidTotalName,
                 DebitTotalName,
+                CreditTotalName,
                 TaxName,
                 GrossTotalName,
                 CurrencyName,
@@ -284,6 +293,11 @@ namespace InvisibleCollectorLib.Model
         public void UnsetDebitTotal()
         {
             UnsetField(DebitTotalName);
+        }
+
+        public void UnsetCreditTotal()
+        {
+            UnsetField(CreditTotalName);
         }
 
         public void UnsetNumber()
