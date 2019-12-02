@@ -176,6 +176,8 @@ namespace InvisibleCollectorLib
             var ret = await MakeRequestAsync<Customer>("GET", new[] {"v1", CustomersEndpoint, customerId});
             
             _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerId, ret);
+
+            ret.Contacts = await GetCustomerContactsAsync(customerId);
             
             return ret;
         }
