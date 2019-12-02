@@ -106,12 +106,29 @@ namespace test
         }
 
         [Test]
-        public void GetCustomerAsync_correct()
+        public async Task GetCustomerAsync_correct()
         {
+            const string id = "12345";
+            
             var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
-            builder._fields[Customer.IdName] = TestId;
-            AssertingModelRequest("GET", $"v1/customers/{TestId}", builder,
-                async ic => await ic.GetCustomerAsync(TestId));
+            builder[Customer.IdName] = id;
+            var firstReplyJson = builder.WithoutContacts()
+                .BuildJson();
+            var finalReplyJson = builder.BuildContactsJson();
+            var expectedModel = builder.BuildModel<Customer>(true);
+            
+            _mockServer.AddRequest("GET", $"v1/customers/{id}", expectedHeaders: BodylessHeaders)
+                .AddJsonResponse(firstReplyJson);
+            
+            _mockServer.AddRequest("GET", $"v1/customers/{id}/contacts", expectedHeaders: BodylessHeaders)
+                .AddJsonResponse(finalReplyJson);
+            
+
+            var uri = _mockServer.GetUrl();
+            var ic = new InvisibleCollector(TestApiKey, uri);
+            
+            var result = await ic.GetCustomerAsync(id);
+            Assert.AreEqual(expectedModel, result);
         }
 
 
