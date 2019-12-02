@@ -228,5 +228,13 @@ namespace InvisibleCollectorLib.Model
         {
             UnsetField(ZipCodeName);
         }
+        
+        public override string ToString()
+        {
+            var fields = FieldsShallow;
+            fields[ContactsName] = InternalItems?.StringifyList();
+            fields[AttributesName] = InternalAttributes?.StringifyDictionary();
+            return fields.StringifyDictionary();
+        }
     }
 }
