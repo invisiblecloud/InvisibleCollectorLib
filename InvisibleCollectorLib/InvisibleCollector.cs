@@ -615,6 +615,12 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        /// <summary>
+        /// Delete a customer's contact
+        /// </summary>
+        /// <param name="customerGid">customer Gid</param>
+        /// <param name="contactGid">contact Gid. contact must belong to the customer</param>
+        /// <returns>the deleted contact</returns>
         public async Task<CustomerContact> DeleteCustomerContactAsync(string customerGid, string contactGid)
         {
             _logger.LogDebug("Making request to delete customer's {customerGid} contact {contactGid}", customerGid, contactGid);
