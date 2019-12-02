@@ -322,7 +322,7 @@ namespace InvisibleCollectorLib
                 customer.Gid, customer);
             var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint,
                 customer.Gid);
-            _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.RoutableId, ret);
+            _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.Gid, ret);
             
             return await TrySetCustomerContacts(customer.Contacts, ret);
         }
@@ -576,7 +576,7 @@ namespace InvisibleCollectorLib
             
             var ret = await MakeRequestAsync<Payment>("DELETE", new [] {PaymentsEndpoint, paymentId});
             
-            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            _logger.LogDebug("Deleted for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
 
@@ -615,6 +615,16 @@ namespace InvisibleCollectorLib
             return ret;
         }
 
+        public async Task<CustomerContact> DeleteCustomerContactAsync(string customerGid, string contactGid)
+        {
+            _logger.LogDebug("Making request to delete customer's {customerGid} contact {contactGid}", customerGid, contactGid);
+            
+            var ret = await MakeRequestAsync<CustomerContact>("DELETE", new [] {CustomersEndpoint, customerGid, "contacts", contactGid});
+            
+            _logger.LogDebug("Deleted for customer with gid: {customerGid} information: {Model}", customerGid, ret);
+            return ret;
+        }
+        
         private async Task<Customer> TrySetCustomerContacts(IList<CustomerContact> contacts, Customer cust)
         {
             if (contacts == null || !contacts.Any())

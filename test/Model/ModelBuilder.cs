@@ -167,7 +167,7 @@ namespace test.Model
         public static ModelBuilder BuildReplyCustomerBuilder(string name = "johny")
         {
             var builder = BuildRequestCustomerBuilder(name);
-            builder[Customer.IdName] = Id;
+            builder[Customer.GidName] = Id;
 
             return builder;
         }

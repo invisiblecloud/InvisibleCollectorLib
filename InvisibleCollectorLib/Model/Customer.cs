@@ -6,14 +6,14 @@ namespace InvisibleCollectorLib.Model
     /// <summary>
     ///     The customer model.
     /// </summary>
-    public class Customer : AttributesModel<CustomerContact>, IRoutableModel
+    public class Customer : AttributesModel<CustomerContact>
     {
         internal const string AddressName = "address";
         internal const string CityName = "city";
         internal const string CountryName = "country";
         internal const string EmailName = "email";
         internal const string ExternalIdName = "externalId";
-        internal const string IdName = "gid";
+        internal const string GidName = "gid";
         internal const string NameName = "name";
         internal const string PhoneName = "phone";
         internal const string MobileName = "mobile";
@@ -86,9 +86,9 @@ namespace InvisibleCollectorLib.Model
         /// </summary>
         public string Gid
         {
-            get => GetField<string>(IdName);
+            get => GetField<string>(GidName);
 
-            set => this[IdName] = value;
+            set => this[GidName] = value;
         }
 
         public string Name
@@ -157,16 +157,6 @@ namespace InvisibleCollectorLib.Model
                 AttributesName
             };
 
-        public string RoutableId
-        {
-            get
-            {
-                if (!(Gid is null) && Gid != "")
-                    return Gid;
-                return ExternalId;
-            }
-        }
-
         public override bool Equals(object other)
         {
             return other is Customer customer && this == customer;
@@ -214,7 +204,7 @@ namespace InvisibleCollectorLib.Model
 
         public void UnsetGid()
         {
-            UnsetField(IdName);
+            UnsetField(GidName);
         }
 
         public void UnsetName()

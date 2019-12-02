@@ -9,6 +9,7 @@ namespace InvisibleCollectorLib.Model
         internal const string EmailName = "email";
         internal const string PhoneName = "phone";
         internal const string MobileName = "mobile";
+        internal const string GidName = "gid";
 
         public CustomerContact()
         {
@@ -47,12 +48,19 @@ namespace InvisibleCollectorLib.Model
 
             set => this[MobileName] = value;
         }
-        
+
+        public string Gid
+        {
+            get => GetField<string>(GidName);
+
+            set => this[GidName] = value;
+        }
+
         public object Clone()
         {
             return new CustomerContact(this);
         }
-        
+
         protected override ISet<string> SendableFields =>
             new SortedSet<string>
             {

@@ -109,7 +109,7 @@ namespace test
         public void GetCustomerAsync_correct()
         {
             var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
-            builder._fields[Customer.IdName] = TestId;
+            builder._fields[Customer.GidName] = TestId;
             AssertingModelRequest("GET", $"v1/customers/{TestId}", builder,
                 async ic => await ic.GetCustomerAsync(TestId));
         }
@@ -189,7 +189,7 @@ namespace test
             var request = ModelBuilder.BuildRequestCustomerBuilder();
             var reply = ModelBuilder.BuildReplyCustomerBuilder();
             var requestModel = reply.BuildModel<Customer>();
-            AssertingModelRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
+            AssertingModelRequest("PUT", $"customers/{requestModel.Gid}", reply,
                 async ic => await ic.SetCustomerAsync(requestModel),
                 request.BuildJson());
         }
@@ -202,7 +202,7 @@ namespace test
             var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
             var firstExpectedJson = builder.WithoutContacts()
                 .BuildJson();
-            builder[Customer.IdName] = id;
+            builder[Customer.GidName] = id;
             var firstReplyJson = builder.WithoutContacts()
                 .BuildJson();
             var finalExpectedJson = builder.BuildContactsJson();
@@ -244,7 +244,7 @@ namespace test
             var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
             var firstExpectedJson = builder.WithoutContacts()
                 .BuildJson();
-            builder[Customer.IdName] = id;
+            builder[Customer.GidName] = id;
             var firstReplyJson = builder.WithoutContacts()
                 .BuildJson();
             var finalExpectedJson = builder.BuildContactsJson();
