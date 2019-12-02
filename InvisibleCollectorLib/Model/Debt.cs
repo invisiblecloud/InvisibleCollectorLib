@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using InvisibleCollectorLib.Utils;
+using Newtonsoft.Json;
 
 namespace InvisibleCollectorLib.Model
 {
@@ -41,7 +42,7 @@ namespace InvisibleCollectorLib.Model
         ///     The Id of the customer to whom the debt is issued.
         /// </summary>
         /// <remarks>
-        ///     It must be the customer's <see cref="Customer.Gid" /> itself and not the <see cref="Customer.ExternalId" />
+        ///     It must be the customer's <see cref="Customer.Id" /> itself and not the <see cref="Customer.ExternalId" />
         /// </remarks>
         /// <seealso cref="SetCustomerId" />
         public string CustomerId
@@ -78,6 +79,7 @@ namespace InvisibleCollectorLib.Model
             set => this[GrossTotalName] = value;
         }
 
+        [JsonProperty(IdName)]
         public string Id
         {
             get => GetField<string>(IdName);
@@ -237,7 +239,7 @@ namespace InvisibleCollectorLib.Model
         /// <param name="customer">The customer</param>
         public void SetCustomerId(Customer customer)
         {
-            CustomerId = customer.Gid;
+            CustomerId = customer.Id;
         }
 
         public void UnsetAttributes()

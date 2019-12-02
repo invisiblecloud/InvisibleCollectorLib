@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using InvisibleCollectorLib.Utils;
+using Newtonsoft.Json;
 
 namespace InvisibleCollectorLib.Model
 {
@@ -13,7 +14,7 @@ namespace InvisibleCollectorLib.Model
         internal const string CountryName = "country";
         internal const string EmailName = "email";
         internal const string ExternalIdName = "externalId";
-        internal const string GidName = "gid";
+        internal const string IdName = "gid";
         internal const string NameName = "name";
         internal const string PhoneName = "phone";
         internal const string MobileName = "mobile";
@@ -84,11 +85,12 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         ///     The customer id.
         /// </summary>
-        public string Gid
+        [JsonProperty(IdName)]
+        public string Id
         {
-            get => GetField<string>(GidName);
+            get => GetField<string>(IdName);
 
-            set => this[GidName] = value;
+            set => this[IdName] = value;
         }
 
         public string Name
@@ -204,7 +206,7 @@ namespace InvisibleCollectorLib.Model
 
         public void UnsetGid()
         {
-            UnsetField(GidName);
+            UnsetField(IdName);
         }
 
         public void UnsetName()

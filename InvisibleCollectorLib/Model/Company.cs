@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace InvisibleCollectorLib.Model
 {
@@ -43,7 +44,8 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         ///     The company Id
         /// </summary>
-        public string Gid
+        [JsonProperty(IdName)]
+        public string Id
         {
             get => GetField<string>(IdName);
 

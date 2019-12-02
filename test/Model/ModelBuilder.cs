@@ -167,7 +167,7 @@ namespace test.Model
         public static ModelBuilder BuildReplyCustomerBuilder(string name = "johny")
         {
             var builder = BuildRequestCustomerBuilder(name);
-            builder[Customer.GidName] = Id;
+            builder[Customer.IdName] = Id;
 
             return builder;
         }
@@ -254,7 +254,7 @@ namespace test.Model
             {
                 {CustomerContact.EmailName, name + "@email.com"},
                 {CustomerContact.NameName, name},
-                {CustomerContact.GidName, gid}
+                {CustomerContact.IdName, gid}
             };
 
             return new ModelBuilder(fields);

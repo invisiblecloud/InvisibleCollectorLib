@@ -109,7 +109,7 @@ namespace test
         public void GetCustomerAsync_correct()
         {
             var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
-            builder._fields[Customer.GidName] = TestId;
+            builder._fields[Customer.IdName] = TestId;
             AssertingModelRequest("GET", $"v1/customers/{TestId}", builder,
                 async ic => await ic.GetCustomerAsync(TestId));
         }
@@ -189,7 +189,7 @@ namespace test
             var request = ModelBuilder.BuildRequestCustomerBuilder();
             var reply = ModelBuilder.BuildReplyCustomerBuilder();
             var requestModel = reply.BuildModel<Customer>();
-            AssertingModelRequest("PUT", $"customers/{requestModel.Gid}", reply,
+            AssertingModelRequest("PUT", $"customers/{requestModel.Id}", reply,
                 async ic => await ic.SetCustomerAsync(requestModel),
                 request.BuildJson());
         }
@@ -202,7 +202,7 @@ namespace test
             var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
             var firstExpectedJson = builder.WithoutContacts()
                 .BuildJson();
-            builder[Customer.GidName] = id;
+            builder[Customer.IdName] = id;
             var firstReplyJson = builder.WithoutContacts()
                 .BuildJson();
             var finalExpectedJson = builder.BuildContactsJson();
@@ -244,7 +244,7 @@ namespace test
             var builder = ModelBuilder.BuildRequestCustomerWithContactsBuilder();
             var firstExpectedJson = builder.WithoutContacts()
                 .BuildJson();
-            builder[Customer.GidName] = id;
+            builder[Customer.IdName] = id;
             var firstReplyJson = builder.WithoutContacts()
                 .BuildJson();
             var finalExpectedJson = builder.BuildContactsJson();
@@ -408,7 +408,7 @@ namespace test
             var model2 = ModelBuilder.BuildCustomerContactBuilder("mary");
             var listBuilder = new ModelListBuilder().Add(model1).Add(model2);
             var expectedJson = listBuilder.Clone()
-                .WithoutFields("gid")
+                .WithoutFields(CustomerContact.IdName)
                 .BuildJson();
             
             var customerBuilder = ModelBuilder.BuildReplyCustomerBuilder();
