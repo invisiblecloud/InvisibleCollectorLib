@@ -248,12 +248,13 @@ namespace test.Model
             return new ModelBuilder(fields);
         }
 
-        public static ModelBuilder BuildRequestCustomerContactBuilder(string name)
+        public static ModelBuilder BuildCustomerContactBuilder(string name = "name", string gid = "123")
         {
             var fields = new Dictionary<string, object>
             {
-                {CustomerContact.EmailName, name + "@b.com"},
-                {CustomerContact.NameName, name}
+                {CustomerContact.EmailName, name + "@email.com"},
+                {CustomerContact.NameName, name},
+                {CustomerContact.IdName, gid}
             };
 
             return new ModelBuilder(fields);
@@ -331,6 +332,25 @@ namespace test.Model
         {
             return JsonConvert.SerializeObject(obj, SerializerSettings);
         }
+
+        public ModelBuilder WithoutFields(string[] fields)
+        {
+            fields.ToList()
+                .ForEach(field =>
+                {
+                    if (_fields.ContainsKey(field))
+                    {
+                        _fields.Remove(field);
+                    }
+                });
+
+            return this;
+        }
+
+        public ModelBuilder Clone()
+        {
+            return new ModelBuilder(_fields);
+        }
     }
 
     internal class ModelListBuilder
@@ -347,6 +367,23 @@ namespace test.Model
             where T : InvisibleCollectorLib.Model.Model, new()
         {
             return _list.Select(e => e.BuildModel<T>()).ToList();
+        }
+
+        public ModelListBuilder Clone()
+        {
+            var copy = new ModelListBuilder();
+
+            copy._list = _list.Select(m => m.Clone())
+                .ToList();
+
+            return copy;
+        }
+
+        public ModelListBuilder WithoutFields(params string[] fields)
+        {
+            _list.ForEach(model => model.WithoutFields(fields));
+
+            return this;
         }
 
         public string BuildJson()

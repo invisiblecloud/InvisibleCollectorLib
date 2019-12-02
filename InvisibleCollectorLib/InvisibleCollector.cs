@@ -101,7 +101,7 @@ namespace InvisibleCollectorLib
         ///     Get customer attributes.
         /// </summary>
         /// <param name="customerId">
-        ///     The ID of the customer whose attributes are to be retrieved. It can be the 'gid' or
+        ///     The ID of the customer whose attributes are to be retrieved. It can be the 'id' or
         ///     'externalId' of the customer (or just use <see cref="Customer.RoutableId" />)
         /// </param>
         /// <returns>The up-to-date customer attributes.</returns>
@@ -130,7 +130,7 @@ namespace InvisibleCollectorLib
         ///     Get a list of the customer's debts
         /// </summary>
         /// <param name="customerId">
-        ///     The ID of the customer whose debts are to be retrieved. It can be the 'gid' or 'externalId' of
+        ///     The ID of the customer whose debts are to be retrieved. It can be the 'id' or 'externalId' of
         ///     the customer (or just use <see cref="Customer.RoutableId" />)
         /// </param>
         /// <returns>The up-to-date list of debts</returns>
@@ -157,8 +157,8 @@ namespace InvisibleCollectorLib
         /// <summary>
         ///     Get customer info
         /// </summary>
-        /// <param name="customerGid">
-        ///     The ID of the customer whose information is to be retrieved. The 'gid' of the customer (or just use <see cref="Customer.Gid" />)
+        /// <param name="customerId">
+        ///     The ID of the customer whose information is to be retrieved. The 'id' of the customer (or just use <see cref="Customer.Id" />)
         /// </param>
         /// <returns>The up-to-date customer information</returns>
         /// <exception cref="IcException">
@@ -169,13 +169,13 @@ namespace InvisibleCollectorLib
         ///     On connection or protocol related errors (except for the protocol errors sent by the
         ///     Invisible Collector)
         /// </exception>
-        public async Task<Customer> GetCustomerAsync(string customerGid)
+        public async Task<Customer> GetCustomerAsync(string customerId)
         {
-            _logger.LogDebug("Making request to get customer for customer ID: {Id}", customerGid);
+            _logger.LogDebug("Making request to get customer for customer ID: {Id}", customerId);
             
-            var ret = await MakeRequestAsync<Customer>("GET", new[] {"v1", CustomersEndpoint, customerGid});
+            var ret = await MakeRequestAsync<Customer>("GET", new[] {"v1", CustomersEndpoint, customerId});
             
-            _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerGid, ret);
+            _logger.LogDebug("Received for customer with id: {Id} information: {Model}", customerId, ret);
             
             return ret;
         }
@@ -269,7 +269,7 @@ namespace InvisibleCollectorLib
         ///     </para>
         /// </remarks>
         /// <param name="customerId">
-        ///     The ID of the customer whose information is to be retrieved. It can be the 'gid' or
+        ///     The ID of the customer whose information is to be retrieved. It can be the 'id' or
         ///     'externalId' of the customer (or just use <see cref="Customer.RoutableId" />)
         /// </param>
         /// <param name="attributes">The attributes to be set</param>
@@ -301,7 +301,7 @@ namespace InvisibleCollectorLib
         ///     Updates the customer's information.
         /// </summary>
         /// <param name="customer">
-        ///     The customer information to be updated. The <see cref="Customer.Gid" /> field must be set, since they contain the id of the customer. The
+        ///     The customer information to be updated. The <see cref="Customer.Id" /> field must be set, since they contain the id of the customer. The
         ///     <see cref="Customer.Country" /> field is mandatory.
         /// </param>
         /// <returns>The up-to-date updated customer information</returns>
@@ -319,10 +319,10 @@ namespace InvisibleCollectorLib
         public async Task<Customer> SetCustomerAsync(Customer customer)
         {
             _logger.LogDebug("Making a request to update the customer's with ID: {Id} information: {Model}",
-                customer.Gid, customer);
+                customer.Id, customer);
             var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint,
-                customer.Gid);
-            _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.RoutableId, ret);
+                customer.Id);
+            _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.Id, ret);
             
             return await TrySetCustomerContacts(customer.Contacts, ret);
         }
@@ -344,7 +344,7 @@ namespace InvisibleCollectorLib
         ///     Invisible Collector)
         /// </exception>
         /// <exception cref="IcModelConflictException">
-        ///     When a customer with the same customer Gid or externalId already exists in
+        ///     When a customer with the same customer Id or externalId already exists in
         ///     the database.
         /// </exception>
         public async Task<Customer> SetNewCustomerAsync(Customer customer)
@@ -387,21 +387,21 @@ namespace InvisibleCollectorLib
         /// <summary>
         ///     Create a new debit associated with a debt
         /// </summary>
-        /// <param name="debtGid">the debt global id <see cref="Debt.Id" /></param>
+        /// <param name="debtId">the debt global id <see cref="Debt.Id" /></param>
         /// <param name="debit">the debit to create</param>
         /// <returns></returns>
-        public async Task<Debit> SetNewDebtDebitAsync(string debtGid, Debit debit)
+        public async Task<Debit> SetNewDebtDebitAsync(string debtId, Debit debit)
         {
             _logger.LogDebug("Making a request to create a new debt debit note with information: {Model}", debit);
-            var ret = await MakeRequestAsync<Debit, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtGid, "debits");
+            var ret = await MakeRequestAsync<Debit, object>("POST", debit.FieldsShallow, DebtsEndpoint, debtId, "debits");
             _logger.LogDebug("Created a new debt debit note with the information: {Model}", ret);
             return ret;
         }
         
-        public async Task<Credit> SetNewDebtCreditAsync(string debtGid, Credit credit)
+        public async Task<Credit> SetNewDebtCreditAsync(string debtId, Credit credit)
         {
             _logger.LogDebug("Making a request to create a new debt credit note with information: {Model}", credit);
-            var ret = await MakeRequestAsync<Credit, object>("POST", credit.FieldsShallow, DebtsEndpoint, debtGid, "credits");
+            var ret = await MakeRequestAsync<Credit, object>("POST", credit.FieldsShallow, DebtsEndpoint, debtId, "credits");
             _logger.LogDebug("Created a new debt credit note with the information: {Model}", ret);
             return ret;
         }
@@ -446,7 +446,7 @@ namespace InvisibleCollectorLib
         /// <summary>
         /// Assigns a group to a customer
         /// </summary>
-        /// <param name="customerId">the customer gid</param>
+        /// <param name="customerId">the customer id</param>
         /// <param name="groupId">the group id</param>
         /// <returns>the assigned group</returns>
         public async Task<Group> SetCustomerToGroupAsync(string customerId, string groupId)
@@ -576,24 +576,24 @@ namespace InvisibleCollectorLib
             
             var ret = await MakeRequestAsync<Payment>("DELETE", new [] {PaymentsEndpoint, paymentId});
             
-            _logger.LogDebug("Received for payment with id: {Id} information: {Model}", paymentId, ret);
+            _logger.LogDebug("Deleted for payment with id: {Id} information: {Model}", paymentId, ret);
             return ret;
         }
 
         /// <summary>
         /// Sets new or updates customer contacts. Contacts are identified by their <see cref="CustomerContact.Name"/>
         /// </summary>
-        /// <param name="customerGid">custoemr gid</param>
+        /// <param name="customerId">custoemr id</param>
         /// <param name="contacts">customer contacts</param>
         /// <returns>the up-to-date customer</returns>
-        public async Task<Customer> SetNewCustomerContactsAsync(string customerGid,
+        public async Task<Customer> SetNewCustomerContactsAsync(string customerId,
             IList<CustomerContact> contacts)
         {
-            _logger.LogDebug("Making request to create customer's {Id} contacts with the following info: {Model}", customerGid, contacts);
+            _logger.LogDebug("Making request to create customer's {Id} contacts with the following info: {Model}", customerId, contacts);
 
             var objects = contacts.Select(c => c.SendableDictionary);
             var json = _jsonFacade.DictionaryToJson(objects);
-            var ret = await MakeRequestAsync<Customer>("POST", new[] {"v1", "customers", customerGid, "contacts"}, null, json);
+            var ret = await MakeRequestAsync<Customer>("POST", new[] {"v1", "customers", customerId, "contacts"}, null, json);
 
             _logger.LogDebug("Received customer: {Models}", ret);
             return ret;
@@ -602,19 +602,35 @@ namespace InvisibleCollectorLib
         /// <summary>
         ///     Returns the customer's contacts
         /// </summary>
-        /// <param name="customerGid">the customer gid</param>
+        /// <param name="customerId">the customer id</param>
         /// <returns> the customer contacts</returns>
-        public async Task<IList<CustomerContact>> GetCustomerContactsAsync(string customerGid)
+        public async Task<IList<CustomerContact>> GetCustomerContactsAsync(string customerId)
         {
-            _logger.LogDebug("Making request to get customer's {} contacts'", customerGid);
+            _logger.LogDebug("Making request to get customer's {} contacts'", customerId);
             
             var ret = await MakeRequestAsync<List<CustomerContact>>("GET", new[]
-                {"v1", "customers", customerGid, "contacts"});
+                {"v1", "customers", customerId, "contacts"});
             
-            _logger.LogDebug("Received contacts: {Model} for customer {Id}", ret, customerGid);
+            _logger.LogDebug("Received contacts: {Model} for customer {Id}", ret, customerId);
             return ret;
         }
 
+        /// <summary>
+        /// Delete a customer's contact
+        /// </summary>
+        /// <param name="customerId">customer Id</param>
+        /// <param name="contactId">contact Id. contact must belong to the customer</param>
+        /// <returns>the deleted contact</returns>
+        public async Task<CustomerContact> DeleteCustomerContactAsync(string customerId, string contactId)
+        {
+            _logger.LogDebug("Making request to delete customer's {customerId} contact {contactId}", customerId, contactId);
+            
+            var ret = await MakeRequestAsync<CustomerContact>("DELETE", new [] {CustomersEndpoint, customerId, "contacts", contactId});
+            
+            _logger.LogDebug("Deleted for customer with id: {customerId} information: {Model}", customerId, ret);
+            return ret;
+        }
+        
         private async Task<Customer> TrySetCustomerContacts(IList<CustomerContact> contacts, Customer cust)
         {
             if (contacts == null || !contacts.Any())
@@ -622,7 +638,7 @@ namespace InvisibleCollectorLib
                 return cust;
             }
 
-            return await SetNewCustomerContactsAsync(cust.Gid, contacts);
+            return await SetNewCustomerContactsAsync(cust.Id, contacts);
         }
 
         private async Task<TReturn> MakeRequestAsync<TReturn>(string method, string[] pathFragments, IDictionary<string, string> query = null, string requestJson = null) where TReturn : new()

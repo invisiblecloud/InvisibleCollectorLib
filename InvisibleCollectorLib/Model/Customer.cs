@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using InvisibleCollectorLib.Utils;
+using Newtonsoft.Json;
 
 namespace InvisibleCollectorLib.Model
 {
     /// <summary>
     ///     The customer model.
     /// </summary>
-    public class Customer : AttributesModel<CustomerContact>, IRoutableModel
+    public class Customer : AttributesModel<CustomerContact>
     {
         internal const string AddressName = "address";
         internal const string CityName = "city";
@@ -84,7 +85,8 @@ namespace InvisibleCollectorLib.Model
         /// <summary>
         ///     The customer id.
         /// </summary>
-        public string Gid
+        [JsonProperty(IdName)]
+        public string Id
         {
             get => GetField<string>(IdName);
 
@@ -156,16 +158,6 @@ namespace InvisibleCollectorLib.Model
                 MobileName,
                 AttributesName
             };
-
-        public string RoutableId
-        {
-            get
-            {
-                if (!(Gid is null) && Gid != "")
-                    return Gid;
-                return ExternalId;
-            }
-        }
 
         public override bool Equals(object other)
         {

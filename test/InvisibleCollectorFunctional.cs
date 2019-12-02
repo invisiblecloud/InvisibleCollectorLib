@@ -189,7 +189,7 @@ namespace test
             var request = ModelBuilder.BuildRequestCustomerBuilder();
             var reply = ModelBuilder.BuildReplyCustomerBuilder();
             var requestModel = reply.BuildModel<Customer>();
-            AssertingModelRequest("PUT", $"customers/{requestModel.RoutableId}", reply,
+            AssertingModelRequest("PUT", $"customers/{requestModel.Id}", reply,
                 async ic => await ic.SetCustomerAsync(requestModel),
                 request.BuildJson());
         }
@@ -388,8 +388,8 @@ namespace test
         [Test]
         public void GetCustomerContactsAsync_correct()
         {
-            var model1 = ModelBuilder.BuildRequestCustomerContactBuilder("john");
-            var model2 = ModelBuilder.BuildRequestCustomerContactBuilder("mary");
+            var model1 = ModelBuilder.BuildCustomerContactBuilder("john");
+            var model2 = ModelBuilder.BuildCustomerContactBuilder("mary");
             var listBuilder = new ModelListBuilder().Add(model1).Add(model2);
             var replyJson = listBuilder.BuildJson();
             
@@ -404,10 +404,12 @@ namespace test
         [Test]
         public void SetNewCustomerContactsAsync_correct()
         {
-            var model1 = ModelBuilder.BuildRequestCustomerContactBuilder("john");
-            var model2 = ModelBuilder.BuildRequestCustomerContactBuilder("mary");
+            var model1 = ModelBuilder.BuildCustomerContactBuilder("john");
+            var model2 = ModelBuilder.BuildCustomerContactBuilder("mary");
             var listBuilder = new ModelListBuilder().Add(model1).Add(model2);
-            var expectedJson = listBuilder.BuildJson();
+            var expectedJson = listBuilder.Clone()
+                .WithoutFields(CustomerContact.IdName)
+                .BuildJson();
             
             var customerBuilder = ModelBuilder.BuildReplyCustomerBuilder();
             var ic = ConfigureIc("POST", "v1/customers/3/contacts", customerBuilder.BuildJson(), expectedJson);
@@ -510,6 +512,16 @@ namespace test
 
             var result = await ic.SetCustomerToGroupAsync(customerId, groupId);
             Assert.AreEqual(expectedModel, result);
+        }
+        
+        [Test]
+        public void DeleteContactAsync_correct()
+        {
+            var customerGid = "a123";
+            var contactGid = "b789";
+            var reply = ModelBuilder.BuildCustomerContactBuilder(gid: contactGid);
+            AssertingModelRequest("DELETE", $"customers/{customerGid}/contacts/{contactGid}", reply,
+                async ic => await ic.DeleteCustomerContactAsync(customerGid, contactGid));
         }
     }
 }
