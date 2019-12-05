@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using InvisibleCollectorLib.Utils;
 
+
 namespace InvisibleCollectorLib.Model
 {
     /// <summary>
@@ -15,7 +16,30 @@ namespace InvisibleCollectorLib.Model
         internal const string ToDateName = "to_date";
         internal const string FromDueDateName = "from_duedate";
         internal const string ToDueDateName = "to_duedate";
+        
+        
+        IDictionary<string,string> Attributes;
 
+        /// <summary>
+        ///     This method adds atributes for searching purposes
+        /// </summary>
+        public void AddAtribute(string key, string value)
+        {
+            this.Attributes.Add("attributes["+key+"]", value);
+        }
+
+        /// <summary>
+        ///     This clears all atrributes
+        /// </summary>
+
+        public void ClearAttributes()
+        {
+            this.Attributes.Clear();
+        }
+
+        /// <summary>
+        ///     Debt number for direct search
+        /// </summary>
         public string Number
         {
             get => GetField<string>(NumberName);
@@ -64,16 +88,26 @@ namespace InvisibleCollectorLib.Model
         }
 
         protected override ISet<string> SendableFields =>
-            new SortedSet<string> {NumberName, FromDateName, ToDateName, FromDueDateName, ToDueDateName};
+            new SortedSet<string> {
+                NumberName, 
+                FromDateName,
+                ToDateName,
+                FromDueDateName,
+                ToDueDateName
+            };
 
         internal IDictionary<string, string> SendableStringDictionary =>
-            SendableDictionary.ToDictionary(p => p.Key, p =>
+            SendableDictionary.ToDictionary(
+            p =>
+            {
+                return p.Key;
+            }, 
+            p =>
             {
                 if (p.Value is DateTime date)
                     return date.ToString(IcConstants.DateTimeFormat);
-
                 return Convert.ToString(p.Value);
-            });
+            }).Concat(Attributes).ToDictionary(x => x.Key, x => x.Value);
 
         public override bool Equals(object other)
         {
@@ -93,6 +127,16 @@ namespace InvisibleCollectorLib.Model
         public static bool operator !=(FindDebts left, FindDebts right)
         {
             return !(left == right);
+        }
+
+        private static Dictionary<TKey, TValue>
+        Merge<TKey, TValue>(IEnumerable<Dictionary<TKey, TValue>> dictionaries)
+        {
+            var result = new Dictionary<TKey, TValue>();
+            foreach (var dict in dictionaries)
+                foreach (var x in dict)
+                    result[x.Key] = x.Value;
+            return result;
         }
     }
 }
