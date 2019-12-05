@@ -97,11 +97,7 @@ namespace InvisibleCollectorLib.Model
             };
 
         internal IDictionary<string, string> SendableStringDictionary =>
-            SendableDictionary.ToDictionary(
-            p =>
-            {
-                return p.Key;
-            }, 
+            SendableDictionary.ToDictionary(p =>p.Key, 
             p =>
             {
                 if (p.Value is DateTime date)
@@ -127,16 +123,6 @@ namespace InvisibleCollectorLib.Model
         public static bool operator !=(FindDebts left, FindDebts right)
         {
             return !(left == right);
-        }
-
-        private static Dictionary<TKey, TValue>
-        Merge<TKey, TValue>(IEnumerable<Dictionary<TKey, TValue>> dictionaries)
-        {
-            var result = new Dictionary<TKey, TValue>();
-            foreach (var dict in dictionaries)
-                foreach (var x in dict)
-                    result[x.Key] = x.Value;
-            return result;
         }
     }
 }
