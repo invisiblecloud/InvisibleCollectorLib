@@ -16,35 +16,39 @@ namespace InvisibleCollectorLib.Model
         internal const string ToDateName = "to_date";
         internal const string FromDueDateName = "from_duedate";
         internal const string ToDueDateName = "to_duedate";
+        internal const string AttributesName = "attributes";
 
+        protected IDictionary<string, string> InternalAttributes
+        {
+            get => GetField<IDictionary<string, string>>(AttributesName);
 
-        private IDictionary<string,string> _attributes = new Dictionary<string, string>();
+            set => this[AttributesName] = value;
+        }
 
         /// <summary>
         ///     Add attribute for searching purposes. Searching is done using OR on attributes.
         /// </summary>
         public void SetAttribute(string key, string value)
         {
-            _attributes.Add("attributes["+key+"]", value);
+            if (InternalAttributes is null)
+                InternalAttributes = new Dictionary<string, string>();
+
+            InternalAttributes[key] = value;
         }
 
-        /// <summary>
-        ///     Clear all attributes
-        /// </summary>
-
-        public void UnsetAttributes()
+        public string GetAttribute(string key)
         {
-            _attributes.Clear();
+            return InternalAttributes?[key];
         }
 
         public IDictionary<string, string> Attributes
         {
-            get => _attributes
+            get => InternalAttributes
                 ?.ToDictionary(entry => entry.Key, entry => entry.Value);
 
-            set => _attributes = value?.ToDictionary(entry => entry.Key, entry => entry.Value);
+            set => InternalAttributes = value?.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
-        
+
         /// <summary>
         ///     Debt number for direct search
         /// </summary>
@@ -94,29 +98,33 @@ namespace InvisibleCollectorLib.Model
 
             set => this[ToDueDateName] = value; // datetime is immutable
         }
-        
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string> {
-                NumberName, 
-                FromDateName,
-                ToDateName,
-                FromDueDateName,
-                ToDueDateName
-            };
 
-        internal IDictionary<string, string> SendableStringDictionary =>
-            SendableDictionary.ToDictionary(p =>p.Key, 
-            p =>
+        internal IDictionary<string, string> SendableStringDictionary
+        {
+            get
             {
-                if (p.Value is DateTime date)
-                    return date.ToString(IcConstants.DateTimeFormat);
-                return Convert.ToString(p.Value);
-            }).Concat(_attributes)
-                .ToDictionary(x => x.Key, x => x.Value);
+                var copy = new Dictionary<string, object>(_fields);
+                copy.Remove(AttributesName);
+                if (InternalAttributes != null && InternalAttributes.Count != 0)
+                {
+                    InternalAttributes.ToList().ForEach(pair => copy[$"attributes[{pair.Key}]"] = pair.Value);
+                }
+
+                return copy.ToDictionary(p => p.Key,
+                        p =>
+                        {
+                            if (p.Value is DateTime date)
+                                return date.ToString(IcConstants.DateTimeFormat);
+                            return Convert.ToString(p.Value);
+                        })
+                    .ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
+
 
         public override bool Equals(object other)
         {
-            return other is FindDebts find && this == find && _attributes.EqualsCollection(find._attributes);
+            return other is FindDebts find && this == find;
         }
 
         public override int GetHashCode()
@@ -126,7 +134,29 @@ namespace InvisibleCollectorLib.Model
 
         public static bool operator ==(FindDebts left, FindDebts right)
         {
-            return left == (Model) right;
+            var refFind = IcUtils.ReferenceQuality(left, right);
+            if (refFind != null)
+                return (bool) refFind;
+
+            var leftCopy = new FindDebts()
+            {
+                FieldsShallow = left.FieldsShallow,
+                InternalAttributes = null
+            };
+            var rightCopy = new FindDebts()
+            {
+                FieldsShallow = right.FieldsShallow,
+                InternalAttributes = null
+            };
+
+            if (leftCopy != (Model) rightCopy)
+                return false;
+
+            var attributesRef = left.KeyRefEquality(right, AttributesName);
+            if (attributesRef != null)
+                return (bool) attributesRef;
+            
+            return left.InternalAttributes.EqualsCollection(right.InternalAttributes);
         }
 
         public static bool operator !=(FindDebts left, FindDebts right)
