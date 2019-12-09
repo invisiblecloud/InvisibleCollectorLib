@@ -42,7 +42,7 @@ namespace test.Model
         public string BuildContactsJson()
         {
             var customerContacts = (IList<CustomerContact>) _fields[Customer.ContactsName];
-            var contacts = customerContacts.Select(c => c.SendableDictionary).ToList();
+            var contacts = customerContacts.Select(c => c.FieldsShallow).ToList();
             return JsonConvert.SerializeObject(contacts, SerializerSettings);
         }
 
@@ -96,7 +96,7 @@ namespace test.Model
         {
             var copy = new ModelBuilder(this);
             if (_fields.ContainsKey(key) && _fields[key] != null)
-                copy._fields[key] = ((IList<T>) copy._fields[key]).Select(item => item.SendableDictionary)
+                copy._fields[key] = ((IList<T>) copy._fields[key]).Select(item => item.FieldsShallow)
                     .ToList();
 
             return copy.BuildJson();

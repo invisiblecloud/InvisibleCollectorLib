@@ -159,26 +159,6 @@ namespace InvisibleCollectorLib.Model
             set => this[TypeName] = value;
         }
 
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string>
-            {
-                NumberName,
-                CustomerIdName,
-                TypeName,
-                StatusName,
-                DateName,
-                DueDateName,
-                NetTotalName,
-                PaidTotalName,
-                DebitTotalName,
-                CreditTotalName,
-                TaxName,
-                GrossTotalName,
-                CurrencyName,
-                ItemsName,
-                AttributesName
-            };
-
         internal IDictionary<string, object> SendableDictionary()
         {
             var fields = FieldsShallow;

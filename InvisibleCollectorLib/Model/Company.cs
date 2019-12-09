@@ -85,10 +85,7 @@ namespace InvisibleCollectorLib.Model
 
             set => this[ZipCodeName] = value;
         }
-
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string> {NameName, VatNumberName, AddressName, ZipCodeName, CityName};
-
+        
         public override bool Equals(object other)
         {
             return other is Company company && this == company;

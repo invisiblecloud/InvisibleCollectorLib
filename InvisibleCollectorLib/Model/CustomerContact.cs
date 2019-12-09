@@ -60,14 +60,5 @@ namespace InvisibleCollectorLib.Model
         {
             return new CustomerContact(this);
         }
-
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string>
-            {
-                NameName,
-                EmailName,
-                PhoneName,
-                MobileName
-            };
     }
 }

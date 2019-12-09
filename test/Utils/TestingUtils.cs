@@ -66,7 +66,7 @@ namespace test.Utils
         public static InvisibleCollectorLib.Model.Model BuildModelMock(IDictionary<string, object> fields)
         {
             var mock = new Mock<InvisibleCollectorLib.Model.Model>();
-            mock.Setup(m => m.SendableDictionary).Returns(fields);
+            mock.Setup(m => m.FieldsShallow).Returns(fields);
             return mock.Object;
         }
 

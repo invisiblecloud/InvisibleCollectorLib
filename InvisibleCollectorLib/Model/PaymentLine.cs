@@ -20,12 +20,6 @@ namespace InvisibleCollectorLib.Model
         {
         }
 
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string>
-            {
-                NumberName, ReferenceNumber, AmountName
-            };
-        
         public override bool Equals(object other)
         {
             return other is PaymentLine line && this == line;

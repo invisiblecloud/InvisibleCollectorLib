@@ -198,17 +198,10 @@ namespace InvisibleCollectorLib.Model
             fields[LinesName] = InternalItems?.StringifyList();
             return fields.StringifyDictionary();
         }
-
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string>
-            {
-                NumberName, CurrencyName, GrossTotalName, TypeName, TaxName, NetTotalName, DateName, StatusName,
-                LinesName, ExternalIdName
-            };
-
+        
         internal IDictionary<string, object> SendableDictionary()
         {
-            var fields = base.SendableDictionary;
+            var fields = FieldsShallow;
             if (InternalItems != null)
                 fields[LinesName] = InternalItems.Select(item => item.FieldsShallow).ToList();
 

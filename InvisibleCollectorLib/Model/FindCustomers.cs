@@ -43,10 +43,7 @@ namespace InvisibleCollectorLib.Model
             set => this[VatNumberName] = value;
         }
         
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string> {EmailName, ExternalId, PhoneName, VatNumberName};
-        
         internal IDictionary<string, string> SendableStringDictionary =>
-            SendableDictionary.ToDictionary(p => p.Key, p => Convert.ToString(p.Value));
+            FieldsShallow.ToDictionary(p => p.Key, p => Convert.ToString(p.Value));
     }
 }
