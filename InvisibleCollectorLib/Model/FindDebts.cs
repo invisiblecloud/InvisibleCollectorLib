@@ -16,27 +16,35 @@ namespace InvisibleCollectorLib.Model
         internal const string ToDateName = "to_date";
         internal const string FromDueDateName = "from_duedate";
         internal const string ToDueDateName = "to_duedate";
-        
-        
-        IDictionary<string,string> Attributes;
+
+
+        private IDictionary<string,string> _attributes = new Dictionary<string, string>();
 
         /// <summary>
-        ///     This method adds atributes for searching purposes
+        ///     Add attribute for searching purposes. Searching is done using OR on attributes.
         /// </summary>
-        public void AddAtribute(string key, string value)
+        public void SetAttribute(string key, string value)
         {
-            this.Attributes.Add("attributes["+key+"]", value);
+            _attributes.Add("attributes["+key+"]", value);
         }
 
         /// <summary>
-        ///     This clears all atrributes
+        ///     Clear all attributes
         /// </summary>
 
-        public void ClearAttributes()
+        public void UnsetAttributes()
         {
-            this.Attributes.Clear();
+            _attributes.Clear();
         }
 
+        public IDictionary<string, string> Attributes
+        {
+            get => _attributes
+                ?.ToDictionary(entry => entry.Key, entry => entry.Value);
+
+            set => _attributes = value?.ToDictionary(entry => entry.Key, entry => entry.Value);
+        }
+        
         /// <summary>
         ///     Debt number for direct search
         /// </summary>
@@ -86,7 +94,7 @@ namespace InvisibleCollectorLib.Model
 
             set => this[ToDueDateName] = value; // datetime is immutable
         }
-
+        
         protected override ISet<string> SendableFields =>
             new SortedSet<string> {
                 NumberName, 
@@ -103,11 +111,12 @@ namespace InvisibleCollectorLib.Model
                 if (p.Value is DateTime date)
                     return date.ToString(IcConstants.DateTimeFormat);
                 return Convert.ToString(p.Value);
-            }).Concat(Attributes).ToDictionary(x => x.Key, x => x.Value);
+            }).Concat(_attributes)
+                .ToDictionary(x => x.Key, x => x.Value);
 
         public override bool Equals(object other)
         {
-            return other is FindDebts find && this == find;
+            return other is FindDebts find && this == find && _attributes.EqualsCollection(find._attributes);
         }
 
         public override int GetHashCode()
