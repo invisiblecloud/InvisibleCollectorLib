@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using InvisibleCollectorLib;
 using InvisibleCollectorLib.Model;
 using InvisibleCollectorLib.Utils;

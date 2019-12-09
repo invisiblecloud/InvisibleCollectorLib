@@ -179,17 +179,15 @@ namespace InvisibleCollectorLib.Model
                 AttributesName
             };
 
-        internal override IDictionary<string, object> SendableDictionary
+        internal IDictionary<string, object> SendableDictionary()
         {
-            get
-            {
-                var fields = base.SendableDictionary;
-                if (InternalItems != null)
-                    fields[ItemsName] = InternalItems.Select(item => item.SendableDictionary).ToList();
+            var fields = FieldsShallow;
+            if (InternalItems != null)
+                fields[ItemsName] = InternalItems.Select(item => item.FieldsShallow).ToList();
 
-                return fields;
-            }
+            return fields;
         }
+
 
         protected override IDictionary<string, string> InternalAttributes
         {
@@ -216,7 +214,7 @@ namespace InvisibleCollectorLib.Model
         {
             return other is Debt debt && this == debt;
         }
-        
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -232,7 +230,7 @@ namespace InvisibleCollectorLib.Model
             return !(left == right);
         }
 
-        
+
         /// <summary>
         ///     A convenience method to set the customer id.
         /// </summary>

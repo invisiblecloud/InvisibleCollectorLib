@@ -44,6 +44,7 @@ namespace InvisibleCollectorLib.Model
         internal IDictionary<string, object> FieldsSubset(ICollection<string> fields) => _fields
             .Where(pair => fields.Contains(pair.Key))
             .ToDictionary(dict => dict.Key, dict => dict.Value);
+        
 
         /// <summary>
         ///     Test the object for equality with the model.

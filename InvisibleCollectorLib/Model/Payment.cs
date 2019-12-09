@@ -17,7 +17,7 @@ namespace InvisibleCollectorLib.Model
         internal const string StatusName = "status";
         internal const string LinesName = "lines";
         internal const string ExternalIdName = "externalId";
-        
+
 
         /// <summary>
         ///     The currency. Must be an ISO 4217 currency code.
@@ -206,16 +206,13 @@ namespace InvisibleCollectorLib.Model
                 LinesName, ExternalIdName
             };
 
-        internal override IDictionary<string, object> SendableDictionary
+        internal IDictionary<string, object> SendableDictionary()
         {
-            get
-            {
-                var fields = base.SendableDictionary;
-                if (InternalItems != null)
-                    fields[LinesName] = InternalItems.Select(item => item.SendableDictionary).ToList();
+            var fields = base.SendableDictionary;
+            if (InternalItems != null)
+                fields[LinesName] = InternalItems.Select(item => item.FieldsShallow).ToList();
 
-                return fields;
-            }
+            return fields;
         }
     }
 }

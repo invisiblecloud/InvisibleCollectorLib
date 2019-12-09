@@ -183,7 +183,7 @@ namespace test.Model
             Assert.AreEqual(debt.FieldsShallow.Count, 0);
 
             debt.Items = new List<Item>();
-            var items = (IList<IDictionary<string, object>>) debt.SendableDictionary[Debt.ItemsName];
+            var items = (IList<IDictionary<string, object>>) debt.SendableDictionary()[Debt.ItemsName];
             Assert.AreEqual(items.Count, 0);
 
             const string name = "a name";
@@ -194,7 +194,7 @@ namespace test.Model
                     Name = name
                 }
             };
-            var items2 = (IList<IDictionary<string, object>>) debt.SendableDictionary[Debt.ItemsName];
+            var items2 = (IList<IDictionary<string, object>>) debt.SendableDictionary()[Debt.ItemsName];
             Assert.AreEqual(items2.Count, 1);
             Assert.AreEqual(name, items2[0]["name"]);
         }
