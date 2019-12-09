@@ -19,7 +19,8 @@ namespace test.Model
                 FromDate = null,
                 Attributes = new Dictionary<string, string>()
                 {
-                    {"a", "b"}
+                    {"a", "b"},
+                    {"1", "2"}
                 }
             };
 
@@ -29,7 +30,8 @@ namespace test.Model
                 ("number", "123"),
                 ("to_date", "2010-01-01"),
                 ("from_date", ""),
-                ("attributes[a]", "b")
+                ("attributes[a]", "b"),
+                ("attributes[1]", "2")
             );
         }
         
