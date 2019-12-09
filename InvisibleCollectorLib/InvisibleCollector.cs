@@ -227,7 +227,7 @@ namespace InvisibleCollectorLib
         public async Task<Company> SetCompanyAsync(Company company)
         {
             _logger.LogDebug("Making request to update company information with the following info: {Model}", company);
-            var ret = await MakeRequestAsync<Company, object>("PUT", company.SendableDictionary, CompaniesEndpoint);
+            var ret = await MakeRequestAsync<Company, object>("PUT", company.FieldsShallow.FieldsDifference(Company.IdName, Company.CountryName, Company.NotificationsName), CompaniesEndpoint);
             _logger.LogDebug("Updated company with new information: {Model}", ret);
             return ret;
         }
@@ -320,7 +320,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making a request to update the customer's with ID: {Id} information: {Model}",
                 customer.Id, customer);
-            var ret = await MakeRequestAsync<Customer, object>("PUT", customer.SendableDictionary, CustomersEndpoint,
+            var ret = await MakeRequestAsync<Customer, object>("PUT", customer.FieldsShallow.FieldsDifference(Customer.IdName, Customer.ContactsName), CustomersEndpoint,
                 customer.Id);
             _logger.LogDebug("Updated for the customer with ID: {Id} information: {Model}", customer.Id, ret);
             
@@ -350,7 +350,7 @@ namespace InvisibleCollectorLib
         public async Task<Customer> SetNewCustomerAsync(Customer customer)
         {
             _logger.LogDebug("Making a request to create a new customer with information: {Model}", customer);
-            var ret = await MakeRequestAsync<Customer, object>("POST", customer.SendableDictionary, CustomersEndpoint);
+            var ret = await MakeRequestAsync<Customer, object>("POST", customer.FieldsShallow.FieldsDifference(Customer.IdName, Customer.ContactsName), CustomersEndpoint);
             _logger.LogDebug("Created a new customer with the information: {Model}", ret);
             
             return await TrySetCustomerContacts(customer.Contacts, ret);
@@ -378,7 +378,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making a request to create a new debt with information: {Model}", debt);
             
-            var ret = await MakeRequestAsync<Debt, object>("POST", debt.SendableDictionary, DebtsEndpoint);
+            var ret = await MakeRequestAsync<Debt, object>("POST", debt.SendableDictionary().FieldsDifference(Debt.IdName), DebtsEndpoint);
             
             _logger.LogDebug("Created a new debt with the information: {Model}", ret);
             return ret;
@@ -498,7 +498,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making a request to create a new payment with information: {Model}", payment);
 
-            var ret = await MakeRequestAsync<Payment, object>("POST", payment.SendableDictionary, PaymentsEndpoint);
+            var ret = await MakeRequestAsync<Payment, object>("POST", payment.SendableDictionary(), PaymentsEndpoint);
             
             _logger.LogDebug("Created a new payment with the information: {Model}", ret);
             
@@ -591,7 +591,7 @@ namespace InvisibleCollectorLib
         {
             _logger.LogDebug("Making request to create customer's {Id} contacts with the following info: {Model}", customerId, contacts);
 
-            var objects = contacts.Select(c => c.SendableDictionary);
+            var objects = contacts.Select(c => c.FieldsShallow.FieldsDifference(CustomerContact.IdName));
             var json = _jsonFacade.DictionaryToJson(objects);
             var ret = await MakeRequestAsync<Customer>("POST", new[] {"v1", "customers", customerId, "contacts"}, null, json);
 

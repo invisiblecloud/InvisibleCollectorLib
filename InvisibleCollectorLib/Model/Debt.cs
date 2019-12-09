@@ -159,38 +159,6 @@ namespace InvisibleCollectorLib.Model
             set => this[TypeName] = value;
         }
 
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string>
-            {
-                NumberName,
-                CustomerIdName,
-                TypeName,
-                StatusName,
-                DateName,
-                DueDateName,
-                NetTotalName,
-                PaidTotalName,
-                DebitTotalName,
-                CreditTotalName,
-                TaxName,
-                GrossTotalName,
-                CurrencyName,
-                ItemsName,
-                AttributesName
-            };
-
-        internal override IDictionary<string, object> SendableDictionary
-        {
-            get
-            {
-                var fields = base.SendableDictionary;
-                if (InternalItems != null)
-                    fields[ItemsName] = InternalItems.Select(item => item.SendableDictionary).ToList();
-
-                return fields;
-            }
-        }
-
         protected override IDictionary<string, string> InternalAttributes
         {
             get => GetField<IDictionary<string, string>>(AttributesName);
@@ -204,6 +172,9 @@ namespace InvisibleCollectorLib.Model
 
             set => this[ItemsName] = value;
         }
+        
+        protected override string ItemName => ItemsName;
+
 
         public string RoutableId => Id;
 
@@ -216,7 +187,7 @@ namespace InvisibleCollectorLib.Model
         {
             return other is Debt debt && this == debt;
         }
-        
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -232,7 +203,7 @@ namespace InvisibleCollectorLib.Model
             return !(left == right);
         }
 
-        
+
         /// <summary>
         ///     A convenience method to set the customer id.
         /// </summary>

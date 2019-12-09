@@ -138,9 +138,13 @@ namespace test
             {
                 Number = "123",
                 ToDate = new DateTime(2010, 1, 1),
-                FromDate = null
+                FromDate = null,
+                Attributes = new Dictionary<string, string>()
+                {
+                    {"a", "bxy"}
+                }
             };
-            var expectedQueryParams = new List<string> {"123", "number", "to_date", "2010-01-01", "from_date"};
+            var expectedQueryParams = new List<string> {"123", "number", "to_date", "2010-01-01", "from_date", WebUtility.UrlEncode("attributes[a]"), "bxy"};
 
             var ic = ConfigureIc("GET", "debts/find", replyJson, null, expectedQueryParams);
 

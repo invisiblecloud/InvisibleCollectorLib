@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using InvisibleCollectorLib.Utils;
 
 namespace InvisibleCollectorLib.Model
 {
     public abstract class ItemsModel<ItemT>: Model
-        where ItemT: ICloneable
+        where ItemT: Model, ICloneable 
     {
         protected virtual IList<ItemT> InternalItems
         {
             get;
             set;
         }
+
+        protected virtual string ItemName { get; }
         
         protected void AddItem(ItemT item)
         {
@@ -22,6 +25,15 @@ namespace InvisibleCollectorLib.Model
                 InternalItems = new List<ItemT>();
 
             InternalItems.Add((ItemT) item.Clone());
+        }
+        
+        internal IDictionary<string, object> SendableDictionary()
+        {
+            var fields = FieldsShallow;
+            if (InternalItems != null)
+                fields[ItemName] = InternalItems.Select(item => item.FieldsShallow).ToList();
+
+            return fields;
         }
 
         public static bool AreEqual<CollectionT>(CollectionT left, CollectionT right, string itemsName)

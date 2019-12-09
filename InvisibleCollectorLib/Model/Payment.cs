@@ -17,7 +17,7 @@ namespace InvisibleCollectorLib.Model
         internal const string StatusName = "status";
         internal const string LinesName = "lines";
         internal const string ExternalIdName = "externalId";
-        
+
 
         /// <summary>
         ///     The currency. Must be an ISO 4217 currency code.
@@ -106,6 +106,8 @@ namespace InvisibleCollectorLib.Model
 
             set => this[LinesName] = value;
         }
+
+        protected override string ItemName => LinesName;
 
         /// <summary>
         /// A list of debts being paid.
@@ -197,25 +199,6 @@ namespace InvisibleCollectorLib.Model
             var fields = FieldsShallow;
             fields[LinesName] = InternalItems?.StringifyList();
             return fields.StringifyDictionary();
-        }
-
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string>
-            {
-                NumberName, CurrencyName, GrossTotalName, TypeName, TaxName, NetTotalName, DateName, StatusName,
-                LinesName, ExternalIdName
-            };
-
-        internal override IDictionary<string, object> SendableDictionary
-        {
-            get
-            {
-                var fields = base.SendableDictionary;
-                if (InternalItems != null)
-                    fields[LinesName] = InternalItems.Select(item => item.SendableDictionary).ToList();
-
-                return fields;
-            }
         }
     }
 }

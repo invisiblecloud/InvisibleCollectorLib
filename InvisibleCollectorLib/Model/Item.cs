@@ -76,17 +76,6 @@ namespace InvisibleCollectorLib.Model
             set => this[TaxesName] = value;
         }
 
-        protected override ISet<string> SendableFields => new SortedSet<string>
-            {
-            NameName,
-            PriceName,
-            QuantityName,
-            NetPriceName,
-            VatName,
-            TaxesName,
-            DescriptionName
-        };
-
         public object Clone()
         {
             return new Item(this);

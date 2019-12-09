@@ -27,5 +27,9 @@ namespace InvisibleCollectorLib.Utils
 
         internal static IList<T> Clone<T>(this IList<T> list) where T : ICloneable => list.Select(e => (T) e.Clone()).ToList();
         
+        internal static IDictionary<K, V> FieldsDifference<K, V>(this IDictionary<K, V> dictionary, params K[] fields) => dictionary
+            .Where(pair => ! fields.Contains(pair.Key))
+            .ToDictionary(dict => dict.Key, dict => dict.Value);
+        
     }
 }

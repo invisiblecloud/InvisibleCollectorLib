@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using InvisibleCollectorLib.Utils;
 
@@ -20,32 +18,8 @@ namespace InvisibleCollectorLib.Model
             _fields = model._fields?.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
-        protected object this[string key]
-        {
-            set => _fields[key] = value;
-
-            private get
-            {
-                _fields.TryGetValue(key, out var value);
-                return value;
-            }
-        }
-
-        protected virtual ISet<string> SendableFields { get; }
 
         // don't use this, will fail on null value
-        internal IDictionary<string, object> FieldsShallow
-        {
-            set => _fields = new Dictionary<string, object>(value);
-
-            get => new Dictionary<string, object>(_fields);
-        }
-
-        internal virtual IDictionary<string, object> SendableDictionary => FieldsSubset(SendableFields);
-
-        internal IDictionary<string, object> FieldsSubset(ICollection<string> fields) => _fields
-            .Where(pair => fields.Contains(pair.Key))
-            .ToDictionary(dict => dict.Key, dict => dict.Value);
 
         /// <summary>
         ///     Test the object for equality with the model.
@@ -115,16 +89,34 @@ namespace InvisibleCollectorLib.Model
             _fields = new Dictionary<string, object>();
         }
 
+        public void UnsetField(string fieldName)
+        {
+            _fields.Remove(fieldName);
+        }
+
+        internal IDictionary<string, object> FieldsShallow
+        {
+            set => _fields = new Dictionary<string, object>(value);
+
+            get => new Dictionary<string, object>(_fields);
+        }
+
+        protected object this[string key]
+        {
+            set => _fields[key] = value;
+
+            private get
+            {
+                _fields.TryGetValue(key, out var value);
+                return value;
+            }
+        }
+
         protected T GetField<T>(string key)
         {
             return (T) this[key];
         }
 
-        protected void UnsetField(string fieldName)
-        {
-            _fields.Remove(fieldName);
-        }
-        
         protected bool? KeyRefEquality(Model other, string key)
         {
             var leftHas = _fields.ContainsKey(key);

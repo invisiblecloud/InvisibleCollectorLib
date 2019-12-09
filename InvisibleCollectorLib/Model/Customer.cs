@@ -142,23 +142,6 @@ namespace InvisibleCollectorLib.Model
         {
             AddItem(contact);
         }
-
-        protected override ISet<string> SendableFields =>
-            new SortedSet<string>
-            {
-                NameName,
-                ExternalIdName,
-                VatNumberName,
-                AddressName,
-                ZipCodeName,
-                CityName,
-                CountryName,
-                EmailName,
-                PhoneName,
-                MobileName,
-                AttributesName
-            };
-
         public override bool Equals(object other)
         {
             return other is Customer customer && this == customer;
