@@ -107,6 +107,8 @@ namespace InvisibleCollectorLib.Model
             set => this[LinesName] = value;
         }
 
+        protected override string ItemName => LinesName;
+
         /// <summary>
         /// A list of debts being paid.
         /// </summary>
@@ -197,15 +199,6 @@ namespace InvisibleCollectorLib.Model
             var fields = FieldsShallow;
             fields[LinesName] = InternalItems?.StringifyList();
             return fields.StringifyDictionary();
-        }
-        
-        internal IDictionary<string, object> SendableDictionary()
-        {
-            var fields = FieldsShallow;
-            if (InternalItems != null)
-                fields[LinesName] = InternalItems.Select(item => item.FieldsShallow).ToList();
-
-            return fields;
         }
     }
 }

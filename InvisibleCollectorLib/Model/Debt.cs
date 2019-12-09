@@ -159,16 +159,6 @@ namespace InvisibleCollectorLib.Model
             set => this[TypeName] = value;
         }
 
-        internal IDictionary<string, object> SendableDictionary()
-        {
-            var fields = FieldsShallow;
-            if (InternalItems != null)
-                fields[ItemsName] = InternalItems.Select(item => item.FieldsShallow).ToList();
-
-            return fields;
-        }
-
-
         protected override IDictionary<string, string> InternalAttributes
         {
             get => GetField<IDictionary<string, string>>(AttributesName);
@@ -182,6 +172,9 @@ namespace InvisibleCollectorLib.Model
 
             set => this[ItemsName] = value;
         }
+        
+        protected override string ItemName => ItemsName;
+
 
         public string RoutableId => Id;
 
