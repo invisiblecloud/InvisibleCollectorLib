@@ -16,6 +16,7 @@ namespace InvisibleCollectorLib.Model
         internal const string CustomerIdName = "customerId";
         internal const string DateName = "date";
         internal const string DueDateName = "dueDate";
+        internal const string ExpiresAtName = "expires_at";
         internal const string GrossTotalName = "grossTotal";
         internal const string IdName = "id";
         internal const string ItemsName = "items";
@@ -70,6 +71,16 @@ namespace InvisibleCollectorLib.Model
             get => GetField<DateTime?>(DueDateName);
 
             set => this[DueDateName] = value; // datetime is immutable
+        }
+
+        /// <summary>
+        ///     The debt due date. Only the years, month and days are considered.
+        /// </summary>
+        public DateTime? ExpiresAt
+        {
+            get => GetField<DateTime?>(ExpiresAtName);
+
+            set => this[ExpiresAtName] = value; // datetime is immutable
         }
 
         public double? GrossTotal
@@ -236,6 +247,11 @@ namespace InvisibleCollectorLib.Model
         public void UnsetDueDate()
         {
             UnsetField(DueDateName);
+        }
+
+        public void UnsetExpiresAt()
+        {
+            UnsetField(ExpiresAtName);
         }
 
         public void UnsetGrossTotal()
