@@ -16,7 +16,7 @@ namespace InvisibleCollectorLib.Model
         internal const string CustomerIdName = "customerId";
         internal const string DateName = "date";
         internal const string DueDateName = "dueDate";
-        internal const string ExpiresAtName = "expires_at";
+        internal const string ExpiresAtName = "expiresAt";
         internal const string GrossTotalName = "grossTotal";
         internal const string IdName = "id";
         internal const string ItemsName = "items";
