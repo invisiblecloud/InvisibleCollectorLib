@@ -4,17 +4,17 @@
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageId>InvisibleCollectorLib</PackageId>
-        <Version>0.1.41</Version>
-        <Authors>jpmadureira; RostyslavKhoptiy</Authors>
+        <Version>0.1.42</Version>
+        <Authors>pmendes</Authors>
         <Company>InvisibleCollector</Company>
         <Product />
         <PackageLicenseUrl>https://github.com/invisiblecloud/InvisibleCollectorLib/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/invisiblecloud/InvisibleCollectorLib</PackageProjectUrl>
         <PackageIconUrl>https://www.invcapture.com/assets/logo-8d0def418eab6b488b35642d885324fc3a6def1bb4443f7e3745468c4e039673.png</PackageIconUrl>
-        <Description>Invoice Capture is an online debt management system that helps companies get paid faster. InvisibleCollectorLib is a .NET library to communicate with it's public API.</Description>
+        <Description>Invisible Collector is an online debt collections system that helps companies get paid faster. InvisibleCollectorLib is a .NET library to communicate with it's public API.</Description>
         <PackageReleaseNotes>https://github.com/invisiblecloud/InvisibleCollectorLib/releases</PackageReleaseNotes>
-        <Copyright>Copyright 2017 Invisible Cloud</Copyright>
-        <PackageTags>C# library API SDK .NET Invoice Debt</PackageTags>
+        <Copyright>Copyright 2022 Invisible Cloud</Copyright>
+        <PackageTags>C# library API SDK .NET Debt Collections</PackageTags>
         <AssemblyName>InvisibleCollectorLib</AssemblyName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
@@ -24,7 +24,7 @@
       <DocumentationFile>bin\Release\netstandard2.0\InvisibleCollectorLib.xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
-      <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.27" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 </Project>
