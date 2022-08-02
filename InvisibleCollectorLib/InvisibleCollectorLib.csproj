@@ -4,7 +4,7 @@
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageId>InvisibleCollectorLib</PackageId>
-        <Version>0.1.42</Version>
+        <Version>0.2.88</Version>
         <Authors>pmendes</Authors>
         <Company>InvisibleCollector</Company>
         <Product />
