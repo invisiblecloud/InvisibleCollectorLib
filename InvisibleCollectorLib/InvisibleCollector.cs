@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -43,7 +43,8 @@ namespace InvisibleCollectorLib
         /// <param name="remoteUri">The InvisibleCollector service address.</param>
         /// <param name="logger">The logger to be used by the lib</param>
         /// <param name="maxConcurrentRequests">The maximum number of concurrent HTTP requests to InvivisibleCollector</param>
-        public InvisibleCollector(string apiKey, string remoteUri = ProductionUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null) : this(apiKey, new Uri(remoteUri), maxConcurrentRequests, logger)
+        /// <param name="timeout">The HTTP request timeout. Defaults to 5 minutes if not specified.</param>
+        public InvisibleCollector(string apiKey, string remoteUri = ProductionUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null, TimeSpan? timeout = null) : this(apiKey, new Uri(remoteUri), maxConcurrentRequests, logger, timeout)
         {
         }
 
@@ -54,11 +55,11 @@ namespace InvisibleCollectorLib
         ///     but the <paramref name="remoteUri" /> in Uri format.
         /// </summary>
         /// <param name="remoteUri">The Invisible Collector service address</param>
-        public InvisibleCollector(string apiKey, Uri remoteUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null)
+        public InvisibleCollector(string apiKey, Uri remoteUri, int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, ILogger<InvisibleCollector> logger = null, TimeSpan? timeout = null)
         {
             _uriBuilder = new HttpUriBuilder(remoteUri);
             _jsonFacade = new JsonConvertFacade();
-            _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary, maxConcurrentRequests);
+            _apiFacade = new ApiConnectionFacade(apiKey, _jsonFacade.JsonStreamToStringDictionary, maxConcurrentRequests, timeout);
             _logger = logger ?? NullLogger<InvisibleCollector>.Instance;
 
             _logger.LogInformation("Started Instance");
