@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -22,7 +22,7 @@ namespace InvisibleCollectorLib.Connection
         private readonly HttpClient _client;
 
         internal ApiConnectionFacade(string apiKey, Func<Stream, IDictionary<string, string>> jsonParser,
-            int maxConcurrentRequests = IcConstants.MaxConcurrentRequests)
+            int maxConcurrentRequests = IcConstants.MaxConcurrentRequests, TimeSpan? timeout = null)
         {
             _apiKey = apiKey;
             _jsonParser = jsonParser;
@@ -31,7 +31,10 @@ namespace InvisibleCollectorLib.Connection
             {
                 MaxConnectionsPerServer = maxConcurrentRequests
             };
-            _client = new HttpClient(handler);
+            _client = new HttpClient(handler)
+            {
+                Timeout = timeout ?? TimeSpan.FromMinutes(5)
+            };
         }
 
         /// <summary>
