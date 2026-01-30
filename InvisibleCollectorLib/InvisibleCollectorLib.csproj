@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageId>InvisibleCollectorLib</PackageId>
-        <Version>0.2.88</Version>
+        <Version>0.3.0</Version>
         <Authors>pmendes</Authors>
         <Company>InvisibleCollector</Company>
         <Product />
